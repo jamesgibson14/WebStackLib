@@ -1,3 +1,5 @@
 *.class
 *.pyc
 *.pyo
+js/lib
+js/r.js
