@@ -2,9 +2,8 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'engine',
-  'models/model'
-], function($, _, Backbone, E, Model){
+  'models/PSDetail'
+], function($, _, Backbone, Model){
   var collection = Backbone.Collection.extend({
 // Reference to this collection's model.
     model: Model

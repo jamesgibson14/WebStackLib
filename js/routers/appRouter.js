@@ -34,10 +34,10 @@ define(['jquery','backbone','engine', 'handlebars', 'views/view', 'views/another
         },
         'main': function(view){
         	
-        	debugger;
+        	
         	//var v1 = E.loadModule('js/views/' + view + '.js');//{url: 'js/views/' + view + '.js', dataType: 'script'}
         	require(['views/' + view], function(View) { 
-                
+                debugger;
                 var view = new View().render().el;
                 
                 $('#mainview').html(view);

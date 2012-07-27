@@ -44,5 +44,5 @@ function   (App) {
     //loaded and can be used here now.
     
   	// Instantiates a new Router
-    this.router = new Desktop();
+    this.router = new App();
 });

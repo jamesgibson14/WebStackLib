@@ -4,7 +4,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
 
         // Represents the actual DOM element that corresponds to your View (There is a one to one relationship between View Objects and DOM elements)
         el: 'body',
-
+        template: template,
         // View constructor
         initialize: function() {
 
@@ -12,7 +12,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
             this.model = new Model();
 
             // Setting the view's template property
-            this.template = _.template( template, { model: this.model.toJSON() } );
+            this.template = Handlebars.compile(this.template);
 			
         },
 
@@ -24,8 +24,8 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
 	    },
 
         render: function() {
-
-            this.$el.find("#example").append(this.template);
+            var temp = this.model.toJSON();
+            this.$el.find("#example").append(this.template(temp));
 
         },
 
