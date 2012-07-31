@@ -1,4 +1,4 @@
-define(['jquery','backbone','engine', 'handlebars', 'views/view', 'views/anotherView', 'require'], function($, Backbone, E, Handlebars, MainView, AnotherView,require){
+define(['jquery','backbone','engine', 'handlebars', 'require'], function($, Backbone, E, Handlebars, require){
 
     var Router = Backbone.Router.extend({
 
@@ -21,12 +21,10 @@ define(['jquery','backbone','engine', 'handlebars', 'views/view', 'views/another
 
         'home': function(){
 
-            // Instantiating mainView and anotherView instances
-            var mainView = new MainView(),
-                anotherView = new AnotherView();
-
-            // Renders the mainView template
-            mainView.render();
+            require(['views/view'], function(View) { 
+               
+                var view = new View().render();
+            }); 
 
             // anotherView.js extends view.js.  anotherView.js does not have a promptUser method, so JavaScript looks up the prototype chain and uses the view.js promptUser method instead.
             //!!! I could extend view for security ie: Dev view extends "editor view" which extends "read only view"
@@ -37,7 +35,7 @@ define(['jquery','backbone','engine', 'handlebars', 'views/view', 'views/another
         	
         	//var v1 = E.loadModule('js/views/' + view + '.js');//{url: 'js/views/' + view + '.js', dataType: 'script'}
         	require(['views/' + view], function(View) { 
-                debugger;
+                
                 var view = new View().render().el;
                 
                 $('#mainview').html(view);

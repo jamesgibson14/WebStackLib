@@ -5,9 +5,9 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
         // Represents the actual DOM element that corresponds to your View (There is a one to one relationship between View Objects and DOM elements)
         el: 'body',
         template: template,
+        location: '' + window.location.href,
         // View constructor
         initialize: function() {
-
             // Setting the view's model property to the passed in model
             this.model = new Model();
 
@@ -19,13 +19,14 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
         events: {
 
             "click #mcontent": "promptUser",
-            'click #todoview': 'loadlink'
+            'click #todoview': 'loadlink',
+            'click #restart':'restart'
 
 	    },
 
         render: function() {
             var temp = this.model.toJSON();
-            this.$el.find("#example").append(this.template(temp));
+            this.$el.append(this.template(temp));
 
         },
 
@@ -35,14 +36,16 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
 
         },
         loadlink: function(e){
-        	debugger;
         	var id = $(e.currentTarget).attr('id');
         	$('#mainview').html('YOu loaded ' + id);
         	
         	
         	//define(['jquery','backbone'])
         	
-        } 
+        },
+        restart: function(){
+            window.location = this.location + '';
+        }
 
     });
 	

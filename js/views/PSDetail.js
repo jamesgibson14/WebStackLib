@@ -1,10 +1,10 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!templates/main.html', 'models/collection'], function($, Backbone, E, Handlebars, Model, template, Collection){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSDetail.html'], function($, Backbone, E, Handlebars, Model, template){
 
     var View = Backbone.View.extend({
 
         //... is a list tag.
         tagName:  "li",
-        className: "ui-state-default",
+        className: "row",
         // Cache the template function for a single item.
         template: template,
     
@@ -14,8 +14,8 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
           //"click label.todo-content"  : "showOrder",
           "dblclick label.todo-content" : "edit",
           "click span.todo-destroy"   : "clear",
-          "keypress .todo-input"      : "updateOnEnter",
-          "blur .todo-input"          : "close"
+          "keypress .pid"      : "updateOnEnter",
+          "blur .pid"          : "close"
         },
     
         // The TodoView listens for changes to its model, re-rendering. Since there's
@@ -62,7 +62,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
         // Close the `"editing"` mode, saving changes to the todo.
         close: function() {
           this.model.set({content: this.input.val()});
-          $(this.el).removeClass("editing");
+          //$(this.el).removeClass("editing");
         },
     
         // If you hit `enter`, we're through editing the item.
