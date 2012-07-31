@@ -10,30 +10,26 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
     
         // The DOM events specific to an item.
         events: {
-          "click .check"              : "toggleDone",
+          "click .check"              : "toggleFlag",
           //"click label.todo-content"  : "showOrder",
           "dblclick label.todo-content" : "edit",
           "click span.todo-destroy"   : "clear",
-          "keypress .pid"      : "updateOnEnter",
-          "blur .pid"          : "close"
+          "keypress .edit": "updateOnEnter"
         },
     
         // The TodoView listens for changes to its model, re-rendering. Since there's
         // a one-to-one correspondence between a **Todo** and a **TodoView** in this
         // app, we set a direct reference on the model for convenience.
         initialize: function() {
-            this.model = new Model();
             this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render', 'close', 'remove');
+            _.bindAll(this, 'render', 'close', 'remove','toggleFlag');
             this.model.bind('change', this.render);
             this.model.bind('destroy', this.remove,this);
         },
     
         // Re-render the contents of the todo item.
         render: function() {
-          $(this.el).html(this.template(this.model.toJSON()));
-          this.input = this.$('.todo-input');
-          return this;
+          debugger;
           var temp = this.model.toJSON();
             
           temp = this.template(temp);
@@ -41,10 +37,9 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
           this.$el.html( temp );
           return this;
         },
-    
         // Toggle the `"done"` state of the model.
-        toggleDone: function() {
-          this.model.toggle();
+        toggleFlag: function() {
+          this.model.toggleflag();
         },
         
         // Alert the Order of this todo.
@@ -60,14 +55,20 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
         },
     
         // Close the `"editing"` mode, saving changes to the todo.
-        close: function() {
-          this.model.set({content: this.input.val()});
-          //$(this.el).removeClass("editing");
+        close: function(input) {
+            
+            this.model.set({pid: this.$(input).val()});
+            //$(this.el).removeClass("editing");
         },
     
         // If you hit `enter`, we're through editing the item.
         updateOnEnter: function(e) {
-          if (e.keyCode == 13) this.close();
+          
+          if (e.keyCode == 13) {
+              debugger;
+              e.preventDefault();
+              this.close(e.currentTarget);              
+          }
         },
     
         // Remove the item, destroy the model.

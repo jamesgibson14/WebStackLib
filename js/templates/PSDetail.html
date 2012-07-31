@@ -1,4 +1,4 @@
-<span class='cell'>{{pid}}</span><input type="text" class="pid" />
+<span class='cell'>{{pid}}<br /><input type="text" id="editPID" class="edit" /></span>
 <span class='cell'>{{opseq}}</span>
 <span class='cell'>{{machine}}</span>
 <span class='cell'>{{shift}}</span>
@@ -11,3 +11,4 @@
 <span class='cell'>{{operator}}</span>
 <span class='cell'>{{date}}</span>
 <span class='cell'>{{componentcode}}</span>
+<span class='cell'><input type="checkbox" class="check" {{#if flag}}checked="checked"{{/if}}  /><br />{{flagreason}}</span>
