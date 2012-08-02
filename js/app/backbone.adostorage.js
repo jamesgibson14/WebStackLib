@@ -1,4 +1,4 @@
-var db = new MSSQLDB();
+
 Backbone.databaseSync = function(method, model, options) {
 	//debugger;
 	var methodMap = {

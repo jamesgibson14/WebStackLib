@@ -1,23 +1,27 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSApp.html', 'models/PSDetails','views/PSDetail'], function($, Backbone, E, Handlebars, Model, template, Collection, subView){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSApp.html', 'models/PSDetails','views/PSDetail'], 
+function($, Backbone, E, Handlebars, Model, template, Collection, subView){
 
     var View = Backbone.View.extend({
 
         tagName:  "div",
         className: 'PSApp',
         collection: new Collection(),
+        filteredModels: [],
         template: template,
         events: {
             'blur .pid':'change',
-            'click .loadtable': 'loadTable',
+            'click .loadtable': 'filter',
             'click .btnRun': 'runEntry'        
         },
         initialize: function() {
-            this.collection.add (new Model());
-            this.collection.add (new Model({pid: 'PID151700a'}));
-            this.collection.add (new Model());
-            this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','enterPeopleSoftScript','tester');
+            //this.collection.add (new Model());
+            //this.collection.add (new Model({pid: 'PID151700a'}));
+            //this.collection.add (new Model());
             
+            this.template = Handlebars.compile(this.template);
+            _.bindAll(this, 'render','change','enterPeopleSoftScript','tester','filter');
+            //this.collection.bind('reset',     this.filter);
+            this.collection.fetch();
         },
     
         // Re-render the contents of the todo item.
@@ -34,29 +38,30 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
             var newvalue = this.$el.find('.pid').val();
             this.model.set({pid: newvalue})
         },
-        addAll: function(models) {
-            
-          // create in memory element 
-          var $el = $('#pidList').clone(); 
-          // also get the `className`, `id`, `attributes` if you need them 
-         
-          // append everything to the in-memory element 
-          _.each(models,function(model){ 
+        filter: function(){
+            //alert('filter and sort');
             debugger;
-            var rowView = new subView({model: model}); 
-            $el.append(rowView.render().el); 
-          }); 
-            
-          // replace the old view element with the new one, in the DOM 
-          this.$("#pidList").replaceWith($el); 
-         
-          // reset the view instance to work with the new $el 
-          //this.setElement($el); 
-    
-          //Todos.each(this.addOne);
+            //this.collection.sort({silent:true});
+            if(false)
+                this.filteredModels = this.collection.remaining();
+            else
+                this.filteredModels = this.collection.models
+        
+            this.addAll();
         },
-        loadTable: function(){            
-            this.addAll(this.collection.models);
+        addAll: function() {
+            // create in memory element
+            var $el = this.$('#pidList').clone(true,true); 
+            // also get the `className`, `id`, `attributes` if you need them 
+            $el.empty();
+            // append everything to the in-memory element 
+            _.each(this.filteredModels, function(model){ 
+                var rowView = new subView({model: model}); 
+                $el.append(rowView.render().el); 
+            }); 
+            // replace the old view element with the new one, in the DOM 
+            this.$("#pidList").replaceWith($el);//.replaceWith($el); 
+            
         },
         runEntry: function(){
             var url = 'http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login';

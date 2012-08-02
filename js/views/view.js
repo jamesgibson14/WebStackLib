@@ -3,14 +3,15 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
     var View = Backbone.View.extend({
 
         // Represents the actual DOM element that corresponds to your View (There is a one to one relationship between View Objects and DOM elements)
-        el: 'body',
+        tagName:  "div",
+        className: 'PSApp',
         template: template,
         location: '' + window.location.href,
         // View constructor
         initialize: function() {
             // Setting the view's model property to the passed in model
             this.model = new Model();
-
+            _.bindAll(this,'render');
             // Setting the view's template property
             this.template = Handlebars.compile(this.template);
 			
@@ -27,7 +28,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
         render: function() {
             var temp = this.model.toJSON();
             this.$el.append(this.template(temp));
-
+            return this;
         },
 
         promptUser: function() {

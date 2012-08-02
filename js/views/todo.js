@@ -22,7 +22,6 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/todo', 'text!templ
         // a one-to-one correspondence between a **Todo** and a **TodoView** in this
         // app, we set a direct reference on the model for convenience.
         initialize: function() {
-            this.model = new Model();
             this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render', 'close', 'remove');
             this.model.bind('change', this.render);
@@ -31,13 +30,9 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/todo', 'text!templ
     
         // Re-render the contents of the todo item.
         render: function() {
-          $(this.el).html(this.template(this.model.toJSON()));
-          this.input = this.$('.todo-input');
-          return this;
-          var temp = this.model.toJSON();
-            
-          temp = this.template(temp);
-    
+          //alert('view render');
+          var temp = this.model.toJSON();            
+          temp = this.template(temp);    
           this.$el.html( temp );
           return this;
         },
@@ -56,12 +51,12 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/todo', 'text!templ
         // Switch this view into `"editing"` mode, displaying the input field.
         edit: function() {
           $(this.el).addClass("editing");
-          this.input.focus();
+          this.$('.todo-input').focus();
         },
     
         // Close the `"editing"` mode, saving changes to the todo.
         close: function() {
-          this.model.set({content: this.input.val()});
+          this.model.set({content: this.$('.todo-input').val()});
           $(this.el).removeClass("editing");
         },
     

@@ -1,4 +1,4 @@
-define(['jquery','backbone','engine', 'handlebars', 'require'], function($, Backbone, E, Handlebars, require){
+define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backboneADO','helpers','jqueryUI'], function($, Backbone, E, Handlebars, require){
 
     var Router = Backbone.Router.extend({
 
@@ -20,10 +20,11 @@ define(['jquery','backbone','engine', 'handlebars', 'require'], function($, Back
         },
 
         'home': function(){
-
+           
             require(['views/view'], function(View) { 
                
-                var view = new View().render();
+                var view = new View().render().el;
+                 $('#bodyview').html(view);
             }); 
 
             // anotherView.js extends view.js.  anotherView.js does not have a promptUser method, so JavaScript looks up the prototype chain and uses the view.js promptUser method instead.
@@ -34,15 +35,13 @@ define(['jquery','backbone','engine', 'handlebars', 'require'], function($, Back
         	
         	
         	//var v1 = E.loadModule('js/views/' + view + '.js');//{url: 'js/views/' + view + '.js', dataType: 'script'}
+        	
         	require(['views/' + view], function(View) { 
                 
                 var view = new View().render().el;
                 
                 $('#mainview').html(view);
             }); 
-
-        	//var view = require('views/todo');
-        	//$('#mainview').html(view.render().el);
         },
         'tab': function(view){
         	//if not loaded... load

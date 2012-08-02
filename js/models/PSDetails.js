@@ -6,8 +6,8 @@ define([
 ], function($, _, Backbone, Model){
   var collection = Backbone.Collection.extend({
 // Reference to this collection's model.
-    model: Model
-
+    model: Model,
+    store: new WebSQLStore(new E.MSSQLDB(),'qryShopPaperDetail',false)
             
 
     });

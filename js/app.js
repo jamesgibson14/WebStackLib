@@ -14,10 +14,12 @@ require.config({
         models: '../models',
         modernizr: "modernizr-2.5.3",
       	jquery: "jquery-1.7.2",
+      	jqueryUI: 'jquery-ui-1.8.16.custom.min',
       	underscore: "lodash-0.3.1",
       	engine: '../app/engine',
+      	database: '../app/database',
+      	backboneADO: '../app/backbone.ado',
       	backbone: "backbone-0.9.2",
-		database: 'database',
 		ieconfig: 'ieconfig',
       	// Require.js Plugins
       	text: "plugins/text-2.0.0"
@@ -32,7 +34,9 @@ require.config({
             exports: 'Backbone'
         },
         'engine': ['jquery'],
-        'backbone.adostorage': ['backbone','database']
+        'jqueryUI': ['jquery'],
+        'database': ['engine'],
+        'backboneADO': ['backbone']
     }
 
 });
