@@ -31,15 +31,20 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
         render: function() {
           debugger;
           var temp = this.model.toJSON();
-            
+          
           temp = this.template(temp);
     
           this.$el.html( temp );
+          if(this.model.get('flag'))
+            this.$el.addClass('error');
+          else
+            this.$el.removeClass("error");
           return this;
         },
         // Toggle the `"done"` state of the model.
         toggleFlag: function() {
-          this.model.toggleflag();
+            var reason = prompt("Reason for Error?");
+            this.model.toggleflag(reason);
         },
         
         // Alert the Order of this todo.

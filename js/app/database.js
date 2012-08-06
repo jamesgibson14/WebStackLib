@@ -6,30 +6,37 @@ Description:	This will hold or base all the javascript code dealing with databas
 */
 engine.MSSQLDB = function(options){
 	var s = {
-		provider: 'Microsoft.ACE.OLEDB.12.0',
 		database: 'CCDB',
 		source: '//smead.us/data/Share.CC/DB/HistPerm/BE/shareddb.accdb',
 		source: 'C:/DATABASES/Sync/DataControl.accdb',
-		type: 'access',
+		sqlsource: 'SQLTEST2',
+		type: 'sqlserver',
 		timeout: 5,
 		security: 'False'
 	}
 	//build ADO Connect String
-	//var conn_str = "Provider='sqloledb';Data Source='" + gblServer + "';Initial Catalog='" + gblDatabase + "';User Id=CCADMIN;Password=S3CURITY;Timeout=5";
-	this.conn_str = 'Provider='+ s.provider +';Data Source=' + s.source + ';Persist Security Info='+ s.security +';';
+	_.extend(s,options)
+	if(s.type == 'sqlserver')
+	   var conn_str = "Provider='sqloledb';Data Source='" + s.sqlsource + "';Initial Catalog='" + s.database + "';User Id=CCADMIN;Password=S3CURITY;Timeout=5";
+	else if (s.type == 'access')
+	   var conn_str = 'Provider=Microsoft.ACE.OLEDB.12.0;Data Source=' + s.source + ';Persist Security Info='+ s.security +';';
 
-	this.conn = new ActiveXObject("ADODB.Connection");
+	var conn = new ActiveXObject("ADODB.Connection");
 
 	this.executeSql = function(SQL,args,success,error){
 		var rs = new ActiveXObject("ADODB.Recordset");
 		SQL = vsprintf(SQL,args);
 		try{
-			rs = this.conn.Execute(SQL);
+		    var now = new Date();
+			rs = conn.Execute(SQL);
+			//alert('opend query time: ' + (new Date()-now));
+			now = new Date();
 			success(SQL,rs);
+			//alert('callback success run time: ' + (new Date()-now));
 			return true;
 		}
 		catch(err){
-			//alert(err.message);
+			alert(err.message);
 			error(SQL,err);
 			throw err;
 			return false;
@@ -38,17 +45,17 @@ engine.MSSQLDB = function(options){
 	this.transaction = function(func){
 		var now = new Date();
 		var res;
-		this.conn.open(this.conn_str);
-		this.conn.BeginTrans();		
-
+		conn.open(conn_str);
+		conn.BeginTrans();		
+        //alert('transaction open time: ' + (new Date()-now));
 		res = func(this);
 
 		if(res) 
-			this.conn.CommitTrans();
+			conn.CommitTrans();
 		else
-			this.conn.RollbackTrans();
-		this.conn.close;
-		alert('transaction to db time: ' + (new Date()-now));
+			conn.RollbackTrans();
+		conn.close;
+		//alert('transaction to db time: ' + (new Date()-now));
 	}
 	
 	//this.conn = "I am connected!"

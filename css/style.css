@@ -40,6 +40,9 @@ iframe {
 	font-size:20px;
 	text-align:center;
 }
+.error {
+	background-color:#C47C7C;
+}
 #todoapp {
 	width: 480px;
 	margin: 0 auto 40px;
@@ -541,7 +544,7 @@ iframe {
 	padding-right:10px;
 	text-align:center;
 	color: #4D926F;
-	font-size:24px;
+	font-size:18px;
 }
 .cell { 
 	display:table-cell;
