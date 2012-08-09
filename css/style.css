@@ -43,6 +43,9 @@ iframe {
 .error {
 	background-color:#C47C7C;
 }
+.entered {
+	background-color:#B8E4B8
+}
 #todoapp {
 	width: 480px;
 	margin: 0 auto 40px;

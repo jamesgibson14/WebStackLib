@@ -7,11 +7,13 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         className: 'PSApp',
         collection: new Collection(),
         filteredModels: [],
+        filters: false,
         template: template,
         events: {
             'blur .pid':'change',
             'click .loadtable': 'loadData',
-            'click .btnRun': 'runEntry'        
+            'click .btnRun': 'runEntry',
+            'click .filter': 'filter'        
         },
         initialize: function() {
             //this.collection.add (new Model());
@@ -44,11 +46,16 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             //alert('filter and sort');
             debugger;
             //this.collection.sort({silent:true});
-            if(false)
-                this.filteredModels = this.collection.remaining();
+            //alert('filters: ' + this.filters);
+            if(this.filters)
+                this.filteredModels = this.collection.filter(function(model){
+                    _.each(this.filters,function(filter){
+                        filter(model)
+                    })
+                });
             else
                 this.filteredModels = this.collection.models
-        
+            
             this.addAll();
         },
         addAll: function() {
@@ -83,8 +90,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var that = this;
             var _step = step;
             var _currentModel = 0;
-            var _collection = this.collection;
+            var _collection = this.filteredModels;
             var _model;
+            var _errors=false;
             var context = $('#autoentry');
             
             var map = {
@@ -111,9 +119,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 step2: function(){
                     //alert('step2: Check for logged in, then go to report screen')
                   
-                    var contents = context.contents();
-                    _model = _collection.models[_currentModel].toJSON();
-                    if(_model.flag){
+                    var contents = context.contents();                   
+                    _model = _collection[_currentModel].toJSON();                                      
+                    if(_model.flag || _model.entered){
+                         _errors = true;
                          _step = 'step10';
                         nextStep();
                         return;
@@ -163,6 +172,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var pid = contents.find('#SM_SF_PID_WRK_PRODUCTION_ID').attr("class");
                     if (pid =="PSERROR"){
                         //alert("Error with PID go to next record");
+                        var temp = {}
+                        temp.flag = _errors = true;
+                        temp.flagreason = 'AutoEntry: incorrect paper component';
+                        _collection[_currentModel].set(temp);
                         _step = 'step10';
                         nextStep();
                         return;
@@ -290,6 +303,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var num = contents.find('input[value="' + _model.componentcode + '"]');
                     if (num.length ==0){
                         alert("step9-PeopleSoftEntry" + " Could not find paper component");
+                        var temp = {}
+                        temp.flag = _errors = true;
+                        temp.flagreason = 'AutoEntry: incorrect paper component';
+                        _collection[_currentModel].set(temp);
                         _step = 'stepSaveScrap';
                         _model.endscrap = 0;
                         nextStep();
@@ -299,7 +316,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     
                     //alert('component row:' + ();
                     var txtEndScrap = contents.find('#SF_COMP_LIST_PEND_CONSUME_QTY\\$' + num);
-                    alert('parsed: ' + parseFloat(txtEndScrap.val()));
+                    //alert('parsed: ' + parseFloat(txtEndScrap.val()));
                     alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.endscrap + ' ' + (Math.round((parseFloat(txtEndScrap.val())+ parseFloat(_model.endscrap))*100)/100));
                     txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + _model.endscrap)*100)/100);
                     
@@ -317,6 +334,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         //save page here
                         
                         if(!confirm('save scrap entries ')){
+                            _errors = true;
                             _step = 'step10';
                             nextStep(); 
                         }
@@ -344,12 +362,20 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step10: function(){
                     //alert('Step10: check for errors with save.. if none go to next record');
+                    if(!_errors)
+                        _collection[_currentModel].set({entered:true});
+                    else
+                        alert('errors... not marking entered');    
+                        
                     _currentModel++;
                     if(_currentModel<_collection.length){
                         _step = 'step2';
                         nextStep();
                     }
-                    else alert('Data Entry finished');
+                    else {
+                        alert('Data Entry finished');
+                        this.collection.syncServer();
+                    }
                 }
             }
             var nextStep = function(){

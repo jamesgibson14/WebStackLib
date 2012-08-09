@@ -4,7 +4,7 @@ Author:			James Gibson
 Date:			2011-11-29
 Description:	This will hold or base all the javascript code dealing with database interaction.
 */
-engine.MSSQLDB = function(options){
+engine.ADODB = function(options){
 	var s = {
 		database: 'CCDB',
 		source: '//smead.us/data/Share.CC/DB/HistPerm/BE/shareddb.accdb',

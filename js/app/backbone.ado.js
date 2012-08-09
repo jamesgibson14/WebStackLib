@@ -58,7 +58,10 @@ _.extend(WebSQLStore.prototype,{
 	
 	findAll: function (model, success,error) {
 		//console.log("sql findAll");
-		this._executeSql("SELECT * FROM "+this.tableName,[], success, error);			
+		if(!model.sql)
+		    this._executeSql("SELECT * FROM "+this.tableName,[], success, error);	
+		else
+            this._executeSql(model.sql,[],success,error);		
 	},
 	
 	update: function (model, success, error) {

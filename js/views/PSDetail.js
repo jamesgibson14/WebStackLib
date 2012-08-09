@@ -11,6 +11,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
         // The DOM events specific to an item.
         events: {
           "click .check"              : "toggleFlag",
+          'click .chkentered':'toggleEntered',
           //"click label.todo-content"  : "showOrder",
           "dblclick label.todo-content" : "edit",
           "click span.todo-destroy"   : "clear",
@@ -29,24 +30,43 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
     
         // Re-render the contents of the todo item.
         render: function() {
-          debugger;
-          var temp = this.model.toJSON();
+            debugger;
+            var temp = this.model.toJSON();
           
-          temp = this.template(temp);
+            temp = this.template(temp);
     
-          this.$el.html( temp );
-          if(this.model.get('flag'))
-            this.$el.addClass('error');
-          else
-            this.$el.removeClass("error");
-          return this;
+            this.$el.html( temp );
+            if(this.model.get('flag'))
+                this.$el.addClass('error');
+            else
+                this.$el.removeClass("error");
+            if(this.model.get('entered'))
+                this.$el.addClass('entered');
+            else
+                this.$el.removeClass("entered");
+            return this;
         },
-        // Toggle the `"done"` state of the model.
+        // Toggle the `"flag"` state of the model.
         toggleFlag: function() {
-            var reason = prompt("Reason for Error?");
-            this.model.toggleflag(reason);
+            var temp = {};
+            if(this.$('.check').prop('checked')){
+                temp.flagreason = this.model.get('flagreason') +  prompt("Please enter the reason for flagging this PID?") + '<br />';
+                temp.flag = true;
+            }
+            else
+                temp.flag =false
+            this.model.set(temp);
         },
-        
+        // Toggle the `"flag"` state of the model.
+        toggleEntered: function() {
+            var temp = {}
+            temp.entered = !this.model.get('entered')
+            if(temp.entered)
+                temp.dateentered = new Date().format('mm/dd/yyyy h:MM:ss TT');
+            else
+                temp.dateentered = null;
+            this.model.set(temp);
+        },
         // Alert the Order of this todo.
         showOrder: function(e) {
             //console.log(e);
