@@ -13,16 +13,17 @@ require.config({
         templates: '../templates',
         models: '../models',
         modernizr: "modernizr-2.5.3",
-      	jquery: "jquery-1.7.2",
-      	jqueryUI: 'jquery-ui-1.8.16.custom.min',
-      	underscore: "lodash-0.3.1",
+      	jquery: "jquery-1.7.2.min",
+      	jqueryUI: 'jquery-ui-1.8.22.custom.min',
+	handlebars: 'handlebars-1.0.0.beta.6',
+      	underscore: "lodash-0.4.2",
       	engine: '../app/engine',
       	database: '../app/database',
       	backboneADO: '../app/backbone.ado',
       	backbone: "backbone-0.9.2",
 		ieconfig: 'ieconfig',
       	// Require.js Plugins
-      	text: "plugins/text-2.0.0"
+      	text: "text-2.0.0"
     },
     shim: {
         'backbone': {
@@ -33,10 +34,14 @@ require.config({
             //module value.
             exports: 'Backbone'
         },
+	'handlebars': {
+            exports: 'Handlebars'
+        },
         'engine': ['jquery'],
         'jqueryUI': ['jquery'],
         'database': ['engine'],
-        'backboneADO': ['backbone']
+        'backbone.iosync': ['backbone'],
+        'backbone.iobind': ['backbone.iosync']
     }
 
 });

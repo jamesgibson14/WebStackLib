@@ -1,4 +1,5 @@
-define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backboneADO','helpers','jqueryUI'], function($, Backbone, E, Handlebars, require){
+define(['jquery','backbone','engine', 'handlebars', 'require', 'database','helpers','jqueryUI','backbone.iosync', 'backbone.iobind'], 
+function($, Backbone, E, Handlebars, require){
 
     var Router = Backbone.Router.extend({
 
