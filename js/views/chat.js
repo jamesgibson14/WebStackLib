@@ -4,7 +4,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/chat', 'text!templ
 
         //... is a list tag.
         tagName:  "li",
-        className: "ui-state-default",
+        className: "chat",
         // Cache the template function for a single item.
         template: template,
     
@@ -34,7 +34,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/chat', 'text!templ
     
         rmchat: function(){
 			alert('removing chat')
-			}
+			},
         // Close the `"editing"` mode, saving changes to the todo.
         close: function() {
           this.model.set({content: this.$('.todo-input').val()});

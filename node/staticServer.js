@@ -1,14 +1,22 @@
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
- 
+var io = require('socket.io').listen(app);
+
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
+
 http.createServer(function (request, response) {
  
     console.log('request starting...');
      
     var filePath =  request.url;
     if (filePath == '/')
-        filePath = '/index.html';
+        filePath = '../index.html';
     filePath = '../' + filePath; 
     var extname = path.extname(filePath);
     var contentType = 'text/html';

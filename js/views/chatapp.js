@@ -1,9 +1,9 @@
-define(['jquery', 'backbone', 'engine','handlebars', 'models/chat', 'text!templates/chatapp.html','models/chats','text!templates/TodoStats.html','views/todo'], 
+define(['jquery', 'backbone', 'engine','handlebars', 'models/chat', 'text!templates/chatapp.html','models/chats','text!templates/TodoStats.html','views/chat'], 
 function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subView){
     var View = Backbone.View.extend({
 
         tagName:  "div",
-        className: 'PSApp',
+        className: 'chatapp',
         collection: new collection(),
         filteredModels: [],
 
@@ -13,46 +13,27 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
     
         // Delegated events for creating new items, and clearing completed ones.
         events: {
-		  'click .chat': 'chat',
-		  'keyup .text': 'typity'
+		  'click .chat': 'createOnEnter',
+		  'keyup .text': 'createOnEnter'
 		},
-		initialize: function () {
-		  _.bindAll(this);
-		   this.template = Handlebars.compile(this.template);
-		   var temp = this.template({});
-            this.$el.html( temp );
-		  $(this.el).find('.text').focus();
-		  this.input = this.$(".text");
-		},
-		chat: function () {
-		  var view = new subView({model: model});
-            this.$("#todo-list").append(view.render().el);
-		},
-		typity: function (evt) {
-		  if (evt.which === 13) {
-			this.chat();
-		  }
-		}
-    
-        // At initialization we bind to the relevant events on the `Todos`
-        // collection, when items are added or changed. Kick things off by
-        // loading any preexisting todos that might be saved in *localStorage*.
-        initialize: function() {
-            _.bindAll(this, 'addOne', 'addAll', 'render', 'toggleAllComplete','renderStats','reOrder','filter');
-            this.collection.bind('reset',     this.filter);
-             this.collection.bind('add',     this.addOne);
-             
-            this.template = Handlebars.compile(this.template);
-            this.statsTemplate = Handlebars.compile(this.statsTemplate);
-            var temp = this.template({});
-            this.$el.html( temp );
-            debugger;
-             
-            this.input = this.$("#new-todo");
-            this.renderStats();
-            this.collection.fetch();
-           
-        },
+	initialize: function () {
+		var that = this;
+	   Backbone.socket = io.connect('http://192.168.1.25');
+		Backbone.socket.on('connect',alert('socket connected'));
+	   Backbone.socket.on('newChatFromOtherUser',function(data){
+		var model = new Model(data);		
+		that.collection.add(model);
+		});
+	   _.bindAll(this, 'addOne', 'addAll', 'render', 'toggleAllComplete','renderStats','reOrder','filter');
+	this.collection.bind('add',     this.addOne, this);
+	   this.template = Handlebars.compile(this.template);
+	   var temp = this.template({});
+    	   this.$el.html( temp );
+	   $(this.el).find('.text').focus();
+	   this.input = this.$(".text");
+//	   this.collection.fetch();
+	},   
+        
         test: function(){
             //for testing UI interactions
             alert("Test Code");
@@ -80,7 +61,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
         // appending its element to the `<ul>`.
         addOne: function(model) {
             var view = new subView({model: model});
-            this.$("#todo-list").append(view.render().el);
+            this.$(".history").append(view.render().el);
         },
         
         filter: function() {
@@ -131,17 +112,17 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
         // Generate the attributes for a new Todo item.
         newAttributes: function() {
           return {
-            content: this.input.val(),
-            order:   this.collection.nextOrder(),
-            done:    false
+            text: this.input.val(),
+            author:   'james'
           };
         },
     
         // If you hit return in the main input field, create new **Todo** model,
         // persisting it to *localStorage*.
         createOnEnter: function(e) {
+	  //alert('kepup');
           if (e.keyCode != 13) return;
-          this.collection.create(this.newAttributes(),{wait:true});
+          this.collection.create(this.newAttributes());
           this.input.val('');
         },
     
