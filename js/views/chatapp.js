@@ -18,9 +18,10 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
 		},
 	initialize: function () {
 		var that = this;
-	   Backbone.socket = io.connect('http://192.168.1.25');
+	   Backbone.socket = io.connect('http://71.195.221.2:2389');
 		Backbone.socket.on('connect',alert('socket connected'));
 	   Backbone.socket.on('newChatFromOtherUser',function(data){
+		alert("new chat");		
 		var model = new Model(data);		
 		that.collection.add(model);
 		});

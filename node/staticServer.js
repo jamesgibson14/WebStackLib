@@ -4,6 +4,26 @@ var http = require("http"),
     fs = require("fs")
     port = 2389;
 
+var io = require('socket.io').listen(port);
+
+io.sockets.on('connection', function (socket) {
+ socket.emit('news', { hello: 'world' });
+ socket.on('myevent', function (data) {
+   console.log(data);
+       socket.broadcast.emit('user connected',data);
+ });
+  socket.on('ws:create', function (data, callback) {
+data.id = Math.random();
+temp = JSON.stringify(data);
+if (false) {
+callback('error');
+} else {
+// ... some data scrubbing
+socket.broadcast.emit('newChatFromOtherUser',data);
+callback(null, temp);
+}
+})
+
 http.createServer(function(request, response) {
 
   var uri = url.parse(request.url).pathname
