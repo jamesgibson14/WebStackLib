@@ -1,10 +1,40 @@
-var http = require("http"),
+var app = require('http').createServer(handler)
+  , io = require('socket.io').listen(app)
+  , fs = require('fs'),
     url = require("url"),
     path = require("path"),
-    fs = require("fs")
     port = 2389;
 
-var io = require('socket.io').listen(port);
+app.listen(port);
+
+function handler (req, res) {
+  var uri = url.parse(req.url).pathname
+    , filename = path.join(process.cwd(), uri);
+  
+  path.exists(filename, function(exists) {
+    if(!exists) {
+      res.writeHead(404, {"Content-Type": "text/plain"});
+      res.write("404 Not Found\n");
+      res.end();
+      return;
+    }
+
+	if (fs.statSync(filename).isDirectory()) filename += '/index.html';
+
+    fs.readFile(filename, "binary", function(err, file) {
+      if(err) {        
+        res.writeHead(500, {"Content-Type": "text/plain"});
+        res.write(err + "\n");
+        res.end();
+        return;
+      }
+
+      res.writeHead(200);
+      res.write(file, "binary");
+      res.end();
+    });
+  });
+}
 
 io.sockets.on('connection', function (socket) {
  socket.emit('news', { hello: 'world' });
@@ -22,36 +52,7 @@ callback('error');
 socket.broadcast.emit('newChatFromOtherUser',data);
 callback(null, temp);
 }
-})
+});
 
-http.createServer(function(request, response) {
 
-  var uri = url.parse(request.url).pathname
-    , filename = path.join(process.cwd(), uri);
-  
-  path.exists(filename, function(exists) {
-    if(!exists) {
-      response.writeHead(404, {"Content-Type": "text/plain"});
-      response.write("404 Not Found\n");
-      response.end();
-      return;
-    }
-
-	if (fs.statSync(filename).isDirectory()) filename += '/index.html';
-
-    fs.readFile(filename, "binary", function(err, file) {
-      if(err) {        
-        response.writeHead(500, {"Content-Type": "text/plain"});
-        response.write(err + "\n");
-        response.end();
-        return;
-      }
-
-      response.writeHead(200);
-      response.write(file, "binary");
-      response.end();
-    });
-  });
-}).listen(parseInt(port, 10));
-
-console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
+});
