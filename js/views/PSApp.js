@@ -35,6 +35,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var temp = this.template({});
             
             this.$el.html( temp );
+
+            if((document.location + '').indexOf('.hta','.hta')>-1) 
+                this.$('#autoentry').attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
             return this;
         },
         change: function(){
@@ -174,7 +177,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         //alert("Error with PID go to next record");
                         var temp = {}
                         temp.flag = _errors = true;
-                        temp.flagreason = 'AutoEntry: incorrect paper component';
+                        temp.flagreason = 'AutoEntry: PID closed or other error';
                         _collection[_currentModel].set(temp);
                         _step = 'step10';
                         nextStep();
@@ -239,7 +242,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //alert('step6: goto Scrap Entry PID lookup page');
                     if (!(_model.scrap > 0 || _model.endscrap > 0)){
                         //no scrap or endscrap goto next record
-                        alert("No Scrap/EndScrap: go to next record");
+                        //alert("No Scrap/EndScrap: go to next record");
                         _step = 'step10';
                         nextStep();                       
                     }
@@ -364,9 +367,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //alert('Step10: check for errors with save.. if none go to next record');
                     if(!_errors)
                         _collection[_currentModel].set({entered:true});
-                    else
-                        alert('errors... not marking entered');    
-                        
+                    else{
+                        //alert('errors... not marking entered');    
+                    } 
+                    _errors = false;
                     _currentModel++;
                     if(_currentModel<_collection.length){
                         _step = 'step2';
@@ -374,7 +378,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     }
                     else {
                         alert('Data Entry finished');
-                        this.collection.syncServer();
+                        //that.collection.syncServer();
                     }
                 }
             }

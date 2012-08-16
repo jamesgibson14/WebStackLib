@@ -1,10 +1,12 @@
-<span class='cell'>{{pid}}</span>
+<span class='cell'>{{pid}}<br />St: {{status}}</span>
 <span class='cell'>{{opseq}}</span>
 <span class='cell'>{{machine}}<br />UOM: {{UnitOfMeasure}}</span>
 <span class='cell'>{{shift}}</span>
-<span class='cell'>{{scrap}}<br />{{scrappercent}} %</span>
-<span class='cell'>{{endscrap}}</span>
-<span class='cell'>actual: {{qtycompleted}}<br />target: {{expectedqty}}</span>
+<span class='cell'>actual: {{qtycompleted}}
+	<br />target: {{expectedqty}}</span>
+<span class='cell'>{{scrap}}
+	<br />{{scrappercent}} %</span>
+<span class='cell'>{{endscrap}} <input type="checkbox" class="chkendscrap" /></span>
 <span class='cell'>{{setuptime}}</span>
 <span class='cell'>{{runtime}}</span>
 <span class='cell'>{{downtime}}</span>

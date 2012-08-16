@@ -131,7 +131,12 @@ Backbone.sync = function (method, model, options) {
             var attr ={}
             var i = 0;
             while(i<len){
-                attr[rs.fields(i).name] = rs.fields(i).value;
+                var val = rs.fields(i).value + '', sl = val.slice(0,1);
+                if(sl=='[' || sl == '{')
+                    attr[rs.fields(i).name] = JSON.parse( rs.fields(i).value);
+                else{
+                    attr[rs.fields(i).name] = rs.fields(i).value;
+                }
                 i++;   
             }            
             result.push(attr);

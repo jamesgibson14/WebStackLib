@@ -3,7 +3,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
     var View = Backbone.View.extend({
 
         //... is a list tag.
-        tagName:  "li",
+        tagName:  "div",
         className: "row",
         // Cache the template function for a single item.
         template: template,

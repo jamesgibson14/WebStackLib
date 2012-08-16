@@ -27,11 +27,10 @@ define([
             
         },
         syncServer: function(){
-            var sql = "",
-            params = [temp,this.get('pid'),this.get('opseq'),this.get('Paper_ID')],
-            success = function(sql){alert('sucess Psoft updated: ' + sql);},error = function(sql){alert('error on: ' + sql);};
-            if (this.get('Paper_ID')) 
-                sql += 'AND Paper_ID = %s;';
+            var sql = "UPDATE dbo_ProductionDataDetails INNER JOIN tblData2 ON dbo_ProductionDataDetails.RecordID = tblData2.RecordID SET dbo_ProductionDataDetails.PSoft = [tblData2].[PSoft] WHERE (((([dbo_ProductionDataDetails].[PSoft]))<>([tblData2].[PSoft])));",
+            params = [],
+            success = function(sql){return;},error = function(sql){alert('error on: ' + sql);};
+
             this.db.transaction(function(db) {
                 return db.executeSql(sql, params, success, error);
             });  
