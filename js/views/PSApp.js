@@ -63,9 +63,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         },
         addAll: function() {
             // create in memory element
-            var $el = this.$('#pidList').clone(true,true); 
+            var $el = this.$('#pidList').clone(true,true);
+            var header = $el.find('.header').clone(true,true);
             // also get the `className`, `id`, `attributes` if you need them 
-            //$el.empty();
+            $el.empty();
+            $el.append(header);
             // append everything to the in-memory element 
             _.each(this.filteredModels, function(model){ 
                 var rowView = new subView({model: model}); 
@@ -103,7 +105,13 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //alert('step1: wait for login screen then login.');
                     var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
-                   
+                    if (context.attr('src') != 'http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login'){
+                        _step = 'step10';
+                        _errors = true;
+                        _currentModel = -1;
+                        nextStep();
+                        return;
+                    }
                     if (contents.find('#userid').length  == 0){
                         //if not loaded yet... run agian
                         nextStep();
