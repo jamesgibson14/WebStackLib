@@ -1,5 +1,6 @@
-define(['jquery', 'backbone', 'engine','handlebars', 'models/machineperformance', 'text!templates/TodoApp.html','models/machineperformanceCollection','text!templates/MachPerfApp.html','views/todo'], 
-function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subView){
+define(['jquery', 'backbone', 'engine','handlebars',  'text!templates/MachPerfApp.html','models/machineperformanceCollection','text!templates/MachPerfApp.html','views/machineperformance'], 
+function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
+    debugger;
     var View = Backbone.View.extend({
 
         tagName:  "div",
@@ -13,146 +14,77 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
     
         // Delegated events for creating new items, and clearing completed ones.
         events: {
-          "keypress #new-todo":  "createOnEnter",
-          "keyup #new-todo":     "showTooltip",
-          "click .todo-clear a": "clearCompleted",
-          "click .mark-all-done": "toggleAllComplete",
-          "click .filter-all-done": "filter",
-          'click #btnTest': 'test'
+          'click .loadtable': 'loadData'
         },
     
         // At initialization we bind to the relevant events on the `Todos`
         // collection, when items are added or changed. Kick things off by
         // loading any preexisting todos that might be saved in *localStorage*.
-        initialize: function() {
-            _.bindAll(this, 'addOne', 'addAll', 'render', 'toggleAllComplete','renderStats','reOrder','filter');
-            this.collection.bind('reset',     this.filter);
-             this.collection.bind('add',     this.addOne);
-             
+        initialize: function() {            
             this.template = Handlebars.compile(this.template);
-            this.statsTemplate = Handlebars.compile(this.statsTemplate);
-            var temp = this.template({});
-            this.$el.html( temp );
-            debugger;
-             
-            this.input = this.$("#new-todo");
-            this.renderStats();
-            this.collection.fetch();
+            _.bindAll(this, 'render','filter','addAll', 'loadData');
+            this.collection.bind('reset',     this.filter);
+           var that = this;
+           setInterval(function(){that.loadData();},1000*5);
            
         },
-        test: function(){
-            //for testing UI interactions
-            alert("Test Code");
-            
+        loadData: function(){
+            debugger;
+            //alert(this.filteredModels.length);
+            var that = this;
+            $.each(this.filteredModels,function(index,model){              
+                that.filteredModels[0].destroy();            
+            });
+
+            //this.filteredModels = []
+            this.collection.fetch();
         },
-    
-        // Re-rendering the App just means refreshing the statistics -- the rest
-        // of the app doesn't change.
+        // Re-render the contents of the todo item.
         render: function() {
+            //var temp = this.model.toJSON();
+            this.$el.empty();
+            var temp = this.template({});
+            
+            this.$el.html( temp );
+
+            if((document.location + '').indexOf('.hta','.hta')>-1) 
+                this.$('#autoentry').attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
+            this.collection.fetch();
             return this;
         },
-        renderStats: function() {
-            var done = this.collection.done().length;
-            var remaining = this.collection.remaining().length;
-    
-            this.$('#todo-stats').html(this.statsTemplate({
-                total:      this.collection.length,
-                done:       done,
-                remaining:  remaining
-            }));
-            this.$(".mark-all-done")[0].checked = !remaining;
-        },
-    
-        // Add a single todo item to the list by creating a view for it, and
-        // appending its element to the `<ul>`.
-        addOne: function(model) {
-            var view = new subView({model: model});
-            this.$("#todo-list").append(view.render().el);
-        },
-        
-        filter: function() {
+        filter: function(){
             //alert('filter and sort');
-            debugger;
-            this.collection.sort({silent:true});
-            if(this.$(".filter-all-done")[0].checked)
-                this.filteredModels = this.collection.remaining();
+            //this.collection.sort({silent:true});
+            //alert('filters: ' + this.filters);
+            //alert(this.collection.length);
+            if(this.filters)
+                this.filteredModels = this.collection.filter(function(model){
+                    _.each(this.filters,function(filter){
+                        filter(model)
+                    })
+                });
             else
                 this.filteredModels = this.collection.models
-        
+            
             this.addAll();
         },
-        reOrder: function(event, ui) {
-            //alert('pos: ' + ui.item.index() + ', ' + ui.placeholder.index());
-            var now = new Date();
-            
-            var that = this;
-            this.$('div.todo').each(function(i){
-                
-                var id = $(this).attr('data-id');
-                var model = that.collection.get(id); 
-                model.save({order: i + 1},{silent:true});
-            });
-            alert(new Date()-now);
-        },
-        
-        // Add all items in the **Todos** collection at once.
         addAll: function() {
             // create in memory element
-            this.$('#todo-list').sortable('destroy');
-            var $el = this.$('#todo-list').clone(true,true); 
+            var $ele = this.$('#list').clone(true,true);
+            var header = $ele.find('.header').clone(true,true);
             // also get the `className`, `id`, `attributes` if you need them 
-            $el.empty();
+            $ele.empty();
+            $ele.append(header);
             // append everything to the in-memory element 
-            _.each(this.filteredModels, function(model){ 
-                var rowView = new subView({model: model}); 
-                $el.append(rowView.render().el); 
-            }); 
-            $el.sortable({
-                update: this.reOrder
-            });
-            // replace the old view element with the new one, in the DOM 
-            this.$("#todo-list").replaceWith($el);//.replaceWith($el); 
             
-        },
-    
-        // Generate the attributes for a new Todo item.
-        newAttributes: function() {
-          return {
-            content: this.input.val(),
-            order:   this.collection.nextOrder(),
-            done:    false
-          };
-        },
-    
-        // If you hit return in the main input field, create new **Todo** model,
-        // persisting it to *localStorage*.
-        createOnEnter: function(e) {
-          if (e.keyCode != 13) return;
-          this.collection.create(this.newAttributes(),{wait:true});
-          this.input.val('');
-        },
-    
-        // Clear all done todo items, destroying their models.
-        clearCompleted: function() {
-          _.each(this.collection.done(), function(todo){ todo.destroy(); });
-          return false;
-        },
-    
-        // Lazily show the tooltip that tells you to press `enter` to save
-        // a new todo item, after one second.
-        showTooltip: function(e) {
-          var tooltip = this.$(".ui-tooltip-top");
-          var val = this.input.val();
-          tooltip.fadeOut();
-          if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
-          if (val == '' || val == this.input.attr('placeholder')) return;
-          var show = function(){ tooltip.show().fadeIn(); };
-          this.tooltipTimeout = _.delay(show, 1000);
-        },
-    
-        toggleAllComplete: function () {
-          var done = this.allCheckbox.checked;
-          this.collection.each(function (todo) { todo.set({'done': done}); });
+            _.each(this.filteredModels, function(model){ 
+
+                var rowView = new subView({model: model}); 
+                $ele.append(rowView.render().el); 
+            }); 
+            // replace the old view element with the new one, in the DOM 
+            this.$("#list").replaceWith($ele);//.replaceWith($el); 
+            
         }
 
     });

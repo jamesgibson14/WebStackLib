@@ -2,41 +2,12 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'engine',
-  'models/todo'
-], function($, _, Backbone, E, Model){
+  'engine'
+], function($, _, Backbone, E){
   var collection = Backbone.Collection.extend({
-// Reference to this collection's model.
-    model: Model,
-    urlRoot: '/machineperformance',
-    url: function(){ return this.urlRoot;},
-    // set all of the todo items under the `"todos"` namespace.
-    //localStorage: new Store("todos-backbone"),
-    sql: 'Execute dbo.spGetDataForPeopleSoftEntry',
-    store: new WebSQLStore(new E.MSSQLDB(),'todos'),
-    
-    // Filter down the list of all todo items that are finished.
-    done: function() {
-      //alert('done');
-      return this.filter(function(model){ return model.get('done'); });
-    },
 
-    // Filter down the list to only todo items that are still not finished.
-    remaining: function() {
-      return this.without.apply(this, this.done());
-    },
-
-    // We keep the Todos in sequential order, despite being saved by unordered
-    // GUID in the database. This generates the next order number for new items.
-    nextOrder: function() {
-      if (!this.length) return 1;
-      return this.last().get('order') + 1;
-    },
-
-    // Todos are sorted by their original insertion order.
-    comparator: function(model) {
-      return model.get('order');
-    }
+    sql: 'Execute dbo.spKioskPerformanceData',
+    store: new WebSQLStore(new E.ADODB(),'dbo.spKioskPerformanceData',false)
   });
 
   return collection;

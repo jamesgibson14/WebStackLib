@@ -2,10 +2,28 @@
 	<h1>{{title}}</h1>
 </div>
 <div class="content">
-	<button id="btnTest">Tester</button>
-	<div id="listArea">
+	<button class='loadtable'>Load Machines</button>
+	<div id="listArea" class="table">
 
-	  <ul id="list"> </ul>
+	  <div id="list" class="table"> 
+	  	<div class='row header'>
+	  		<span class="hcell">Cell</span>
+	  		<span class="hcell">Workcenter</span>
+	  		<span class="hcell">Machine</span>
+			<span class="hcell" colspan="3">Pieces Per Hour<br /><span class="hcell">Month</span>
+			<span class="hcell">Week</span>
+			<span class="hcell">Day</span></span>
+			<span class="hcell " colspan="3">Machine Uptime %<br /><span class="hcell">Month</span>
+			<span class="hcell">Week</span>
+			<span class="hcell">Day</span></span>
+			<span class="hcell" colspan="3">Scrap %<br /><span class="hcell">Month</span>
+			<span class="hcell">Week</span>
+			<span class="hcell">Day</span></span>
+			<span class="hcell" colspan="3">Goal %<br /><span class="hcell">Month</span>
+			<span class="hcell">Week</span>
+			<span class="hcell">Day</span></span>
+		</div>
+	  </div>
 	</div>
 	
 	<div id="list-stats"> </div>

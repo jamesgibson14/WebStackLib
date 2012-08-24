@@ -1,7 +1,15 @@
 define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backboneADO','helpers','jqueryUI'], function($, Backbone, E, Handlebars, require){
-
+    Backbone.View.prototype.close = function () {    
+        if (this.beforeClose) {        
+            this.beforeClose();    
+        }    
+        this.remove();
+        if(this.unbindAll)
+            this.unbindAll();    
+        this.unbind();
+    };
     var Router = Backbone.Router.extend({
-
+        mainView: null,
         initialize: function(){
         
             // Tells Backbone to start watching for hashchange events
@@ -14,16 +22,18 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
 
             // When there is no hash bang on the url, the home method is called
             '': 'home',
-            'main/:view': 'main',
+            'main/:view/:random': 'main',
             'tab/:view': 'tab'
 
         },
 
         'home': function(){
-           
+            var that = this;
+            if (this.mainView)
+                this.mainView.close();
             require(['views/view'], function(View) { 
-               
-                var view = new View().render().el;
+                that.mainView = new View();
+                var view = that.mainView.render().el;
                  $('#bodyview').html(view);
             }); 
 
@@ -31,9 +41,9 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
             //!!! I could extend view for security ie: Dev view extends "editor view" which extends "read only view"
             //anotherView.promptUser();
         },
-        'main': function(view){
+        'main': function(view,random){
         	
-        	
+        	//alert(random);
         	//var v1 = E.loadModule('js/views/' + view + '.js');//{url: 'js/views/' + view + '.js', dataType: 'script'}
         	
         	require(['views/' + view], function(View) { 

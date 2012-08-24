@@ -1,8 +1,23 @@
-<div class="machperf">
-    <div class="display">
-    	{{code}}      
-    </div>
-    <div class="edit">
-      <input class="model-input" type="text" value="{{ content }}" />
-    </div>
-</div>
+<span class='cell'>{{Cell}}</span>     
+<span class='cell'>{{Workcenter}}</span>    
+<span class='cell'>{{MachineCode}}</span>
+<span class='cell'>    
+	<span class='icell'>{{ ProductionRateMonth }}</span>
+	<span class='icell'>{{ ProductionRateWeek }}</span>
+	<span class='icell'>{{ ProductionRateDay }}</span>
+</span>
+<span class='cell'>    
+	<span class='icell'>{{ MachineRunTimePercentageMonth }}%</span>
+	<span class='icell'>{{ MachineRunTimePercentageWeek }}%</span>
+	<span class='icell'>{{ MachineRunTimePercentageDay }}%</span>
+</span>
+<span class='cell'>    
+	<span class='icell'>{{ ScrapPercentageMonth }}%</span>
+	<span class='icell'>{{ ScrapPercentageWeek }}%</span>
+	<span class='icell'>{{ ScrapPercentageDay }}%</span>
+</span>
+<span class='cell'>    
+	<span class='icell'>{{ GoalPercentageMonth }}%</span>
+	<span class='icell'>{{ GoalPercentageWeek }}%</span>
+	<span class='icell'>{{ GoalPercentageDay }}%</span>
+</span>

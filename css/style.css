@@ -539,7 +539,9 @@ iframe {
 	position: relative;
 	top: 1px;
 }
-
+.table {
+	display:table;
+}
 .hcell { 
 	display:table-cell;
 	padding:5px;
@@ -547,10 +549,18 @@ iframe {
 	padding-right:10px;
 	text-align:center;
 	color: #4D926F;
-	font-size:18px;
+	font-size:16px;
+}
+.column {
+	display:table-column;
 }
 .cell { 
 	display:table-cell;
+	padding:5px;
+	text-align:center;
+	border:1px solid black;
+}
+.icell { 
 	padding:5px;
 	text-align:center;
 	border:1px solid black;
