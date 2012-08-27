@@ -22,7 +22,7 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
 
             // When there is no hash bang on the url, the home method is called
             '': 'home',
-            'main/:view/:random': 'main',
+            'main/:view': 'main',
             'tab/:view': 'tab'
 
         },
@@ -41,7 +41,7 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
             //!!! I could extend view for security ie: Dev view extends "editor view" which extends "read only view"
             //anotherView.promptUser();
         },
-        'main': function(view,random){
+        'main': function(view){
         	
         	//alert(random);
         	//var v1 = E.loadModule('js/views/' + view + '.js');//{url: 'js/views/' + view + '.js', dataType: 'script'}
