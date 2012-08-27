@@ -3,8 +3,8 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/machineper
     var View = Backbone.View.extend({
 
         //... is a list tag.
-        tagName:  "div",
-        className: "row",
+        tagName:  "tr",
+        className: "row odd",
 
         template: template,
     

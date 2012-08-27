@@ -77,9 +77,10 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
             $ele.append(header);
             // append everything to the in-memory element 
             
-            _.each(this.filteredModels, function(model){ 
-
-                var rowView = new subView({model: model}); 
+            _.each(this.filteredModels, function(model,index){ 
+                var cl = 'row'
+                if (index % 2 !=0) cl = 'row odd'
+                var rowView = new subView({model: model,className: cl}); 
                 $ele.append(rowView.render().el); 
             }); 
             // replace the old view element with the new one, in the DOM 
