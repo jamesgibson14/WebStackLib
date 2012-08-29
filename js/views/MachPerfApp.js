@@ -32,7 +32,6 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
                     else
                         alert(document.location = document.location.pathname.slice(1) + '?module=MachPerfApp')
                },1000*60*10);
-
         },
         loadData: function(){
             debugger;

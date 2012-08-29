@@ -16,11 +16,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             'click .filter': 'filter'        
         },
         initialize: function() {
-            //this.collection.add (new Model());
-            //this.collection.add (new Model({pid: 'PID151700a'}));
-            //this.collection.add (new Model());
-            
-            this.template = Handlebars.compile(this.template);
+          this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','change','enterPeopleSoftScript','tester','filter');
             this.collection.bind('reset',     this.filter);
             
@@ -74,8 +70,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 $el.append(rowView.render().el); 
             }); 
             // replace the old view element with the new one, in the DOM 
-            this.$("#pidList").replaceWith($el);//.replaceWith($el); 
-            
+            this.$("#pidList").replaceWith($el);//.replaceWith($el);             
         },
         runEntry: function(){
             var url = 'http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login';
@@ -248,7 +243,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step6: function(){
                     //alert('step6: goto Scrap Entry PID lookup page');
-                    if (!(_model.scrap > 0 || _model.endscrap > 0)){
+                    if (!(_model.scrap > 0 || _model.PaperConverting > 0)){
                         //no scrap or endscrap goto next record
                         //alert("No Scrap/EndScrap: go to next record");
                         _step = 'step10';

@@ -29,9 +29,12 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
 
         'home': function(){
             var that = this;
+            var view = 'view';
+            if(E.GET['module'] != undefined)
+               view = E.GET['module'];
             if (this.mainView)
                 this.mainView.close();
-            require(['views/view'], function(View) { 
+            require(['views/'+view], function(View) { 
                 that.mainView = new View();
                 var view = that.mainView.render().el;
                  $('#bodyview').html(view);
@@ -42,11 +45,10 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
             //anotherView.promptUser();
         },
         'main': function(view){
-        	
-        	//alert(random);
-        	//var v1 = E.loadModule('js/views/' + view + '.js');//{url: 'js/views/' + view + '.js', dataType: 'script'}
-        	
-        	require(['views/' + view], function(View) { 
+            if(E.GET['module'] != undefined)
+               view = E.GET['module'];
+
+            require(['views/' + view], function(View) { 
                 
                 var view = new View().render().el;
                 
@@ -54,9 +56,9 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
             }); 
         },
         'tab': function(view){
-        	//if not loaded... load
-        	//add to tabs
-        	//switch to new tab
+            //if not loaded... load
+            //add to tabs
+            //switch to new tab
         }
     });
 
