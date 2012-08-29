@@ -25,11 +25,13 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
             _.bindAll(this, 'render','filter','addAll', 'loadData');
             this.collection.bind('reset',     this.filter);
            var that = this;
-           setInterval(function(){
-                    alert('loading data');
-                    that.loadData();
-               },1000*60);
-           
+           setTimeout(function(){
+                    debugger;
+                    if(E.ui == 'hta')
+                        document.location = document.location.pathname + '?module=MachPerfApp';
+                    else
+                        alert(document.location = document.location.pathname.slice(1) + '?module=MachPerfApp')
+               },1000*5);
         },
         loadData: function(){
             debugger;
