@@ -554,6 +554,17 @@ iframe {
 	text-align:center;
 	color: #4D926F;
 	font-size:16px;
+	border:1px solid black;
+}
+.hicell { 
+	display:table-cell;
+	padding:5px;
+	padding-left:10px;
+	padding-right:10px;
+	text-align:center;
+	color: #4D926F;
+	font-size:16px;
+	border:1px solid black;
 }
 .column {
 	display:table-column;
@@ -565,7 +576,7 @@ iframe {
 	border:1px solid black;
 }
 .icell { 
-	padding:5px;
+	padding:4px;
 	text-align:center;
 	border:1px solid black;
 }

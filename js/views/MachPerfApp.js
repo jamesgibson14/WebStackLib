@@ -25,7 +25,10 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
             _.bindAll(this, 'render','filter','addAll', 'loadData');
             this.collection.bind('reset',     this.filter);
            var that = this;
-           setInterval(function(){that.loadData();},1000*60*10);
+           setInterval(function(){
+                    alert('loading data');
+                    that.loadData();
+               },1000*60);
            
         },
         loadData: function(){
