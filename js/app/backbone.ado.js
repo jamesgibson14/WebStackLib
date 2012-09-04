@@ -11,10 +11,11 @@ function guid() {
 
 // ====== [ WebSQLStore ] ======
 
-var WebSQLStore = function (db, tableName, createTable, initSuccessCallback, initErrorCallback) {
+var WebSQLStore = function (db, tableName, createTable, isJSON, initSuccessCallback, initErrorCallback) {
 	var success, error;
 	this.createTable = createTable || false;
 	this.tableName = tableName;
+	this.isJSON = isJSON || false;
 	this.db = db;
 	if(createTable){
     	success = function (tx,res) {
@@ -34,6 +35,7 @@ _.extend(WebSQLStore.prototype,{
 	
 	create: function (model,success,error) {
 		//when you want use your id as identifier, use apiid attribute
+		
 		if (model.attributes.apiid) {
 			model.id = model.attributes.id = model.attributes.apiid;
 		}
@@ -110,43 +112,44 @@ Backbone.sync = function (method, model, options) {
 		return;
 	}
 	 debugger;
-	success = function (tx, rs) {
-	   
+	success = function (tx, rs) {	   
 	    
 		var count = 0,len = rs.Fields.Count,result = [];
-		/*
-		try{
-		    while (!rs.ActiveConnection || !rs.eof){
-			
-    			result.push(JSON.parse(rs.fields('value').value));
-    			rs.movenext;
-    			count++;
-			}
-		} 
-		catch(err){
-		    
+		if(store.isJSON) {		
+    		try{
+    		    while (!rs.ActiveConnection || !rs.eof){
+    			
+        			result.push(JSON.parse(rs.fields('value').value));
+        			rs.movenext;
+        			count++;
+    			}
+    		} 
+    		catch(err){
+    		    
+    		}		
 		}
-		*/
-		while (!rs.ActiveConnection || !rs.eof){
-            var attr ={}
-            var i = 0;
-            while(i<len){
-                var val = rs.fields(i).value + '', sl = val.slice(0,1);
-                if(sl=='[' || sl == '{')
-                    attr[rs.fields(i).name] = JSON.parse( rs.fields(i).value);
-                else if(rs.fields(i).name.indexOf('time')>-1){
-                       attr[rs.fields(i).name] = Math.round(rs.fields(i).value*100)/100
-                }                
-                else{
-                    attr[rs.fields(i).name] = rs.fields(i).value;
-                }
-                i++;   
-            }            
-            result.push(attr);
-            rs.movenext;
-            count++;
-        }
-		options.success(result);
+		else {
+    		while (!rs.ActiveConnection || !rs.eof){
+                var attr ={}
+                var i = 0;
+                while(i<len){
+                    var val = rs.fields(i).value + '', sl = val.slice(0,1);
+                    if(sl=='[' || sl == '{')
+                        attr[rs.fields(i).name] = JSON.parse( rs.fields(i).value);
+                    else if(rs.fields(i).name.indexOf('time')>-1){
+                           attr[rs.fields(i).name] = Math.round(rs.fields(i).value*100)/100
+                    }                
+                    else{
+                        attr[rs.fields(i).name] = rs.fields(i).value;
+                    }
+                    i++;   
+                }            
+                result.push(attr);
+                rs.movenext;
+                count++;
+            }
+	   }
+	   options.success(result);
 	};
 	error = function (tx,error) {
 		//console.log("sql error");

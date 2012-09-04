@@ -40,7 +40,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
             this.collection.fetch();
            
         },
-        test: function(){
+        test: function(e){
             //for testing UI interactions
             alert("Test Code");
             
@@ -130,6 +130,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
           if (e.keyCode != 13) return;
           this.collection.create(this.newAttributes(),{wait:true});
           this.input.val('');
+          e.preventDefault();
         },
     
         // Clear all done todo items, destroying their models.

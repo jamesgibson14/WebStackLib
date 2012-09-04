@@ -5,7 +5,6 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
     // Default attributes for the todo.
     defaults: {
       content: "empty todo...",
-	  assignedTo: "james",
       done: false
     },
 	url: function(){ return this.isNew() ? '/todos' : '/todos/' + this.get('id');},

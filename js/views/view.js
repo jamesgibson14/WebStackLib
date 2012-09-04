@@ -28,9 +28,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
         render: function() {
             var temp = this.model.toJSON();
             this.$el.append(this.template(temp));
-            this.$el.tabs({
-   select: function(event, ui) { alert('tab selected'); }
-});
+            this.$el.find('#tabs').buttonset();
             return this;
         },
 
