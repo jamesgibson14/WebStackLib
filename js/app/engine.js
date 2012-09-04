@@ -378,6 +378,10 @@
         var parts = document.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
             vars[key] = value;
         });
+        if(hta.commandLine)
+            var parts = hta.commandLine.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                vars[key] = value;
+            });
         return vars;
         /* Example of use
         var first = getUrlVars()["id"];

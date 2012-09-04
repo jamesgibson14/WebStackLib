@@ -211,6 +211,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         });
                         return;
                     }
+                    //no Agency Associates
+                    if(_model.operator.indexOf('T'<-1))
+                        _model.operator = '';
+                    
                     var shift = (_model.shift == "F") ? 1 : 2;
                     var txtMachine = contents.find('#SM_SF_SHIFT_RPT_MACHINE_CODE\\$0').val(_model.machine);
                     var txtDate = contents.find('#SM_SF_SHIFT_RPT_OP_START_DT\\$0').val(_model.date);
@@ -243,7 +247,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step6: function(){
                     //alert('step6: goto Scrap Entry PID lookup page');
-                    if (!(_model.scrap > 0 || _model.PaperConverting > 0)){
+                    if (!(_model.scrap > 0 || _model.PaperConverting == 1)){
                         //no scrap or endscrap goto next record
                         //alert("No Scrap/EndScrap: go to next record");
                         _step = 'step10';
@@ -269,6 +273,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     if(_model.scrap<0) 
                         frm.SF_PRDN_PRM_WRK_REVERSE_COMPL$chk.value = "y";
                     //alert('check for negative: ' + frm.SF_PRDN_PRM_WRK_REVERSE_COMPL$chk.value);
+                    
                     frm.ICAction.value="SF_PB_WRK_RFR_PRDN_COMPL_PB";
                     frm.submit();
                     _step = 'step8';
@@ -281,7 +286,17 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var txtMachine = contents.find('#SM_SFRPTLINK_WK_MACHINE_CODE\\$0')
-                    if(txtMachine.length==0){
+                    if (_model.assortment && _model.PaperConverting){
+                        //only enter endscrap which is process scrap converted to feet + endscrap
+                        var frm = fr.forms[1];
+                        frm.ICAction.value = "#ICPanel18";
+                        frm.submit();
+                        _step = 'step9';
+                        context.one('load', function(){
+                            nextStep();       
+                        }); 
+                    }
+                    else if(txtMachine.length==0){
                         var txtScrapQty = contents.find('#SF_COMPL_WRK_SCRAPPED_QTY\\$0').val(_model.scrap);
                         var op = contents.find('#SF_COMPL_WRK_COMPL_OP_SEQ\\$0');               
                         op.val(_model.opseq);
@@ -306,26 +321,24 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //alert('step9: Find Paper component and add on endscrap length, Save and go to next PID')
                     var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
-                    var num = contents.find('input[value="' + _model.componentcode + '"]');
-                    if (num.length ==0){
-                        alert("step9-PeopleSoftEntry" + " Could not find paper component");
-                        var temp = {}
-                        temp.flag = _errors = true;
-                        temp.flagreason = 'AutoEntry: incorrect paper component';
-                        _collection[_currentModel].set(temp);
-                        _step = 'stepSaveScrap';
-                        _model.endscrap = 0;
-                        nextStep();
-                        return; 
-                    }
-                    num = num.attr("id").substr(-1);
-                    
-                    //alert('component row:' + ();
-                    var txtEndScrap = contents.find('#SF_COMP_LIST_PEND_CONSUME_QTY\\$' + num);
-                    //alert('parsed: ' + parseFloat(txtEndScrap.val()));
-                    alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.endscrap + ' ' + (Math.round((parseFloat(txtEndScrap.val())+ parseFloat(_model.endscrap))*100)/100));
-                    txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + _model.endscrap)*100)/100);
-                    
+                    var temp = {}
+                    for(var i=0,len=_model.componentcode.length;i<len;i++){
+                        var num = contents.find('input[value="' + _model.componentcode[i].cc + '"]');
+                        if (num.length ==0){
+                            alert("step9-PeopleSoftEntry" + " Could not find paper component");
+                            
+                            temp.flag = _errors = true;
+                            temp.flagreason = 'AutoEntry: incorrect paper component: ' + _model.componentcode[i].cc;
+                            _collection[_currentModel].set(temp);
+                        }
+                        num = num.attr("id").substr(-1);
+                        
+                        //alert('component row:' + ();
+                        var txtEndScrap = contents.find('#SF_COMP_LIST_PEND_CONSUME_QTY\\$' + num);
+                        //alert('parsed: ' + parseFloat(txtEndScrap.val()));
+                        alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.componentcode[i].es + ' + ' + _model.componentcode[i].sc +' = ' + (Math.round((parseFloat(txtEndScrap.val())+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
+                        txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100);
+                    }  
                     _model.endscrap = 0;  
                    //submitAction_main0(document.main0, '#ICPanel18')
                    _step = 'stepSaveScrap';

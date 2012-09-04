@@ -1,6 +1,17 @@
 <div id="header">
-	<button id="restart">Restart App</button><a href="#main/view">Home</a>
+	<button id="restart" class="restart">Restart App</button><a href="#main/view">Home</a>
+	<div id='tabs'>
+		<ul>
+			<li><a href="#tabs-home" >Home</a></li>
+			<li><a href="#main/TodoApp" >Main: Todolist</a></li>
+			<li><a href="#main/PSApp" >Main: PeopleSoft Entry</a></li>
+			<li><a href="#main/KioskApp" >Main: Kiosk</a><br /></li>
+			<li><a href="#main/MachPerfApp" >Main: Machine Performance</a></li>
+		</ul>
+		<div id="tabs-home">Hello Home tab</div>
+	</div>
 </div>
+
 <div id="mainview">
 	<h1>Your Template says:</h1>
 	<h3 id="mcontent">{{content }}</h3>

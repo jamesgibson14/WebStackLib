@@ -50,6 +50,9 @@ iframe {
 .odd {
 	background-color:#C47C7C;
 }
+.restart{
+	float:right;
+}
 #todoapp {
 	width: 480px;
 	margin: 0 auto 40px;

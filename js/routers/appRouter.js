@@ -8,6 +8,7 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
             this.unbindAll();    
         this.unbind();
     };
+    
     var Router = Backbone.Router.extend({
         mainView: null,
         initialize: function(){

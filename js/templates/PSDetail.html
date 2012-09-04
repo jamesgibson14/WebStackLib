@@ -12,6 +12,11 @@
 <span class='cell'>{{downtime}}</span>
 <span class='cell'>{{operator}}</span>
 <span class='cell'>{{date}}</span>
-<span class='cell'>{{componentcode}}<br />F: {{feedup}}</span>
+<span class='cell'>
+{{#each componentcode}}
+  {{this.cc}}<br />
+{{/each}}
+{{#if PaperConverting}}F: {{feedup}}{{/if}}
+</span>
 <span class='cell'><input type="checkbox" class="check" {{#if flag}}checked="checked"{{/if}}  /><br />{{{flagreason}}}</span>
 <span class='cell'><input type="checkbox" class="chkentered" {{#if entered}}checked="checked"{{/if}}  /><br />{{dateentered}}</span>

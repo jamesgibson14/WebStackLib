@@ -12,7 +12,7 @@ define([
     url: function(){ return this.urlRoot;},
     // set all of the todo items under the `"todos"` namespace.
     //localStorage: new Store("todos-backbone"),
-    store: new WebSQLStore(new E.MSSQLDB(),'todos'),
+    store: new WebSQLStore(new E.ADODB(),'todos'),
     
     // Filter down the list of all todo items that are finished.
     done: function() {
