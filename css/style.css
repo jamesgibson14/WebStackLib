@@ -579,12 +579,13 @@ tr {
 	display:table-cell;
 	padding:5px;
 	text-align:center;
-	font-weight:900;
+	font-weight:600;
 }
-.icell { 
+.mcell { 
 	padding:4px;
-	text-align:center;
-	border:1px solid black;
+	text-align:center;;
+	font-weight:900;
+	font-size: 16px;
 }
 .row {
 	display:table-row;
