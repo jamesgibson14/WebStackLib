@@ -14,7 +14,7 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
     
         // Delegated events for creating new items, and clearing completed ones.
         events: {
-          'click .loadtable': 'loadData'
+          'click .loadtable': 'addWeekday'
         },
     
         // At initialization we bind to the relevant events on the `Todos`
@@ -22,31 +22,28 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
         // loading any preexisting todos that might be saved in *localStorage*.
         initialize: function() {            
             this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','filter','addAll', 'loadData');
+            _.bindAll(this, 'render','filter','addAll', 'addWeekday');
             this.collection.bind('reset',     this.filter);
            var that = this;
            setTimeout(function(){
+                    
                     debugger;
                     if(E.ui == 'hta')
                         document.location = document.location.pathname + '?module=MachPerfApp';
                     else
-                        alert(document.location = document.location.pathname.slice(1) + '?module=MachPerfApp')
+                        document.location = document.location.pathname.slice(1) + '?module=MachPerfApp';
+                    
+                   //that.collection.fetch();
                },1000*60*10);
         },
-        loadData: function(){
+        addWeekday: function(){
             debugger;
-            //alert(this.filteredModels.length);
-            var that = this;
-            $.each(this.filteredModels,function(index,model){              
-                that.filteredModels[0].destroy();            
-            });
-
-            //this.filteredModels = []
-            this.collection.fetch();
+            var wkdy = new Date('' + this.filteredModels[0].get('Weekday'));
+            wkdy = wkdy.format('ddd mmm-d');
+            this.$('.day').text(wkdy);
         },
         // Re-render the contents of the todo item.
         render: function() {
-            //var temp = this.model.toJSON();
             this.$el.empty();
             var temp = this.template({});
             
@@ -58,10 +55,6 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
             return this;
         },
         filter: function(){
-            //alert('filter and sort');
-            //this.collection.sort({silent:true});
-            //alert('filters: ' + this.filters);
-            //alert(this.collection.length);
             if(this.filters)
                 this.filteredModels = this.collection.filter(function(model){
                     _.each(this.filters,function(filter){
@@ -76,21 +69,16 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
         addAll: function() {
             // create in memory element
             var $ele = this.$('#list').clone(true,true);
-            var header = $ele.find('.header').clone(true,true);
-            // also get the `className`, `id`, `attributes` if you need them 
-            $ele.empty();
-            $ele.append(header);
-            // append everything to the in-memory element 
             
             _.each(this.filteredModels, function(model,index){ 
-                var cl = 'row'
-                if (index % 2 !=0) cl = 'row odd'
-                var rowView = new subView({model: model,className: cl}); 
-                $ele.append(rowView.render().el); 
+                var rowView = new subView({model: model});
+                var screenRow =  $ele.find("#m"+model.get('MachineCode'));
+                screenRow.append(rowView.render().el); 
             }); 
+            
             // replace the old view element with the new one, in the DOM 
             this.$("#list").replaceWith($ele);//.replaceWith($el); 
-            
+            this.addWeekday();
         }
 
     });

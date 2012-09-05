@@ -3,9 +3,9 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/machineper
     var View = Backbone.View.extend({
 
         //... is a list tag.
-        tagName:  "tr",
-        className: "row odd",
-
+        tagName:  "div",
+        className: 'modeldiv',
+        
         template: template,
     
         initialize: function() {
@@ -16,8 +16,21 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/machineper
     
         render: function() {
           //alert('view render');
-          var temp = this.model.toJSON();            
-          temp = this.template(temp);    
+          var temp = this.model.toJSON();
+          if(temp.GoalPercentageMonth) temp.GoalPercentageMonth += '%';
+          if(temp.GoalPercentageWeek) temp.GoalPercentageWeek += '%'; 
+          if(temp.GoalPercentageDay) temp.GoalPercentageDay += '%'; 
+          if(temp.MachineRunTimePercentageMonth) temp.MachineRunTimePercentageMonth += '%';
+          if(temp.MachineRunTimePercentageWeek) temp.MachineRunTimePercentageWeek += '%'; 
+          if(temp.MachineRunTimePercentageDay) temp.MachineRunTimePercentageDay += '%'; 
+          if(temp.ScrapPercentageMonth) temp.ScrapPercentageMonth += '%';
+          if(temp.ScrapPercentageWeek) temp.ScrapPercentageWeek += '%'; 
+          if(temp.ScrapPercentageDay)  temp.ScrapPercentageDay += '%'; 
+          if(temp.ProductionRateMonth) temp.ProductionRateMonth = temp.ProductionRateMonth.format('0,000');
+          if(temp.ProductionRateWeek) temp.ProductionRateWeek = temp.ProductionRateWeek.format('0,000');
+          if(temp.ProductionRateDay) temp.ProductionRateDay = temp.ProductionRateDay.format('0,000');
+          
+          temp = this.template(temp); 
           this.$el.html( temp );
           return this;
         }

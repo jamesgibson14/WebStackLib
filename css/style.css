@@ -9,11 +9,6 @@ html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre
 	font-family: inherit;
 	vertical-align: baseline;
 }
-body {
-	line-height: 1;
-	color: black;
-	background: white;
-}
 ol, ul {
 	list-style: none;
 }
@@ -25,6 +20,9 @@ html {
 	background: #eeeeee;
 }
 body {
+	line-height: 1;
+	color: black;
+	background: white;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 14px;
 	line-height: 1.4em;
@@ -52,6 +50,10 @@ iframe {
 }
 .restart{
 	float:right;
+}
+tr {
+	
+	border:1px solid black;
 }
 #todoapp {
 	width: 480px;
@@ -557,7 +559,8 @@ iframe {
 	text-align:center;
 	color: #4D926F;
 	font-size:16px;
-	border:1px solid black;
+	border:1px solid black;	
+	
 }
 .hicell { 
 	display:table-cell;
@@ -576,7 +579,7 @@ iframe {
 	display:table-cell;
 	padding:5px;
 	text-align:center;
-	border:1px solid black;
+	font-weight:900;
 }
 .icell { 
 	padding:4px;
@@ -590,4 +593,45 @@ iframe {
 
 .tbody {
 	width: 100%;
+}
+.c520 {
+	background-color: #92d050;
+	border-top:1px solid black;
+}
+.gdark {
+	background-color: #c4d79b;
+	border-top:1px solid black;
+}
+.glight {
+	background-color: #d8e4bc;	
+}
+.olight {
+	background-color: #fcd5b4
+}
+.odark {
+	background-color: #fabf8f
+}
+.plight {
+	background-color: #ccc0da
+}
+.pdark {
+	background-color: #b1a0c7
+}
+.c521 {
+	background-color: #ffc000
+}
+.c522 {
+	background-color: #8f78af
+}
+.c523 {
+	background-color: #ffe495
+}
+.c524 {
+	background-color: #aec976
+}
+.c525 {
+	background-color: #d29e00
+}
+.c526 {
+	background-color: #6da82d
 }
