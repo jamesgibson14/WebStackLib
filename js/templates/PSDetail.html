@@ -1,22 +1,22 @@
-<span class='cell'>{{pid}}<br />St: {{status}}</span>
-<span class='cell'>{{opseq}}</span>
-<span class='cell'>{{machine}}<br />UOM: {{UnitOfMeasure}}</span>
-<span class='cell'>{{shift}}</span>
-<span class='cell'>actual: {{qtycompleted}}
+<span class='cell border'>{{pid}}<br />St: {{status}}</span>
+<span class='cell border'>{{opseq}}</span>
+<span class='cell border'>{{machine}}<br />UOM: {{UnitOfMeasure}}</span>
+<span class='cell border'>{{shift}}</span>
+<span class='cell border'>actual: {{qtycompleted}}
 	<br />target: {{expectedqty}}</span>
-<span class='cell'>{{scrap}}
+<span class='cell border'>{{scrap}}
 	<br />{{scrappercent}} %</span>
-<span class='cell'>{{endscrap}} <input type="checkbox" class="chkendscrap" /></span>
-<span class='cell'>{{setuptime}}</span>
-<span class='cell'>{{runtime}}</span>
-<span class='cell'>{{downtime}}</span>
-<span class='cell'>{{operator}}</span>
-<span class='cell'>{{date}}</span>
-<span class='cell'>
+<span class='cell border'>{{endscrap}} <input type="checkbox" class="chkendscrap" /></span>
+<span class='cell border'>{{setuptime}}</span>
+<span class='cell border'>{{runtime}}</span>
+<span class='cell border'>{{downtime}}</span>
+<span class='cell border'>{{operator}}</span>
+<span class='cell border'>{{date}}</span>
+<span class='cell border'>
 {{#each componentcode}}
   {{this.cc}}<br />
 {{/each}}
 {{#if PaperConverting}}F: {{feedup}}{{/if}}
 </span>
-<span class='cell'><input type="checkbox" class="check" {{#if flag}}checked="checked"{{/if}}  /><br />{{{flagreason}}}</span>
-<span class='cell'><input type="checkbox" class="chkentered" {{#if entered}}checked="checked"{{/if}}  /><br />{{dateentered}}</span>
+<span class='cell border'><input type="checkbox" class="check" {{#if flag}}checked="checked"{{/if}}  /><br />{{{flagreason}}}</span>
+<span class='cell border'><input type="checkbox" class="chkentered" {{#if entered}}checked="checked"{{/if}}  /><br />{{dateentered}}</span>

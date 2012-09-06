@@ -38,7 +38,8 @@ engine.ADODB = function(options){
 		catch(err){
 			alert(err.message);
 			error(SQL,err);
-			throw err;
+			//throw err;
+			//rs.close();
 			return false;
 		}
 	};

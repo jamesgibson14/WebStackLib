@@ -30,6 +30,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
     
         // Re-render the contents of the todo item.
         render: function() {
+            debugger;
             var temp = this.model.toJSON();
           
             temp = this.template(temp);
