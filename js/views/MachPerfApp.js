@@ -34,7 +34,7 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
                         document.location = document.location.pathname.slice(1) + '?module=MachPerfApp';
                     
                    //that.collection.fetch();
-               },1000*60*10);
+               },1000*60*60);
         },
         addWeekday: function(){
             debugger;

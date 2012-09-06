@@ -22,17 +22,37 @@ html {
 body {
 	line-height: 1;
 	color: black;
-	background: white;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 14px;
 	line-height: 1.4em;
-	background: #eeeeee;
 	color: #333333;
+	margin-left:3%;
 }
 iframe {
 	width:100%;
 	height:700px;
 	display:none
+}
+#bodyview {
+	position:relative;
+	max-width:97%;
+	background-color: #FFFFFF;
+}
+
+#header{
+
+}
+#mainview{
+
+}
+#footer {
+	position:relative;
+}
+#poweredBy{
+	position:relative;
+	right:5px;
+	bottom:5px;
+	text-align:right
 }
 .tabletitle {
 	font-size:20px;
@@ -642,4 +662,5 @@ tr {
 .title {
 	color:#448DAE;
 	font-size:16px;
+	text-align:center;
 }
