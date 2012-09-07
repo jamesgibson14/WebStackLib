@@ -1,12 +1,12 @@
-<span class='cell border'>{{pid}}<br />St: {{status}}</span>
-<span class='cell border'>{{opseq}}</span>
+<span class='cell border'>{{pid}}<br />Status: {{status}}</span>
+<span class='cell border'>op: {{opseq}}</span>
 <span class='cell border'>{{machine}}<br />UOM: {{UnitOfMeasure}}</span>
 <span class='cell border'>{{shift}}</span>
 <span class='cell border'>actual: {{qtycompleted}}
 	<br />target: {{expectedqty}}</span>
 <span class='cell border'>{{scrap}}
 	<br />{{scrappercent}} %</span>
-<span class='cell border'>{{endscrap}} <input type="checkbox" class="chkendscrap" /></span>
+<span class='cell border'>{{endscrap}} <input type="checkbox" class="chkendscrap" {{#if enterendscrap}}checked="checked"{{/if}} /></span>
 <span class='cell border'>{{setuptime}}</span>
 <span class='cell border'>{{runtime}}</span>
 <span class='cell border'>{{downtime}}</span>

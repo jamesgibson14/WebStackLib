@@ -94,7 +94,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var _model;
             var _errors=false;
             var context = $('#autoentry');
-            
+            var debug = false;
             var map = {
                 step1: function(){
                     //alert('step1: wait for login screen then login.');
@@ -235,7 +235,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step5: function(){
                     //alert('step5: save form');
-                    alert('doublecheck values');
+                    if(debug) alert('doublecheck values');
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var frm = fr.forms[1];
                     frm.ICAction.value="#ICSave";
