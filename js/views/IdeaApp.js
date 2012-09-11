@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/IdeaApp', 'text!templates/IdeaApp.html', 'models/PSDetails','views/PSDetail'], 
-function($, Backbone, E, Handlebars, Model, template, Collection, subView){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/IdeaApp', 'text!templates/IdeaApp.html', 'models/cellsuggestions'], 
+function($, Backbone, E, Handlebars, Model, template, Collection){
 
     var View = Backbone.View.extend({
 
@@ -9,14 +9,15 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         filteredModels: [],
         filters: false,
         template: template,
+        $inputs: {},
         events: {
             'blur .pid':'change',
             'click .loadtable': 'loadData',
-            'click .filter': 'filter'        
+            'click #btnCreate': 'newCellSuggestion'        
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','filter');
+            _.bindAll(this, 'render','change','filter', 'newCellSuggestion');
             this.collection.bind('reset',     this.filter);
             
         },
@@ -25,11 +26,43 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         },
         // Re-render the contents of the todo item.
         render: function() {
-            //var temp = this.model.toJSON();
             
             var temp = this.template({});
             
             this.$el.html( temp );
+            this.$inputs.iassociate = this.$('#iassociate');
+            this.$inputs.idate = this.$('#idate');
+            this.$inputs.imachine = this.$('#imachine');
+            this.$inputs.iidea = this.$('#iidea');
+            this.$inputs.igain = this.$('#igain');
+            this.$('#idate').datepicker({
+                showOn: "both",
+                buttonImage: "assets/images/calendar.gif",
+                buttonImageOnly: true
+            });
+            //var machines = this.model.get('machines'); [{id:35,code: 3555,cell: 520,workcenter:52004},{etc},{etc}]
+            var machines = [
+            "3191",
+            "3555",
+            "519",
+            "3700",
+            "4270"
+            ];
+            this.$( "#imachine" ).autocomplete({
+                source: machines
+                //add on select: set machine_ID, set cell
+            });
+            var associates = [
+            "1234 - jane",
+            "5678 - bill",
+            "2233 - alice",
+            "4499 - hennry",
+            "9012 - zach"
+            ];
+            this.$( "#iassociate" ).autocomplete({
+                source: associates
+                //add on select: set associate_ID
+            });
             return this;
         },
         change: function(){
@@ -67,6 +100,35 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             }); 
             // replace the old view element with the new one, in the DOM 
             this.$("#pidList").replaceWith($el);//.replaceWith($el);             
+        },
+        newAttributes: function() {
+          return {
+            associate: this.$inputs.iassociate.val(),
+            date: this.$inputs.idate.val(),
+            machine: this.$inputs.imachine.val(),
+            idea: this.$inputs.iidea.val(),
+            gain: this.$inputs.igain.val()
+          };
+        },
+        newCellSuggestion: function(){
+            var attributes = this.newAttributes();
+            //if(attributes.date=='Invalid Date'){}
+            var errors; 
+            alert((new Date(attributes.date)));
+            this.collection.create(attributes,{ 
+                error: function(model, error) {
+                    errors = error;
+                }
+            });
+            if(errors){
+                alert(errors);
+                return;
+            } 
+            this.$('#todo-stats').html('Total Suggesion: ' + this.collection.length);
+            //alert('creating new Cell Suggestion')
+            _.each(this.$inputs,function(value,key){
+                value.val('');
+            })
         }
     });
 	

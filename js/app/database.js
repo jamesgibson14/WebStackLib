@@ -20,8 +20,8 @@ engine.ADODB = function(options){
 	   var conn_str = "Provider='sqloledb';Data Source='" + s.sqlsource + "';Initial Catalog='" + s.database + "';User Id=CCADMIN;Password=S3CURITY;Timeout=5";
 	else if (s.type == 'access')
 	   var conn_str = 'Provider=Microsoft.ACE.OLEDB.12.0;Data Source=' + s.source + ';Persist Security Info='+ s.security +';';
-
-	var conn = new ActiveXObject("ADODB.Connection");
+    if (ActiveXObject)
+	   var conn = new ActiveXObject("ADODB.Connection");
 
 	this.executeSql = function(SQL,args,success,error){
 		var rs = new ActiveXObject("ADODB.Recordset");

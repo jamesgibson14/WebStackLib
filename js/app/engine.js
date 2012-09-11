@@ -74,9 +74,12 @@
 
 //Loading - to add a loading icon
 (function(e) {
-    var l = e.loading = function(selector, callback){       
-        $(selector).html('<div id="loading" class="loading-visible">  <span>Loading... <img src="assets/images/ajax-loader2.gif" /></span></div>');
-        setTimeout(function () {callback();},100);
+    var l = e.loading = function(selector, callback,scope){       
+        $(selector).append('<div id="loading" class="loading-visible">  <span>Loading... <img src="assets/images/ajax-loader2.gif" /></span></div>');
+        setTimeout(function () {callback.call(scope);},100);
+    }
+    e.hideLoading = function(){
+        $('#loading').remove();
     }
     
 })(engine);
