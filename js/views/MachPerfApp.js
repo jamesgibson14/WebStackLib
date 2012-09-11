@@ -51,7 +51,8 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
 
             if((document.location + '').indexOf('.hta','.hta')>-1) 
                 this.$('#autoentry').attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
-            this.collection.fetch();
+            E.loading(this.$el,this.collection.fetch,this.collection);
+            //this.collection.fetch();
             return this;
         },
         filter: function(){
@@ -79,6 +80,7 @@ function($, Backbone, E, Handlebars, template, collection,statsTemp,subView){
             // replace the old view element with the new one, in the DOM 
             this.$("#list").replaceWith($ele);//.replaceWith($el); 
             this.addWeekday();
+            E.hideLoading();
         }
 
     });
