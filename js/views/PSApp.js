@@ -327,23 +327,28 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var temp = {}
-                    for(var i=0,len=_model.componentcode.length;i<len;i++){
-                        var num = contents.find('input[value="' + _model.componentcode[i].cc + '"]');
-                        if (num.length ==0){
-                            alert("step9-PeopleSoftEntry" + " Could not find paper component");
+                    if(_model.enterendscrap){
+                        for(var i=0,len=_model.componentcode.length;i<len;i++){
+                            var num = contents.find('input[value="' + _model.componentcode[i].cc + '"]');
+                            if (num.length ==0){
+                                alert("step9-PeopleSoftEntry" + " Could not find paper component");
+                                
+                                temp.flag = _errors = true;
+                                temp.flagreason = 'AutoEntry: incorrect paper component: ' + _model.componentcode[i].cc;
+                                _collection[_currentModel].set(temp);
+                                _step = 'step10';
+                                nextStep(); 
+                                return;
+                            }
+                            num = num.attr("id").substr(-1);
                             
-                            temp.flag = _errors = true;
-                            temp.flagreason = 'AutoEntry: incorrect paper component: ' + _model.componentcode[i].cc;
-                            _collection[_currentModel].set(temp);
-                        }
-                        num = num.attr("id").substr(-1);
-                        
-                        //alert('component row:' + ();
-                        var txtEndScrap = contents.find('#SF_COMP_LIST_PEND_CONSUME_QTY\\$' + num);
-                        //alert('parsed: ' + parseFloat(txtEndScrap.val()));
-                        alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.componentcode[i].es + ' + ' + _model.componentcode[i].sc +' = ' + (Math.round((parseFloat(txtEndScrap.val())+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
-                        txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100);
-                    }  
+                            //alert('component row:' + ();
+                            var txtEndScrap = contents.find('#SF_COMP_LIST_PEND_CONSUME_QTY\\$' + num);
+                            //alert('parsed: ' + parseFloat(txtEndScrap.val()));
+                            alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.componentcode[i].es + ' + ' + _model.componentcode[i].sc +' = ' + (Math.round((parseFloat(txtEndScrap.val())+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
+                            txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100);
+                        } 
+                    } 
                     _model.endscrap = 0;  
                    //submitAction_main0(document.main0, '#ICPanel18')
                    _step = 'stepSaveScrap';
@@ -358,7 +363,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         //save page here
                         
                         if(!confirm('save scrap entries ')){
-                            _errors = true;
+                            var temp = {}
+                            temp.flag = _errors = true;
+                            temp.flagreason = 'AutoEntry: ProcessScrap/EndScrap not entered';
+                            _collection[_currentModel].set(temp);
                             _step = 'step10';
                             nextStep(); 
                         }

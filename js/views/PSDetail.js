@@ -12,6 +12,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
         events: {
           "click .check"              : "toggleFlag",
           'click .chkentered':'toggleEntered',
+          'click .chkendscrap':'toggleEndscrap',
           //"click label.todo-content"  : "showOrder",
           "dblclick label.todo-content" : "edit",
           "click span.todo-destroy"   : "clear",
@@ -64,6 +65,11 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
                 temp.dateentered = new Date().format('mm/dd/yyyy h:MM:ss TT');
             else
                 temp.dateentered = null;
+            this.model.set(temp);
+        },
+        toggleEndscrap: function() {
+            var temp = {}
+            temp.enterendscrap = !this.model.get('enterendscrap')
             this.model.set(temp);
         },
         // Alert the Order of this todo.

@@ -118,7 +118,6 @@ Backbone.sync = function (method, model, options) {
 		if(store.isJSON) {		
     		try{
     		    while (!rs.ActiveConnection || !rs.eof){
-    			
         			result.push(JSON.parse(rs.fields('value').value));
         			rs.movenext;
         			count++;
