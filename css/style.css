@@ -75,6 +75,32 @@ tr {
 	
 	border:1px solid black;
 }
+.left {
+	float:left;
+}
+.right {
+	float:right;
+}
+ div.loading-invisible{    
+ 	/*make invisible*/    
+ 	display:none;  
+ }  
+ /*this is what we want the div to look like    when it IS showing*/  
+ div.loading-visible{    
+ 	/*make visible*/    
+ 	display:block;    
+ 	/*position it at the very top-left corner*/    
+ 	position:absolute;    top:0;    left:0;    width:100%;    height:100%;    text-align:center;    
+ 	/* in supporting browsers, make it      a little transparent*/    
+ 	background:#fff;    
+ 	_background:none; 
+ 	/*this line removes the background in IE*/    
+ 	opacity:.75;    
+ 	border-top:1px solid #ddd;    
+ 	border-bottom:1px solid #ddd;    
+ 	/*set the padding, so that the content      of the div is centered vertically*/    
+ 	padding-top:25%;  
+ }
 #todoapp {
 	width: 480px;
 	margin: 0 auto 40px;
@@ -104,10 +130,8 @@ tr {
 	border: 0;
 	outline: none;
 	padding: 6px;
+	margin:2px;
 	border: 1px solid #999999;
-	-moz-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-	-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-	-o-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
 	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
 }
 

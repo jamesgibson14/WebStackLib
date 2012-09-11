@@ -108,7 +108,7 @@ Backbone.sync = function (method, model, options) {
 	var store = model.store || model.collection.store, success, error;
 	
 	if (store == null) {
-		console.warn("[BACKBONE-WEBSQL] model without store object -> ", model);
+		//alert("[BACKBONE-WEBSQL] model without store object -> ", model);
 		return;
 	}
 	 debugger;

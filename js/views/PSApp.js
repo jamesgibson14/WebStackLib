@@ -22,7 +22,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             
         },
         loadData: function(){
-            this.collection.fetch();
+            var that = this;
+            E.loading(this.$el,that.collection.fetch,this.collection);
+            //this.collection.fetch();
         },
         // Re-render the contents of the todo item.
         render: function() {
@@ -55,10 +57,12 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             else
                 this.filteredModels = this.collection.models
             
+            var that = this;
             this.addAll();
         },
         addAll: function() {
             // create in memory element
+            
             var $el = this.$('#pidList').clone(true,true);
             var header = $el.find('.header').clone(true,true);
             // also get the `className`, `id`, `attributes` if you need them 
@@ -70,7 +74,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 $el.append(rowView.render().el); 
             }); 
             // replace the old view element with the new one, in the DOM 
-            this.$("#pidList").replaceWith($el);//.replaceWith($el);             
+            this.$("#pidList").replaceWith($el);//.replaceWith($el);
+            E.hideLoading();             
         },
         runEntry: function(){
             var url = 'http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login';
