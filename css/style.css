@@ -34,7 +34,6 @@ iframe {
 	display:none
 }
 #bodyview {
-	position:relative;
 	max-width:97%;
 	background-color: #FFFFFF;
 }
@@ -77,9 +76,17 @@ tr {
 }
 .left {
 	float:left;
+	position:relative;
 }
 .right {
 	float:right;
+	position:relative;
+}
+.absolute {
+	position:absolute;
+}
+.relative {
+	position:relative;
 }
  div.loading-invisible{    
  	/*make invisible*/    

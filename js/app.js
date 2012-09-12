@@ -21,9 +21,13 @@ require.config({
       	backboneADO: '../app/backbone.ado',
       	backbone: "backbone-0.9.2",
 		ieconfig: 'ieconfig',
+		jq: 'jqplot/',
+		jqp: 'jqplot/pluggins',
+		jqplot: "jqplot/jquery.jqplot.min",
       	// Require.js Plugins
       	text: "plugins/text-2.0.0"
     },
+    //packages: ["app/jqplotAll", "store"],
     shim: {
         'backbone': {
             //These script dependencies should be loaded before loading
@@ -36,7 +40,8 @@ require.config({
         'engine': ['jquery'],
         'jqueryUI': ['jquery'],
         'database': ['engine'],
-        'backboneADO': ['backbone']
+        'backboneADO': ['backbone'],
+        'jqplot': ['jquery']
     }
 
 });
