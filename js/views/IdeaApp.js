@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/IdeaApp', 'text!templates/IdeaApp.html', 'models/cellsuggestions'], 
-function($, Backbone, E, Handlebars, Model, template, Collection){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/IdeaApp', 'text!templates/IdeaApp.html', 'models/cellsuggestions','views/idea'], 
+function($, Backbone, E, Handlebars, Model, template, Collection, subView){
 
     var View = Backbone.View.extend({
 
@@ -10,6 +10,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection){
         filters: false,
         template: template,
         $inputs: {},
+        attributes: {style:'overflow:hidden;'},
         events: {
             'blur .pid':'change',
             'click .loadtable': 'loadData',
@@ -17,9 +18,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection){
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','filter', 'newCellSuggestion');
+            _.bindAll(this, 'render','change','filter', 'newCellSuggestion','addOne');
             this.collection.bind('reset',     this.filter);
-            
+            this.collection.bind('add',     this.addOne);
         },
         loadData: function(){
             this.collection.fetch();
@@ -35,11 +36,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection){
             this.$inputs.imachine = this.$('#imachine');
             this.$inputs.iidea = this.$('#iidea');
             this.$inputs.igain = this.$('#igain');
-            this.$('#idate').datepicker({
-                showOn: "both",
-                buttonImage: "assets/images/calendar.gif",
-                buttonImageOnly: true
-            });
+            this.$('input, textarea').placeholder();
+            this.$('#idate').datepicker();
+            this.$('#btnCreate').button();
             //var machines = this.model.get('machines'); [{id:35,code: 3555,cell: 520,workcenter:52004},{etc},{etc}]
             var machines = [
             "3191",
@@ -88,7 +87,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection){
         },
         addAll: function() {
             // create in memory element
-            var $el = this.$('#pidList').clone(true,true);
+            var $el = this.$('#list').clone(true,true);
             var header = $el.find('.header').clone(true,true);
             // also get the `className`, `id`, `attributes` if you need them 
             $el.empty();
@@ -99,7 +98,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection){
                 $el.append(rowView.render().el); 
             }); 
             // replace the old view element with the new one, in the DOM 
-            this.$("#pidList").replaceWith($el);//.replaceWith($el);             
+            this.$("#list").replaceWith($el);//.replaceWith($el);             
+        },
+        addOne: function(model) {
+            var view = new subView({model: model});
+            this.$("#list").append(view.render().el);
         },
         newAttributes: function() {
           return {
@@ -114,14 +117,32 @@ function($, Backbone, E, Handlebars, Model, template, Collection){
             var attributes = this.newAttributes();
             //if(attributes.date=='Invalid Date'){}
             var errors; 
-            alert((new Date(attributes.date)));
+
             this.collection.create(attributes,{ 
                 error: function(model, error) {
                     errors = error;
-                }
+                },wait:true
             });
             if(errors){
-                alert(errors);
+                _.each(errors, function(val, key){
+                    switch(key) {
+                        case "db":   
+                            alert('Error with Database; Please contact Data Support.\n\n' + val); 
+                        break;
+                        case "machine":  alert(key + ': ' + val);//highlight area red.
+                            break;
+                        case "date":  alert(key + ': ' + val);
+                            break;
+                        case "associate":  alert(key + ': ' + val);
+                            break;
+                        case "idea":  alert(key + ': ' + val);
+                            break;
+                        case "gain":  alert(key + ': ' + val);
+                            break;
+                        default:
+                            alert(key + ': ' + val);
+                    }
+                })
                 return;
             } 
             this.$('#todo-stats').html('Total Suggesion: ' + this.collection.length);

@@ -25,7 +25,8 @@ engine.ADODB = function(options){
 
 	this.executeSql = function(SQL,args,success,error){
 		var rs = new ActiveXObject("ADODB.Recordset");
-		SQL = vsprintf(SQL,args);
+		if (args)
+		  SQL = vsprintf(SQL,args);
 		try{
 		    var now = new Date();
 			rs = conn.Execute(SQL);
@@ -36,8 +37,9 @@ engine.ADODB = function(options){
 			return true;
 		}
 		catch(err){
-			alert(err.message);
-			error(SQL,err);
+			alert('Error: ' + err.message + ', sql: ' + SQL);
+			err.sql = SQL
+			error(err);
 			//throw err;
 			//rs.close();
 			return false;
@@ -56,6 +58,7 @@ engine.ADODB = function(options){
 		else
 			conn.RollbackTrans();
 		conn.close;
+		return res;
 		//alert('transaction to db time: ' + (new Date()-now));
 	}
 	

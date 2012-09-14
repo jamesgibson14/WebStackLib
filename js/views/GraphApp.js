@@ -4,8 +4,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
     var View = Backbone.View.extend({
 
         tagName:  "div",
-        className: 'ReportApp',
-        attributes: {style:'width:700px;border:3px solid black;overflow:hidden;'},
+        className: 'ReportApp ofh',
+        attributes: {style:'width:700px;border:3px solid black;'},
         collection: new Collection(),
         model: new Model(),
         filteredModels: [],
@@ -21,15 +21,13 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
           this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','change','enterPeopleSoftScript','tester','filter');
             this.collection.bind('reset',     this.filter);
-            
         },
         loadData: function(){
             var that = this;
             //E.loading(this.$el,that.collection.fetch,this.collection);
              var plot1 = $.jqplot ('chart1', [this.model.get('data')]);
-             plot1.bind('resize', function(event, ui) {
-                plot1.replot( { resetAxes: true } );
-            });
+            
+            this.$('#grapharea').bind('resize', function(event, ui) {plot1.replot( { resetAxes: true } );});
 
             //this.collection.fetch();
         },
@@ -51,7 +49,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     that.$('#dtTo').html(new Date(ui.values[1],1).format("yyyy"));
                 }
             });
-            
+            this.$('#grapharea').resizable({delay:20,minHeight: 326,minWidth: 650});
             return this;
         },
         change: function(){

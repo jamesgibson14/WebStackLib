@@ -1,23 +1,49 @@
-<div class="title">
-	<h1>Cell Suggestion Entry</h1>
+<div class="boxpad">
+	<h1 class="ui-widget-header title"><span class="">Cell Suggestion Entry</span></h1>
 </div>
 <div class="content">
-	<div id="create-todo">
-	  <input id="iassociate" placeholder="What needs to be done?" type="text" /><label for="Machine">Enter Associate Code</label><br />
-	  <input id="idate" placeholder="What needs to be done?" type="text" /><label for="Machine">Enter Date</label><br />
-	  <input id="imachine" placeholder="What needs to be done?" type="text" /><label for="Machine">Enter Machine code</label><br />
-	  <span id="scell" >520</span><label for="Machine">Cell</label><br />
-	  <input id="iidea" placeholder="What needs to be done?" type="text" /><label for="Machine">Idea</label><br />
-	  <input id="igain" placeholder="What needs to be done?" type="text" /><label for="Machine">Gains</label><br />
+	<div id="tags" class="border right boxpad">
+		<h2 class="ui-widget-header"><span>Tags</span></h2><br />
+		<input id="search" placeholder="search tags" /><br />
+		<ul>
+			<li>Quick Tip</li>
+			<li>Excel</li>
+			<li>PeopleSoft</li>
+			<li>Forklift</li>
+			<li>Quick Tip</li>
+			<li>Excel</li>
+			<li>PeopleSoft</li>
+			<li>Forklift</li>
+			<li>Quick Tip</li>
+			<li>Excel</li>
+			<li>PeopleSoft</li>
+			<li>Forklift</li>
+			<li>Quick Tip</li>
+			<li>Excel</li>
+			<li>PeopleSoft</li>
+			<li>Forklift</li>
+		</ul>
 	</div>
-	<button id="btnCreate">Create</button>
-	<div id="todos">
-	  <input class="check mark-all-done" type="checkbox"/>
-	  <label for="check-all">Mark all as complete</label>
-	  <input class="show filter-all-done" type="checkbox"/>
-	  <label for="show-remaining">Hide completed</label>
-	  <ul id="todo-list"> </ul>
+	<div id="create-model" class="border ofh" style="width:650px;">
+	  <input id="iassociate" placeholder="Associate:" type="text" />
+	  <input id="idate" placeholder="Date:" type="text" size="8" />
+	  <input id="imachine" placeholder="Machine:" type="text" size="6" />
+	  <label for="Cell">Cell </label><span id="scell" >520</span><br />
+	  <textarea id="iidea" placeholder="Enter Idea here:" cols="40" rows="5" ></textarea>
+	  <textarea id="igain" placeholder="How will this improve the process (Gains)?" cols="40" rows="5"></textarea><br />
+	  <button id="btnCreate" class="right">Create</button>
 	</div>
 	
-	<div id="todo-stats"> </div>
+	<div id="models" class="border boxpad left" style="margin-top: 7px">
+		<h2 class="ui-widget-header"><span >Current Ideas Entered</span></h2><br />
+	  	<input class="check mark-all-done" type="checkbox"/>
+	  	<label for="check-all">Mark all as complete</label>
+	  	<input class="show filter-all-done" type="checkbox"/>
+	  	<label for="show-remaining">Hide completed</label>
+	  	<ul id="list"> </ul>
+	  	<div id="todo-stats"> </div>
+	</div>
+	
+	
+	
 </div>

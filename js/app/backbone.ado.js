@@ -106,9 +106,14 @@ _.extend(WebSQLStore.prototype,{
 
 Backbone.sync = function (method, model, options) {
 	var store = model.store || model.collection.store, success, error;
-	
-	if (store == null) {
-		//alert("[BACKBONE-WEBSQL] model without store object -> ", model);
+	var db;
+	if(model.collection) 
+	   db = model.collection.db
+	if(model.db)
+	   db = model.db
+	   
+	if (store == null && db == null) {
+		alert("Error: No Storage method available", model);
 		return;
 	}
 	 debugger;
