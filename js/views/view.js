@@ -4,7 +4,8 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
 
         // Represents the actual DOM element that corresponds to your View (There is a one to one relationship between View Objects and DOM elements)
         tagName:  "div",
-        className: 'PSApp',
+        className: 'SmeadApp',
+        attributes: {},
         template: template,
         location: '' + window.location.href,
         // View constructor

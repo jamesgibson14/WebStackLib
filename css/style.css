@@ -8,6 +8,10 @@ html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote, pre
 	font-size: 100%;
 	font-family: inherit;
 	vertical-align: baseline;
+	
+}
+div {
+	padding: 1px;
 }
 ol, ul {
 	list-style: none;
@@ -17,7 +21,7 @@ a img {
 }
 
 html {
-	background: #eeeeee;
+	background: #333333;
 }
 body {
 	line-height: 1;
@@ -33,26 +37,63 @@ iframe {
 	height:700px;
 	display:none
 }
+h1 {
+	margin:10px;
+	padding:5px;
+	font-size:28px;
+}
+h2 {
+	margin:8px;
+	font-size:20px;
+}
+h3 {
+	margin:6px;
+	font-size:16px;
+}
+h1.ui-widget-header, h2.ui-widget-header {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 20px;
+	border-radius: 1em 4em 1em 4em;
+}
+.title {
+	padding-left:25%;
+}
 #bodyview {
-	position:relative;
 	max-width:97%;
 	background-color: #FFFFFF;
+	padding: 5px;
+	border-radius: 15px;
 }
 
 #header{
-
+	margin-bottom: 6px;
 }
 #mainview{
-
+	
 }
 #footer {
-	position:relative;
+	overflow:hidden;
+	padding-right: 10px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	background-color: #bbb;
+	margin-top:6px;
+	margin-left: -6px;
+	margin-right: -6px;
+	margin-bottom: -6px;
+	border-radius: 0px 0px 15px 15px;
+	border-top: 1px solid black;
 }
 #poweredBy{
-	position:relative;
-	right:5px;
-	bottom:5px;
-	text-align:right
+	float: right;
+	text-align:right;
+}
+.ofh {
+	overflow:hidden;
+}
+.boxpad {
+	padding:5px;
 }
 .tabletitle {
 	font-size:20px;
@@ -77,9 +118,17 @@ tr {
 }
 .left {
 	float:left;
+	position:relative;
 }
 .right {
 	float:right;
+	position:relative;
+}
+.absolute {
+	position:absolute;
+}
+.relative {
+	position:relative;
 }
  div.loading-invisible{    
  	/*make invisible*/    
@@ -137,7 +186,35 @@ tr {
 	border: 1px solid #999999;
 	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
 }
-
+#create-model input {
+	
+	font-size: 18px;
+	font-family: inherit;
+	line-height: 1.1em;
+	border: 0;
+	outline: none;
+	padding: 6px;
+	margin:2px;
+	border: 1px solid #999999;
+	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
+}
+#create-model label {
+	margin-left: 7px;
+}
+#create-model span {
+	font-size: 18px;
+	margin-left: 7px;
+	padding:5px;
+}
+.placeholder{
+	color:#AAAAAA;	
+}
+textarea {
+	overflow: auto;
+	margin-left: 7px;
+	font-size: 16px;
+	font-family: inherit;
+}
 #create-todo span {
 	position: absolute;
 	z-index: 999;
@@ -686,8 +763,4 @@ tr {
 .c526 {
 	background-color: #6da82d
 }
-.title {
-	color:#448DAE;
-	font-size:16px;
-	text-align:center;
-}
+

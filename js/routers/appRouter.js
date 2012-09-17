@@ -1,4 +1,4 @@
-define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backboneADO','helpers','jqueryUI'], function($, Backbone, E, Handlebars, require){
+define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min'], function($, Backbone, E, Handlebars, require){
     Backbone.View.prototype.close = function () {    
         if (this.beforeClose) {        
             this.beforeClose();    

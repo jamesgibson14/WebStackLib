@@ -14,7 +14,7 @@ define([
     // set all of the todo items under the `"todos"` namespace.
     //localStorage: new Store("todos-backbone"),
     //store: new WebSQLStore(new E.ADODB({type: 'access'}),'todos',false,true),
-    
+    db: new E.ADODB({type: 'access'}),
     // Filter down the list of all todo items that are finished.
     done: function() {
       return this.filter(function(model){ return model.get('done'); });

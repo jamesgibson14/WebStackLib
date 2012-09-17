@@ -5,27 +5,82 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
     // Default attributes for the todo.
     defaults: {
       content: "empty todo...",
+      associateID: 1912,
+      workcenter: '52302',
+      cell: 523,
       done: false
     },
 	//url: function(){ return this.isNew() ? '/todos' : '/todos/' + this.get('id');},
     
     
     validate: function  (attrs) {
+        var err = {};
         if(/Invalid|NaN/.test(new Date(attrs.date))){
-            return "Date error: please input a correct date";
-        }    
+            err.date = "Date error: please input a correct date";
+        }
+        if(!attrs.machine)
+             err.machine = "machine error: please input a correct machine";
+       
+        return ($.isEmptyObject(err)) ? false : err;   
     },
     // Ensure that each todo created has `content`.
     initialize: function() {
-      if (!this.get("content")) {
-        this.set({"content": this.defaults.content},{silent: true});
-      };
-	   this.on('change', this.save);
+        //_.bindAll(this, 'sync')
+
     },
 
     // Toggle the `done` state of this todo item.
     toggle: function() {
       this.set({done: !this.get("done")});
+    },
+    sync: function(method, model,options){
+        var sql ='SELECT MAX(CellSuggestionNum)+1 AS cellnum FROM CellSuggestions';
+        var sql2 = "INSERT INTO CellSuggestions (CellSuggestionNum, OpenDate, Suggestion, Cell, Submitter, CellorNew, Gain, OriginalMachine) VALUES (%s,'%s','%s', %s,'%s','%s','%s','%s')"
+        var cellnum, cellid, 
+        _error,
+        machine = this.get('machine'),
+        suggestion = this.get('idea'),
+        gain = this.get('gain'),
+        workcenter = this.get('workcenter'),
+        associateID = this.get('associateID')
+        cell = this.get('cell');
+        var opendate = new Date();
+            
+        var params = [];
+        var success = function(sql,rs){cellnum = rs.fields('cellnum').value; };
+        var error = function(error){ 
+            if(!_error)
+                _error = {};
+            _error.db = error;
+        };
+        var that = this;
+        
+        var transSuccessfull = this.collection.db.transaction(function(db) {
+            var err = false
+            err = db.executeSql(sql, null, success, error);
+            //alert('cellnum: ' + cellnum);
+            success = function(sql,rs){return;};
+            params = [cellnum, opendate.format('mm/dd/yyyy'),suggestion,cell, associateID,'PE',gain,machine];
+            err = db.executeSql(sql2, params, success, error);
+            
+            sql2 = 'SELECT CellSuggestionID FROM CellSuggestions WHERE CellSuggestionNum = ' + cellnum;
+            params = null;
+            success = function(sql,rs){ cellid = rs.fields('CellSuggestionID').value; };
+            err = db.executeSql(sql2, params, success, error);
+            
+            success = function(sql,rs){return;};
+            sql2 = "INSERT INTO tblStorage (CellSuggestion, Machine, Workcenter, Status_ID) VALUES (%s,'%s','%s',13)";
+            params = [cellid,machine,workcenter];
+            err = db.executeSql(sql2, params, success, error);
+            err = false;
+            return err;
+        });
+        if(transSuccessfull)
+            options.success({peNum: cellnum, id:cellid})
+        else
+            options.error(this,_error)
+        
+        return (transSuccessfull) ? {peNum: cellnum, id:cellid} : false;
     }
 
   });
