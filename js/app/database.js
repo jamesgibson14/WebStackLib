@@ -14,6 +14,7 @@ engine.ADODB = function(options){
 		timeout: 5,
 		security: 'False'
 	}
+	
 	//build ADO Connect String
 	_.extend(s,options)
 	if(s.type == 'sqlserver')
@@ -22,7 +23,7 @@ engine.ADODB = function(options){
 	   var conn_str = 'Provider=Microsoft.ACE.OLEDB.12.0;Data Source=' + s.source + ';Persist Security Info='+ s.security +';';
     if (ActiveXObject)
 	   var conn = new ActiveXObject("ADODB.Connection");
-
+    conn.open(conn_str);
 	this.executeSql = function(SQL,args,success,error){
 		var rs = new ActiveXObject("ADODB.Recordset");
 		SQL = vsprintf(SQL,args);
@@ -46,7 +47,7 @@ engine.ADODB = function(options){
 	this.transaction = function(func){
 		var now = new Date();
 		var res;
-		conn.open(conn_str);
+		
 		conn.BeginTrans();		
         //alert('transaction open time: ' + (new Date()-now));
 		res = func(this);
@@ -55,7 +56,7 @@ engine.ADODB = function(options){
 			conn.CommitTrans();
 		else
 			conn.RollbackTrans();
-		conn.close;
+		//conn.close;
 		//alert('transaction to db time: ' + (new Date()-now));
 	}
 	

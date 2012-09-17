@@ -12,7 +12,8 @@ define([
         modelsToSave: [],
         sqlToExecute: null,
         store: new WebSQLStore(new E.ADODB(),'dbo.spGetDataForPeopleSoftEntry',false),
-        db: new E.ADODB({type: 'access'}),
+        sqldb: new E.ADODB({type: 'sqlserver'}),
+        accessdb: new E.ADODB({type: 'access'}),
         save: function(){
             if(modelsToSave.length>0){
                 _.each(modelsToSave, function(modelid){
