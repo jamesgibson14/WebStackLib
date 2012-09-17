@@ -5,9 +5,6 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
     // Default attributes for the todo.
     defaults: {
       content: "empty todo...",
-      associateID: 1912,
-      workcenter: '52302',
-      cell: 523,
       done: false
     },
 	//url: function(){ return this.isNew() ? '/todos' : '/todos/' + this.get('id');},
@@ -18,9 +15,11 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         if(/Invalid|NaN/.test(new Date(attrs.date))){
             err.date = "Date error: please input a correct date";
         }
-        if(!attrs.machine)
+        if(!attrs.machine || attrs.workcenter == 'n/a' || attrs.cell == 'n/a')
              err.machine = "machine error: please input a correct machine";
-       
+        if(!attrs.associateID)
+             err.machine = "Input error: please select a correct associate code or name";
+             
         return ($.isEmptyObject(err)) ? false : err;   
     },
     // Ensure that each todo created has `content`.
@@ -72,7 +71,10 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             sql2 = "INSERT INTO tblStorage (CellSuggestion, Machine, Workcenter, Status_ID) VALUES (%s,'%s','%s',13)";
             params = [cellid,machine,workcenter];
             err = db.executeSql(sql2, params, success, error);
-            err = false;
+            
+            //return false everytime for testing
+            //err = false;
+            
             return err;
         });
         if(transSuccessfull)

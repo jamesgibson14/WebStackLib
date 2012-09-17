@@ -6,6 +6,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         tagName:  "div",
         className: 'PSApp',
         collection: new Collection(),
+        model: new Model(),
         filteredModels: [],
         filters: false,
         template: template,
@@ -21,45 +22,61 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             _.bindAll(this, 'render','change','filter', 'newCellSuggestion','addOne');
             this.collection.bind('reset',     this.filter);
             this.collection.bind('add',     this.addOne);
+            this.model.fetch({wait:true});
         },
         loadData: function(){
             this.collection.fetch();
         },
         // Re-render the contents of the todo item.
         render: function() {
-            
+            var that = this;
             var temp = this.template({});
             
             this.$el.html( temp );
+            this.$inputs.iassociateID = this.$('#iassociateID');
             this.$inputs.iassociate = this.$('#iassociate');
             this.$inputs.idate = this.$('#idate');
             this.$inputs.imachine = this.$('#imachine');
             this.$inputs.iidea = this.$('#iidea');
             this.$inputs.igain = this.$('#igain');
+            this.$inputs.iworkcenter = this.$('#sworkcenter');
+            this.$inputs.icell = this.$('#scell');
             this.$('input, textarea').placeholder();
             this.$('#idate').datepicker();
             this.$('#btnCreate').button();
             //var machines = this.model.get('machines'); [{id:35,code: 3555,cell: 520,workcenter:52004},{etc},{etc}]
-            var machines = [
-            "3191",
-            "3555",
-            "519",
-            "3700",
-            "4270"
-            ];
+
+            var machines = this.model.get('machines');
+  
             this.$( "#imachine" ).autocomplete({
-                source: machines
+                source: machines,
+                minLength: 1,
+                focus:  function( event, ui ) {
+                    $( "#imachine" ).val( ui.item.label );
+                    return false;
+                },
+                select: function( event, ui ) {                    
+                    that.$('#imachineID').html( ui.item.id );
+                    that.$('#scell').html( ui.item.cell );
+                    that.$('#sworkcenter').html( ui.item.wc );
+                    return false;
+                }
                 //add on select: set machine_ID, set cell
             });
-            var associates = [
-            "1234 - jane",
-            "5678 - bill",
-            "2233 - alice",
-            "4499 - hennry",
-            "9012 - zach"
-            ];
+            var associates = this.model.get('associates');
+            
             this.$( "#iassociate" ).autocomplete({
-                source: associates
+                source: associates,
+                minLength: 0,
+                focus:  function( event, ui ) {
+                    $( "#iassociate" ).val( ui.item.label );
+                    return false;
+                },
+                select: function( event, ui ) {                    
+                    that.$('#iassociateID').val( ui.item.id );
+                    return false;
+                }
+
                 //add on select: set associate_ID
             });
             return this;
@@ -106,16 +123,20 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         },
         newAttributes: function() {
           return {
+            associateID: this.$inputs.iassociateID.val(),
             associate: this.$inputs.iassociate.val(),
             date: this.$inputs.idate.val(),
             machine: this.$inputs.imachine.val(),
             idea: this.$inputs.iidea.val(),
-            gain: this.$inputs.igain.val()
+            gain: this.$inputs.igain.val(),
+            workcenter:this.$inputs.iworkcenter.html(),
+            cell:this.$inputs.icell.html()            
           };
         },
         newCellSuggestion: function(){
             var attributes = this.newAttributes();
             //if(attributes.date=='Invalid Date'){}
+            
             var errors; 
 
             this.collection.create(attributes,{ 
@@ -145,7 +166,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 })
                 return;
             } 
-            this.$('#todo-stats').html('Total Suggesion: ' + this.collection.length);
+            this.$('#todo-stats').html('Total Suggesions Entered: ' + this.collection.length);
             //alert('creating new Cell Suggestion')
             _.each(this.$inputs,function(value,key){
                 value.val('');

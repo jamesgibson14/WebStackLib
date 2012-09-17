@@ -3,8 +3,8 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/idea.html'
     var View = Backbone.View.extend({
 
         //... is a list tag.
-        tagName:  "li",
-        className: 'border',
+        tagName:  "tr",
+        className: 'border centered',
         // Cache the template function for a single item.
         template: template,
     

@@ -134,6 +134,9 @@ tr {
  	/*make invisible*/    
  	display:none;  
  }  
+ .centered {
+ 	text-align:center;
+ }
  /*this is what we want the div to look like    when it IS showing*/  
  div.loading-visible{    
  	/*make visible*/    

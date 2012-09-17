@@ -147,8 +147,12 @@ Backbone.sync = function (method, model, options) {
                         attr[rs.fields(i).name] = rs.fields(i).value;
                     }
                     i++;   
-                }            
-                result.push(attr);
+                } 
+                //check if model... vs collection
+                if(model.attributes)
+                    result = attr
+                else
+                    result.push(attr);
                 rs.movenext;
                 count++;
             }
