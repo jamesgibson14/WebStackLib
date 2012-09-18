@@ -50,30 +50,28 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
   
             this.$( "#imachine" ).autocomplete({
                 source: machines,
+                autoFocus: true,
                 minLength: 1,
-                focus:  function( event, ui ) {
-                    $( "#imachine" ).val( ui.item.label );
-                    return false;
-                },
-                select: function( event, ui ) {                    
+                
+                select: function( event, ui ) {
+                    $( "#imachine" ).val( ui.item.label );                    
                     that.$('#imachineID').html( ui.item.id );
                     that.$('#scell').html( ui.item.cell );
                     that.$('#sworkcenter').html( ui.item.wc );
                     return false;
                 }
+
                 //add on select: set machine_ID, set cell
             });
             var associates = this.model.get('associates');
             
             this.$( "#iassociate" ).autocomplete({
                 source: associates,
+                autoFocus: true,
                 minLength: 0,
-                focus:  function( event, ui ) {
-                    $( "#iassociate" ).val( ui.item.label );
-                    return false;
-                },
                 select: function( event, ui ) {                    
                     that.$('#iassociateID').val( ui.item.id );
+                    $( "#iassociate" ).val( ui.item.label );
                     return false;
                 }
 
