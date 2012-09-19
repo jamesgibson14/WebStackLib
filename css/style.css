@@ -137,6 +137,16 @@ tr {
  .centered {
  	text-align:center;
  }
+ .quote {
+ 	border-radius: 7px;
+ 	background-color:#E0E0A0;
+ 	color:#0066CC;
+ 	padding: 4px;
+ 	
+ }
+ .dataSuccess {
+ 	background-color:#6CE26C;
+ }
  /*this is what we want the div to look like    when it IS showing*/  
  div.loading-visible{    
  	/*make visible*/    

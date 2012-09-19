@@ -15,11 +15,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         events: {
             'blur .pid':'change',
             'click .loadtable': 'loadData',
-            'click #btnCreate': 'newCellSuggestion'        
+            'click #btnCreate': 'timeDelay'        
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','filter', 'newCellSuggestion','addOne');
+            _.bindAll(this, 'render','change','filter', 'newCellSuggestion','addOne', 'timeDelay');
             this.collection.bind('reset',     this.filter);
             this.collection.bind('add',     this.addOne);
             this.model.fetch({wait:true});
@@ -36,7 +36,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             this.$inputs.iassociateID = this.$('#iassociateID');
             this.$inputs.iassociate = this.$('#iassociate');
             this.$inputs.idate = this.$('#idate');
-            this.$inputs.imachine = this.$('#imachine');
+            this.$inputs.imachineCode = this.$('#imachineCode');
             this.$inputs.iidea = this.$('#iidea');
             this.$inputs.igain = this.$('#igain');
             this.$inputs.iworkcenter = this.$('#sworkcenter');
@@ -54,8 +54,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 minLength: 1,
                 
                 select: function( event, ui ) {
-                    $( "#imachine" ).val( ui.item.label );                    
-                    that.$('#imachineID').html( ui.item.id );
+                    that.$( "#imachine" ).val( ui.item.label );                    
+                    that.$('#imachineCode').val( ui.item.code );
                     that.$('#scell').html( ui.item.cell );
                     that.$('#sworkcenter').html( ui.item.wc );
                     return false;
@@ -118,23 +118,28 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         addOne: function(model) {
             var view = new subView({model: model});
             this.$("#list").append(view.render().el);
+            view.$el.toggleClass("dataSuccess",700).toggleClass("dataSuccess",700).toggleClass("dataSuccess",700).toggleClass("dataSuccess",700);
+
         },
         newAttributes: function() {
           return {
             associateID: this.$inputs.iassociateID.val(),
             associate: this.$inputs.iassociate.val(),
             date: this.$inputs.idate.val(),
-            machine: this.$inputs.imachine.val(),
+            machine: this.$inputs.imachineCode.val(),
             idea: this.$inputs.iidea.val(),
             gain: this.$inputs.igain.val(),
             workcenter:this.$inputs.iworkcenter.html(),
             cell:this.$inputs.icell.html()            
           };
         },
+        timeDelay:function(){
+          E.loading(this.$el,this.newCellSuggestion,this);  
+        },
         newCellSuggestion: function(){
             var attributes = this.newAttributes();
             //if(attributes.date=='Invalid Date'){}
-            
+            //alert(attributes.machine);
             var errors; 
 
             this.collection.create(attributes,{ 
@@ -143,6 +148,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },wait:true
             });
             if(errors){
+                 E.hideLoading();
                 _.each(errors, function(val, key){
                     switch(key) {
                         case "db":   
@@ -164,11 +170,14 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 })
                 return;
             } 
+            
             this.$('#todo-stats').html('Total Suggesions Entered: ' + this.collection.length);
             //alert('creating new Cell Suggestion')
             _.each(this.$inputs,function(value,key){
                 value.val('');
+                value.html('');
             })
+            E.hideLoading();
         }
     });
 	

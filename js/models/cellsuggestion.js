@@ -19,6 +19,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
              err.machine = "machine error: please input a correct machine";
         if(!attrs.associateID)
              err.machine = "Input error: please select a correct associate code or name";
+        if(attrs.gain=='')
+             this.set('gain',' ');
              
         return ($.isEmptyObject(err)) ? false : err;   
     },
