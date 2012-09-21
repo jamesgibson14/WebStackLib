@@ -147,6 +147,9 @@ tr {
  .dataSuccess {
  	background-color:#6CE26C;
  }
+ .warning {
+ 	background-color:#FFE45C
+ }
  /*this is what we want the div to look like    when it IS showing*/  
  div.loading-visible{    
  	/*make visible*/    

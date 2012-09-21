@@ -49,7 +49,7 @@ _.extend(WebSQLStore.prototype,{
 		//console.log("sql destroy");
 		var id = (model.id || model.attributes.id);
 		success = function(){return;};
-		this._executeSql("DELETE * FROM "+this.tableName+" WHERE id='%s'",[model.id],success, error);
+		this._executeSql("DELETE FROM "+this.tableName+" WHERE id='%s'",[model.id],success, error);
 	},
 	
 	find: function (model, success, error) {

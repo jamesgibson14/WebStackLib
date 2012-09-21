@@ -4,7 +4,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/todo', 'text!templ
 
         //... is a list tag.
         tagName:  "li",
-        className: "ui-state-default",
+        className: "border",
         // Cache the template function for a single item.
         template: template,
     

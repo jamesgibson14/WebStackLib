@@ -21,6 +21,7 @@ require.config({
       	backboneADO: '../app/backbone.ado',
       	backbone: "backbone-0.9.2",
 		ieconfig: 'ieconfig',
+		jqall: 'jqplotAllPlugins',
 		jq: 'jqplot/',
 		jqp: 'jqplot/pluggins',
 		jqplot: "jqplot/jquery.jqplot.min",
