@@ -50,9 +50,9 @@ require.config({
 // Start the main app logic.
 require(['routers/appRouter'],
 function   (App) {
-    //jQuery, canvas and the app/sub module are all
-    //loaded and can be used here now.
-    
+    //main app title
+    document.title = 'SmeadAnalytics'
+
   	// Instantiates a new Router
     this.router = new App();
 });

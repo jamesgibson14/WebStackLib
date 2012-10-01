@@ -30,7 +30,7 @@ body {
 	font-size: 14px;
 	line-height: 1.4em;
 	color: #333333;
-	margin-left:3%;
+
 }
 iframe {
 	width:100%;
@@ -60,7 +60,9 @@ h1.ui-widget-header, h2.ui-widget-header {
 	padding-left:25%;
 }
 #bodyview {
-	max-width:97%;
+	margin-left:auto;
+	margin-right:auto;
+	width:95%;
 	background-color: #FFFFFF;
 	padding: 5px;
 	border-radius: 15px;
@@ -88,6 +90,34 @@ h1.ui-widget-header, h2.ui-widget-header {
 #poweredBy{
 	float: right;
 	text-align:right;
+}
+
+@media print {
+	body	{ color:#000; font:12px arial, helvetica, sans-serif; padding:0; }
+	html {
+		background: #FFFFFF;
+	}
+	#bodyview {
+		max-width:97%;
+		background-color: #FFFFFF;
+		padding: 5px;
+		border-radius: 15px;
+	}
+	
+	#header{
+		display:none;
+	}
+	#mainview{
+		
+	}
+	#footer {
+		overflow:hidden;
+		background-color: #FFFFFF;
+	}
+	#poweredBy{
+		float: right;
+		text-align:right;
+	}
 }
 .ofh {
 	overflow:hidden;
