@@ -1,7 +1,4 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<!DOCTYPE HTML>><HTML><HEAD>
-<META content="text/html; charset=utf-8" http-equiv="Content-Type"></HEAD>
-<BODY><PRE>/*jshint eqnull:true */
+﻿/*jshint eqnull:true */
 /*!
  * jQuery Cookie Plugin v1.2
  * https://github.com/carhartl/jquery-cookie
@@ -52,7 +49,7 @@
 		// read
 		var decode = config.raw ? raw : decoded;
 		var cookies = document.cookie.split('; ');
-		for (var i = 0, parts; (parts = cookies[i] &amp;&amp; cookies[i].split('=')); i++) {
+		for (var i = 0, parts; (parts = cookies[i] && cookies[i].split('=')); i++) {
 			if (decode(parts.shift()) === key) {
 				var cookie = decode(parts.join('='));
 				return config.json ? JSON.parse(cookie) : cookie;
@@ -73,4 +70,3 @@
 	};
 
 })(jQuery, document);
-</PRE></BODY></HTML>

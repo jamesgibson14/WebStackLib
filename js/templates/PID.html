@@ -1,0 +1,22 @@
+<span class='cell border'>{{pid}}<br />Status: {{status}}</span>
+<span class='cell border'>op: {{opseq}}</span>
+<span class='cell border'>{{machine}}<br />UOM: {{UnitOfMeasure}}</span>
+<span class='cell border'>{{shift}}</span>
+<span class='cell border'>actual: {{qtycompleted}}
+	<br />target: {{expectedqty}}</span>
+<span class='cell border'>{{scrap}}
+	<br />{{scrappercent}} %</span>
+<span class='cell border'>{{endscrap}} <input type="checkbox" class="chkendscrap" {{#if enterendscrap}}checked="checked"{{/if}} /></span>
+<span class='cell border'>{{setuptime}}</span>
+<span class='cell border'>{{runtime}}</span>
+<span class='cell border'>{{downtime}}</span>
+<span class='cell border'>{{operator}}</span>
+<span class='cell border'>{{date}}</span>
+<span class='cell border'>
+{{#each componentcode}}
+  {{this.cc}}<br />
+{{/each}}
+{{#if PaperConverting}}F: {{feedup}}{{/if}}
+</span>
+<span class='cell border'><input type="checkbox" class="check" {{#if flag}}checked="checked"{{/if}}  /><br />{{{flagreason}}}</span>
+<span class='cell border'><input type="checkbox" class="chkentered" {{#if entered}}checked="checked"{{/if}}  /><br />{{dateentered}}</span>

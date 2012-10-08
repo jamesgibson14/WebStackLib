@@ -97,7 +97,7 @@
     
 })(engine);
 
-//Freeze - lock up the browser by runing code.
+//Freeze - lock up the browser by runing code for testing.
 (function(e) {
     var l = e.freeze = function(){      
         for(var i=0;i<10000000;i++){

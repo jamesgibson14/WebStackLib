@@ -1,4 +1,4 @@
-define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min'], function($, Backbone, E, Handlebars, require){
+define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min','jquery.cookie'], function($, Backbone, E, Handlebars, require){
     Backbone.View.prototype.close = function () {    
         if (this.beforeClose) {        
             this.beforeClose();    
@@ -8,7 +8,10 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
             this.unbindAll();    
         this.unbind();
     };
-    
+    //$.cookie("cookietest", "you stored a cookie", { expires: 1})
+    //$.cookie("cookiesession", "this is a session a cookie")
+    //alert($.cookie('cookietest'));
+    //alert($.cookie('cookiesession'));
     var Router = Backbone.Router.extend({
         mainView: null,
         initialize: function(){

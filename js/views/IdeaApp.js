@@ -52,7 +52,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 source: machines,
                 autoFocus: true,
                 minLength: 1,
-                
+                delay: 50,
                 select: function( event, ui ) {
                     that.$( "#imachine" ).val( ui.item.label );                    
                     that.$('#imachineCode').val( ui.item.code );
@@ -69,6 +69,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 source: associates,
                 autoFocus: true,
                 minLength: 0,
+                delay: 100,
                 select: function( event, ui ) {                    
                     that.$('#iassociateID').val( ui.item.id );
                     $( "#iassociate" ).val( ui.item.label );
@@ -127,8 +128,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             associate: this.$inputs.iassociate.val(),
             date: this.$inputs.idate.val(),
             machine: this.$inputs.imachineCode.val(),
-            idea: this.$inputs.iidea.val(),
-            gain: this.$inputs.igain.val(),
+            idea: this.$inputs.iidea.val().replace("'","&#39;").replace('"','&#34;'),
+            gain: this.$inputs.igain.val().replace("'","&#39;").replace('"','&#34;'),
             workcenter:this.$inputs.iworkcenter.html(),
             cell:this.$inputs.icell.html()            
           };

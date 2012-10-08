@@ -252,7 +252,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step6: function(){
                     //alert('step6: goto Scrap Entry PID lookup page');
-                    if (_model.status >40 || !(_model.scrap > 0 || _model.PaperConverting == 1)){
+                    if (!(_model.scrap > 0 || _model.PaperConverting == 1)){
                         //no scrap or endscrap goto next record
                         //alert("No Scrap/EndScrap: go to next record");
                         _step = 'step10';
