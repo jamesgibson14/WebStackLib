@@ -406,9 +406,7 @@ textarea {
 }
 
 
-/*
-*  François 'cahnory' Germain
-*/
+
 .ui-tooltip, .ui-tooltip-top, .ui-tooltip-right, .ui-tooltip-bottom, .ui-tooltip-left {
 	color:#ffffff;
 	cursor:normal;
@@ -505,12 +503,7 @@ textarea {
 
 
 
-/*the following changes require some cleanup and integration with the above.**/
 
-/* line 9 */
-
-
-/* line 17 */
 #todoapp {
 	background: white;
 	-moz-box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px 0;
@@ -530,14 +523,11 @@ textarea {
 	-khtml-border-bottom-right-radius: 5px;
 	border-bottom-right-radius: 5px;
 }
-/* line 24 */
 
-
-/* line 32 */
 #todoapp .content #create-todo {
 	position: relative;
 }
-/* line 34 */
+
 #todoapp .content #create-todo input {
 	font-size: 24px;
 	font-family: inherit;
@@ -552,7 +542,7 @@ textarea {
 	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
 }
 
-/* line 47 */
+
 #todoapp .content #create-todo span {
 	position: absolute;
 	z-index: 999;
@@ -560,11 +550,9 @@ textarea {
 	left: 50%;
 	margin-left: -85px;
 }
-/* line 55 */
 #todoapp .content ul#todo-list {
 	margin-top: 10px;
 }
-/* line 57 */
 #todoapp .content ul#todo-list li {
 	padding: 15px 20px 15px 0;
 	position: relative;
@@ -573,7 +561,6 @@ textarea {
 	*zoom: 1;
 	cursor: move;
 }
-/* line 22, /opt/ree/lib/ruby/gems/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 #todoapp .content ul#todo-list li:after {
 	content: "\0020";
 	display: block;
@@ -582,12 +569,10 @@ textarea {
 	overflow: hidden;
 	visibility: hidden;
 }
-/* line 64 */
 #todoapp .content ul#todo-list li.editing {
 	padding: 0;
 	border-bottom: 0;
 }
-/* line 67 */
 #todoapp .content ul#todo-list li.editing .todo-input {
 	display: block;
 	width: 466px;
@@ -603,30 +588,30 @@ textarea {
 	-o-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
 	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
 }
-/* line 79 */
+
 #todoapp .content ul#todo-list li.editing .todo-content {
 	display: none;
 }
-/* line 81 */
+
 #todoapp .content ul#todo-list li.editing .todo-check {
 	display: none;
 }
-/* line 83 */
+
 #todoapp .content ul#todo-list li.editing .todo-destroy {
 	display: none !important;
 }	
-/* line 85 */
+
 #todoapp .content ul#todo-list li .todo-input {
 	display: none;
 }
-/* line 87 */
+
 #todoapp .content ul#todo-list li .todo-check {
 	position: relative;
 	top: 6px;
 	margin: 0 10px 0 7px;
 	float: left;
 }
-/* line 93 */
+
 #todoapp .content ul#todo-list li.done .todo-content{
 	text-decoration: line-through;
 	color: #777777;
@@ -635,7 +620,7 @@ textarea {
 	text-decoration: line-through;
 	color: #777777;
 }
-/* line 96 */
+
 #todoapp .content ul#todo-list li .todo-destroy {
 	position: absolute;
 	right: 0px;
@@ -645,11 +630,11 @@ textarea {
 	width: 20px;
 	height: 20px;
 }
-/* line 106 */
+
 #todoapp .content ul#todo-list li:hover .todo-destroy {
 	display: block;
 }
-/* line 109 */
+
 #todoapp #todo-stats {
 	*zoom: 1;
 	margin-top: 10px;
@@ -671,7 +656,6 @@ textarea {
 	padding: 0 20px;
 	line-height: 36px;
 }
-/* line 22, /opt/ree/lib/ruby/gems/1.8/gems/compass-0.10.5/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 #todoapp #todo-stats:after {
 	content: "\0020";
 	display: block;
@@ -680,20 +664,20 @@ textarea {
 	overflow: hidden;
 	visibility: hidden;
 }
-/* line 118 */
+
 #todoapp #todo-stats .todo-count {
 	float: left;
 }
-/* line 120 */
+
 #todoapp #todo-stats .todo-count .number {
 	font-weight: bold;
 	color: #555555;
 }
-/* line 123 */
+
 #todoapp #todo-stats .todo-clear {
 	float: right;
 }
-/* line 125 */
+
 #todoapp #todo-stats .todo-clear a {
 	display: block;
 	line-height: 20px;
@@ -714,7 +698,6 @@ textarea {
 	-o-box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0 0;
 	box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0 0;
 }
-/* line 136 */
 #todoapp #todo-stats .todo-clear a:hover, #todoapp #todo-stats .todo-clear a:focus {
 	background: rgba(0, 0, 0, 0.15);
 	-moz-box-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0 0;
@@ -722,7 +705,6 @@ textarea {
 	-o-box-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0 0;
 	box-shadow: rgba(0, 0, 0, 0.3) 0 -1px 0 0;
 }
-/* line 139 */
 #todoapp #todo-stats .todo-clear a:active {
 	position: relative;
 	top: 1px;

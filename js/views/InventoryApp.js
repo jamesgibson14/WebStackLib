@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSApp.html', 'models/PSDetails','views/PSDetail'], 
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/InventoryApp.html', 'models/PIDs','views/PIDDetail'], 
 function($, Backbone, E, Handlebars, Model, template, Collection, subView){
 
     var View = Backbone.View.extend({
@@ -11,7 +11,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         template: template,
         events: {
             'blur .pid':'change',
-            'click .loadtable': 'loadData',
+            'change #iPID':'loadPID',
+            'click .loadtable': 'loadPID',
             'click .btnRun': 'runEntry',
             'click .filter': 'filter'        
         },
@@ -19,10 +20,13 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
           this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','change','enterPeopleSoftScript','tester','filter');
             this.collection.bind('reset',     this.filter);
-            
+            //alert(this.collection.sql);
         },
-        loadData: function(){
+        loadPID: function(){
             var that = this;
+            var pid = this.$('#iPID').val();
+            //alert(pid);
+            this.collection.sql = "Execute dbo.spDataIntegrity @pid = '" + pid + "', @inventory = 1";
             E.loading(this.$el,that.collection.fetch,this.collection);
             //this.collection.fetch();
         },
@@ -34,8 +38,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             
             this.$el.html( temp );
 
-            if((document.location + '').indexOf('.hta','.hta')>-1) 
-                this.$('#autoentry').attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
+            //if((document.location + '').indexOf('.hta','.hta')>-1) 
+                //this.$('#autoentry').attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
             return this;
         },
         change: function(){
@@ -75,6 +79,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             }); 
             // replace the old view element with the new one, in the DOM 
             this.$("#pidList").replaceWith($el);//.replaceWith($el);
+            this.$('#collection-stats').html('Total rows: ' + this.filteredModels.length);
             E.hideLoading();             
         },
         runEntry: function(){
