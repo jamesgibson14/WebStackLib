@@ -12,6 +12,7 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
     //$.cookie("cookiesession", "this is a session a cookie")
     //alert($.cookie('cookietest'));
     //alert($.cookie('cookiesession'));
+    alert(E.getwinuser());
     var Router = Backbone.Router.extend({
         mainView: null,
         initialize: function(){

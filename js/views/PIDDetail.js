@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSDetail.html'], function($, Backbone, E, Handlebars, Model, template){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PID', 'text!templates/PID.html'], function($, Backbone, E, Handlebars, Model, template){
 
     var View = Backbone.View.extend({
 
