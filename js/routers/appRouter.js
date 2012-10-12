@@ -1,4 +1,5 @@
-define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min','jquery.cookie'], function($, Backbone, E, Handlebars, require){
+define(['jquery','backbone','engine', 'handlebars', 'require','models/user', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min','jquery.cookie'], 
+function($, Backbone, E, Handlebars, require,user){
     Backbone.View.prototype.close = function () {    
         if (this.beforeClose) {        
             this.beforeClose();    
@@ -8,11 +9,20 @@ define(['jquery','backbone','engine', 'handlebars', 'require', 'database','backb
             this.unbindAll();    
         this.unbind();
     };
-    //$.cookie("cookietest", "you stored a cookie", { expires: 1})
-    //$.cookie("cookiesession", "this is a session a cookie")
-    //alert($.cookie('cookietest'));
-    //alert($.cookie('cookiesession'));
-    alert(E.getwinuser());
+    E.sqldb = new E.ADODB({type: 'sqlserver'});
+    E.accessdb = new E.ADODB({type: 'access'});
+    var username;    
+    if ($.cookie("username")){
+        username = $.cookie("username");
+    }
+    else {
+        username = E.getwinuser();
+        $.cookie("username", username, { expires: 364})
+    }
+    E.user = new user({username: username});
+    E.user.fetch();
+    //alert(E.user.get('Name'));
+    
     var Router = Backbone.Router.extend({
         mainView: null,
         initialize: function(){
