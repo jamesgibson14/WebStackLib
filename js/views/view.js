@@ -31,6 +31,13 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
             _.extend(temp,E.user.toJSON());
             this.$el.append(this.template(temp));
             this.$el.find('#tabs').buttonset();
+            this.$('#links').menu({role: "null"});
+            this.$('#tabs1').tabs({collapsible: true});
+            this.$( ".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *" )
+                .removeClass( "ui-corner-all ui-corner-top" )            
+                .addClass( "ui-corner-bottom" );         
+            // move the nav to the bottom        
+            this.$( ".tabs-bottom .ui-tabs-nav" ).appendTo( ".tabs-bottom" );
             return this;
         },
 

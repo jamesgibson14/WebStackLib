@@ -8,7 +8,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
 
             // Model Constructor
             initialize: function() {
-                this.sql = "Execute getUserInfo @username=N'" + this.get("username") + "';";
+                this.sql = "Execute spGetUserInfoWeb @username = '" + this.get("username") + "'";
                 this.store =  new WebSQLStore(E.sqldb,'todos',false,false);
             },
 

@@ -21,7 +21,7 @@ function($, Backbone, E, Handlebars, require,user){
     }
     E.user = new user({username: username});
     E.user.fetch();
-    //alert(E.user.get('Name'));
+    //alert(E.user.get('PicturePath'));
     
     var Router = Backbone.Router.extend({
         mainView: null,

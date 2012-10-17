@@ -75,6 +75,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             }); 
             // replace the old view element with the new one, in the DOM 
             this.$("#pidList").replaceWith($el);//.replaceWith($el);
+            this.$('#collection-stats').html('Total lines: ' + this.filteredModels.length);
             E.hideLoading();             
         },
         runEntry: function(){
@@ -291,36 +292,54 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var txtMachine = contents.find('#SM_SFRPTLINK_WK_MACHINE_CODE\\$0')
-                    if (_model.assortment && _model.PaperConverting){
+                    var op = contents.find('#SF_COMPL_WRK_COMPL_OP_SEQ\\$0');  
+                    
+                    alert(_model.scrap);
+                    if (parseInt(op.val()) != _model.opseq){
                         //only enter endscrap which is process scrap converted to feet + endscrap
                         var frm = fr.forms[1];
-                        frm.ICAction.value = "#ICPanel18";
+                        frm.ICAction.value = "SF_COMPL_WRK_COMPL_OP_SEQ$prompt$0";
                         frm.submit();
-                        _step = 'step9';
-                        context.one('load', function(){
-                            nextStep();       
-                        }); 
-                    }
-                    else if(txtMachine.length==0){
-                        var txtScrapQty = contents.find('#SF_COMPL_WRK_SCRAPPED_QTY\\$0').val(_model.scrap);
-                        var op = contents.find('#SF_COMPL_WRK_COMPL_OP_SEQ\\$0');               
-                        op.val(_model.opseq);
-                        var frm = fr.forms[1];
-                        frm.ICAction.value="SF_COMPL_WRK_COMPL_OP_SEQ$0";
-                        frm.submit();
-                        _step = 'step8';
+                        _step = 'step8_1';
                         context.one('load', function(){
                             nextStep();       
                         }); 
                     }
                     else {
+                        var txtScrapQty = contents.find('#SF_COMPL_WRK_SCRAPPED_QTY\\$0').val(_model.scrap);  
                         txtMachine.val(_model.machine);
-                        alert('doublecheck values');         
+                        //alert('doublecheck values');         
                         
                         _step = 'stepSaveScrap';                        
                         nextStep();       
                          
                     }
+                },
+                step8_1: function(){
+                    var contents = context.contents();
+                    var fr = document.getElementById("autoentry").contentWindow.document;
+                    var table = contents.find('tr td:first-child :contains(' + _model.opseq + ')')
+                    //alert(table.parent().html());
+                    var index = (table.attr('href')+'').indexOf('#');
+                    //alert(index);
+                    var row = (table.attr('href')+'').slice(index,index +7);
+                    var scrap = table.parent().next().next().next().next().next().next().children().first();
+                    
+                    scrap = parseInt(scrap.html());
+                    if (scrap > 0)
+                        _model.endscrap = 0;
+                    
+                    _model.scrap -= scrap;
+                    if (_model.scrap<0){
+                        _model.scrap = 0;
+                    }                         
+                    var frm = fr.forms[1];
+                    frm.ICAction.value=row;
+                    frm.submit();
+                    _step = 'step8';
+                    context.one('load', function(){
+                        nextStep();       
+                    }); 
                 },
                 step9: function(){
                     //alert('step9: Find Paper component and add on endscrap length, Save and go to next PID')
@@ -344,9 +363,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             
                             //alert('component row:' + ();
                             var txtEndScrap = contents.find('#SF_COMP_LIST_PEND_CONSUME_QTY\\$' + num);
-                            //alert('parsed: ' + parseFloat(txtEndScrap.val()));
-                            alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.componentcode[i].es + ' + ' + _model.componentcode[i].sc +' = ' + (Math.round((parseFloat(txtEndScrap.val())+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
-                            txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100);
+                            var feedup = parseFloat(contents.find('#SF_COMPQTY_WRK_QTY_PER\\$' + num).val());
+                            alert('psfeedup: ' + feedup + ' CEDfeedup: ' + _model.feedup);
+                            alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.componentcode[i].es + ' = ' + (Math.round((parseFloat(txtEndScrap.val())+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
+                            txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + (_model.componentcode[i].es))*100)/100);
                         } 
                     } 
                     _model.endscrap = 0;  
