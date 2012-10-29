@@ -20,17 +20,14 @@ a img {
 	border: none;
 }
 
-html {
-	background: #333333;
-}
+
 body {
 	line-height: 1;
 	color: black;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 14px;
 	line-height: 1.4em;
-	color: #333333;
-
+	background: #333333;
 }
 iframe {
 	width:100%;
@@ -60,22 +57,29 @@ h1.ui-widget-header, h2.ui-widget-header {
 	padding-left:25%;
 }
 #bodyview {
-	margin-left:auto;
-	margin-right:auto;
+	margin-left:2%;
+	margin-right:2%;
 	width:95%;
 	background-color: #FFFFFF;
 	padding: 5px;
 	border-radius: 15px;
-}
 
+	height:97%;
+	z-index: 0;
+}
 #header{
 	margin-bottom: 6px;
 }
 #mainview{
 	
 }
+#SmeadApp {
+
+}
 #footer {
-	overflow:hidden;
+	position:relative;
+	clear:both;
+	height:50px;
 	padding-right: 10px;
 	padding-top: 3px;
 	padding-bottom: 3px;
@@ -86,6 +90,9 @@ h1.ui-widget-header, h2.ui-widget-header {
 	margin-bottom: -6px;
 	border-radius: 0px 0px 15px 15px;
 	border-top: 1px solid black;
+	bottom:6px;
+	width:100%;
+	z-index: 1;
 }
 #poweredBy{
 	float: right;
@@ -160,6 +167,9 @@ tr {
 .relative {
 	position:relative;
 }
+.fixed {
+	position:fixed;
+}
  div.loading-invisible{    
  	/*make invisible*/    
  	display:none;  
@@ -179,6 +189,9 @@ tr {
  }
  .warning {
  	background-color:#FFE45C
+ }
+ .transparent {
+ 	background:none;
  }
  /*this is what we want the div to look like    when it IS showing*/  
  div.loading-visible{    
@@ -277,12 +290,7 @@ textarea {
 	left: 50%;
 	margin-left: -85px;
 }
-#tabs1 .tabs-spacer { float: left; height: 200px; }    
-.tabs-bottom .ui-tabs-nav { clear: left; padding: 0 .2em .2em .2em; }    
-.tabs-bottom .ui-tabs-nav li { 
-	top: auto; bottom: 0; margin: 0 .2em 1px 0; border-bottom: auto; border-top: 0; 
-}    
-.tabs-bottom .ui-tabs-nav li.ui-tabs-active { margin-top: -1px; padding-top: 1px; }
+
 #todo-list {
 	margin-top: 10px;
 }
@@ -409,8 +417,6 @@ textarea {
 #credits a {
 	color: #888;
 }
-
-
 
 .ui-tooltip, .ui-tooltip-top, .ui-tooltip-right, .ui-tooltip-bottom, .ui-tooltip-left {
 	color:#ffffff;
@@ -717,6 +723,9 @@ textarea {
 .table {
 	display:table;
 }
+.psEntryTable {
+	border: 1px solid black;
+}
 .hcell { 
 	display:table-cell;
 	padding:5px;
@@ -725,7 +734,6 @@ textarea {
 	text-align:center;
 	color: #4D926F;
 	font-size:16px;
-	border:1px solid black;	
 	
 }
 .hicell { 
@@ -736,7 +744,6 @@ textarea {
 	text-align:center;
 	color: #4D926F;
 	font-size:16px;
-	border:1px solid black;
 }
 .column {
 	display:table-column;
@@ -806,3 +813,42 @@ textarea {
 	background-color: #6da82d
 }
 
+/* tables */
+table.tablesorter {
+	font-family:arial;
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	font-size: 8pt;
+
+	text-align: left;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color: #e6EEEE;
+	border: 1px solid #FFF;
+	font-size: 8pt;
+	padding: 4px;
+}
+table.tablesorter thead tr .header {
+	background-image: url(../assets/images/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	color: #3D3D3D;
+	padding: 4px;
+
+	vertical-align: top;
+}
+table.tablesorter tbody tr.odd td {
+	background-color:#F0F0F6;
+}
+table.tablesorter thead tr .headerSortUp {
+	background-image: url(../assets/images/asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image: url(../assets/images/desc.gif);
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+background-color: #8dbdd8;
+}

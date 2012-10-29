@@ -1,4 +1,4 @@
-define(['jquery','backbone','engine', 'handlebars', 'require','models/user', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min','jquery.cookie'], 
+define(['jquery','backbone','engine', 'handlebars', 'require','models/user', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min','jquery.cookie','jquery.tablesorter.min'], 
 function($, Backbone, E, Handlebars, require,user){
     Backbone.View.prototype.close = function () {    
         if (this.beforeClose) {        
@@ -53,6 +53,7 @@ function($, Backbone, E, Handlebars, require,user){
                 that.mainView = new View();
                 var view = that.mainView.render().el;
                  $('#bodyview').html(view);
+                 that.mainView.afterRender();
             }); 
 
             // anotherView.js extends view.js.  anotherView.js does not have a promptUser method, so JavaScript looks up the prototype chain and uses the view.js promptUser method instead.

@@ -1,27 +1,45 @@
 	<h1 class="tabletitle">PeopleSoft Entry</h1>
 	<button class='loadtable'>Load PIDs</button><br /><span>Filters <input type="checkbox" id="filters" /></span>
-	<ul id="pidList" class="tbody">
-	<div class='row header'>
-	<span class="hcell">pid</span>
-	<span class="hcell">opseq</span>
-	<span class="hcell">machine</span>
-	<span class="hcell">shift</span>
-	<span class="hcell">qtycompleted</span>
-	<span class="hcell">scrap<li class="ui-state-default ui-corner-all .ui-icon" style="float:right;" title="Counter - Total packed"><span class="ui-icon ui-icon-help"></span></li></span>
-	<span class="hcell">endscrap</span>
-	<span class="hcell">setuptime</span>
-	<span class="hcell">runtime</span>
-	<span class="hcell">downtime</span>
-	<span class="hcell">operator</span>
-	<span class="hcell">date</span>
-	<span class="hcell">componentcode</span>
-	<span class="hcell">999 Flag<br /><input type="checkbox" id="flag" class="filter" /></span>
-	<span class="hcell">Entered</span>
-	</div>
+	<table id="pidList" class="psEntryTable tablesorter">
+	<thead class='row header'><tr>
+	<th class="hcell">pid</th>
+	<th class="hcell">opseq</th>
+	<th class="hcell">machine</th>
+	<th class="hcell">shift</th>
+	<th class="hcell">qtycompleted</th>
+	<th class="hcell">scrap<li class="ui-state-default ui-corner-all .ui-icon" style="float:right;" title="Counter - Total packed"><span class="ui-icon ui-icon-help"></span></li></th>
+	<th class="hcell">endscrap</th>
+	<th class="hcell">setuptime</th>
+	<th class="hcell">runtime</th>
+	<th class="hcell">downtime</th>
+	<th class="hcell">operator</th>
+	<th class="hcell">date</th>
+	<th class="hcell">componentcode</th>
+	<th class="hcell">999 Flag<br /><input type="checkbox" id="flag" class="filter" /></th>
+	<th class="hcell">Entered</th>
+	</tr></thead>
+	<tr>
+	<td class="hcell"><input type="text" /></td>
+	<td class="hcell"><input type="text" /></td>
+	<td class="hcell">machine</td>
+	<td class="hcell">shift</td>
+	<td class="hcell">qtycompleted</td>
+	<td class="hcell">scrap</td>
+	<td class="hcell">endscrap</td>
+	<td class="hcell">setuptime</td>
+	<td class="hcell">runtime</td>
+	<td class="hcell">downtime</td>
+	<td class="hcell">operator</td>
+	<td class="hcell">date</td>
+	<td class="hcell">componentcode</td>
+	<td class="hcell">999 Flag<br /><input type="checkbox" id="flag" class="filter" /></td>
+	<td class="hcell">Entered</td>
+	</tr>
+	<tbody class="tablebody"></tbody>
 
 	<!-- Here is where I need to add a list of PID Module views instead of the following-->
 	
-	</ul>
+	</table>
 	<div id="collection-stats"> </div>
 	<button class="btnRun">Run Process</button><br />
 	<iframe id='autoentry' src="" >Error! An Iframe in not showing.</iframe>

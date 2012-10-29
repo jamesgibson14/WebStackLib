@@ -63,18 +63,25 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         addAll: function() {
             // create in memory element
             
-            var $el = this.$('#pidList').clone(true,true);
-            var header = $el.find('.header').clone(true,true);
+            var $el = this.$('#pidList .tablebody').clone(true,true);
+            //var header = $el.find('.header').clone(true,true);
             // also get the `className`, `id`, `attributes` if you need them 
             $el.empty();
-            $el.append(header);
+            //$el.append(header);
             // append everything to the in-memory element 
             _.each(this.filteredModels, function(model){ 
                 var rowView = new subView({model: model}); 
                 $el.append(rowView.render().el); 
             }); 
             // replace the old view element with the new one, in the DOM 
-            this.$("#pidList").replaceWith($el);//.replaceWith($el);
+            
+            this.$("#pidList  .tablebody").replaceWith($el);//.replaceWith($el);
+            this.$("#pidList").tablesorter({headers:{
+                    0:{sorter:false},1:{sorter:false},3:{sorter:false},4:{sorter:false},5:{sorter:false},
+                    6:{sorter:false},7:{sorter:false},8:{sorter:false},9:{sorter:false},10:{sorter:false},
+                    11:{sorter:false},12:{sorter:false},13:{sorter:false},14:{sorter:false}
+                }
+            });
             this.$('#collection-stats').html('Total lines: ' + this.filteredModels.length);
             E.hideLoading();             
         },
@@ -293,10 +300,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var txtMachine = contents.find('#SM_SFRPTLINK_WK_MACHINE_CODE\\$0')
                     var op = contents.find('#SF_COMPL_WRK_COMPL_OP_SEQ\\$0');  
-                    
+                    var txtScrapQty = contents.find('#SF_COMPL_WRK_SCRAPPED_QTY\\$0')
                     alert(_model.scrap);
                     if (parseInt(op.val()) != _model.opseq){
                         //only enter endscrap which is process scrap converted to feet + endscrap
+                        txtScrapQty.val(_model.scrap); 
                         var frm = fr.forms[1];
                         frm.ICAction.value = "SF_COMPL_WRK_COMPL_OP_SEQ$prompt$0";
                         frm.submit();
@@ -306,7 +314,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         }); 
                     }
                     else {
-                        var txtScrapQty = contents.find('#SF_COMPL_WRK_SCRAPPED_QTY\\$0').val(_model.scrap);  
+                        txtScrapQty.val(_model.scrap);  
                         txtMachine.val(_model.machine);
                         //alert('doublecheck values');         
                         
@@ -334,6 +342,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         _model.scrap = 0;
                     }                         
                     var frm = fr.forms[1];
+                    _model.step8_1=true;
                     frm.ICAction.value=row;
                     frm.submit();
                     _step = 'step8';
@@ -381,7 +390,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //alert('endscrap: ' +_model.endscrap )
                     if (_model.endscrap <= 0){
                         //save page here
-                        
+                        if (_model.scrap == 0){
+                            _step = 'step10';
+                            nextStep();
+                            return;
+                        }
                         if(!confirm('save scrap entries ')){
                             var temp = {}
                             temp.flag = _errors = true;

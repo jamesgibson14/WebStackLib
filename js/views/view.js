@@ -1,10 +1,9 @@
 define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!templates/main.html', 'models/collection'], function($, Backbone, E, Handlebars, Model, template, Collection){
 
     var View = Backbone.View.extend({
-
         // Represents the actual DOM element that corresponds to your View (There is a one to one relationship between View Objects and DOM elements)
         tagName:  "div",
-        className: 'SmeadApp',
+        className: 'SmeadApp border relative',
         attributes: {},
         template: template,
         location: '' + window.location.href,
@@ -14,45 +13,51 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
             this.model = new Model();
             _.bindAll(this,'render');
             // Setting the view's template property
-            this.template = Handlebars.compile(this.template);
-			
+            this.template = Handlebars.compile(this.template);			
         },
-
         events: {
-
-            "click #mcontent": "promptUser",
             'click #todoview': 'loadlink',
             'click #restart':'restart'
-
 	    },
-
         render: function() {
             var temp = this.model.toJSON();
             _.extend(temp,E.user.toJSON());
             this.$el.append(this.template(temp));
-            this.$el.find('#tabs').buttonset();
+            this.$el.find('#tabsmenu').buttonset();
             this.$('#links').menu({role: "null"});
-            this.$('#tabs1').tabs({collapsible: true});
+            this.$('#tabs').tabs({collapsible: true,active:false,
+                beforeActivate: function(event,ui){
+                    if(ui.oldTab.length==0){
+                        //ui.newTab.parent().parent().height('300px').width('300px')
+                    }
+                    if(ui.newTab.length==0){
+                        //ui.newTab.parent().parent().height('300px').width('300px')
+                    }
+                },
+                activate: function(event,ui){
+                    ui.newPanel.hide();                   
+                }            
+            });
+            this.$('#tabs').removeClass('ui-widget-content');
             this.$( ".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *" )
-                .removeClass( "ui-corner-all ui-corner-top" )            
-                .addClass( "ui-corner-bottom" );         
-            // move the nav to the bottom        
-            this.$( ".tabs-bottom .ui-tabs-nav" ).appendTo( ".tabs-bottom" );
+                .removeClass( "ui-corner-all ui-corner-top ui-widget-header" )            
+                .addClass( "ui-corner-bottom right" );
+            this.$('#tabs .ui-tabs-panel').css({'background' : '#bbb', 'opacity':'.75'});
+            
             return this;
         },
-
-        promptUser: function() {
-
-            prompt("Isn't this amazing?", "Yes, yes it is");
-
+        afterRender: function() {
+            this.$('#testtable').tablesorter();
+            this.$('#tabs').position({my:'right bottom',at:'right top',of:'#footer'})
+            
+            var height = this.$el.height();
+            //alert(height)
+            //this.$el.height(height-300);
         },
         loadlink: function(e){
         	var id = $(e.currentTarget).attr('id');
-        	$('#mainview').html('YOu loaded ' + id);
-        	
-        	
-        	//define(['jquery','backbone'])
-        	
+        	$('#mainview').html('YOu loaded ' + id);        	
+        	//define(['jquery','backbone'])        	
         },
         restart: function(){
             window.location = this.location + '';
