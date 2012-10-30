@@ -27,13 +27,12 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
         initialize: function() {
             _.bindAll(this, 'addOne', 'addAll', 'render', 'toggleAllComplete','renderStats','reOrder','filter');
             this.collection.bind('reset',     this.filter);
-             this.collection.bind('add',     this.addOne);
+            this.collection.bind('add',     this.addOne);
              
             this.template = Handlebars.compile(this.template);
             this.statsTemplate = Handlebars.compile(this.statsTemplate);
             var temp = this.template({});
             this.$el.html( temp );
-            debugger;
              
             this.input = this.$("#new-todo");
             this.renderStats();
@@ -68,6 +67,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
         addOne: function(model) {
             var view = new subView({model: model});
             this.$("#todo-list").append(view.render().el);
+            this.renderStats();
         },
         
         filter: function() {
@@ -98,7 +98,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
         // Add all items in the **Todos** collection at once.
         addAll: function() {
             // create in memory element
-            this.$('#todo-list').sortable('destroy');
+            //this.$('#todo-list').sortable('destroy');
             var $el = this.$('#todo-list').clone(true,true); 
             // also get the `className`, `id`, `attributes` if you need them 
             $el.empty();

@@ -63,7 +63,7 @@ h1.ui-widget-header, h2.ui-widget-header {
 	background-color: #FFFFFF;
 	padding: 5px;
 	border-radius: 15px;
-
+	margin-bottom:50px;
 	height:97%;
 	z-index: 0;
 }
@@ -77,21 +77,23 @@ h1.ui-widget-header, h2.ui-widget-header {
 
 }
 #footer {
-	position:relative;
+	position:fixed;
 	clear:both;
 	height:50px;
 	padding-right: 10px;
+	padding-left: 10px;
 	padding-top: 3px;
 	padding-bottom: 3px;
 	background-color: #bbb;
 	margin-top:6px;
-	margin-left: -6px;
-	margin-right: -6px;
+	margin-right:auto;
+	margin-left:auto;
 	margin-bottom: -6px;
-	border-radius: 0px 0px 15px 15px;
+	border-radius: 15px 15px 15px 15px;
 	border-top: 1px solid black;
 	bottom:6px;
-	width:100%;
+	left:0px;
+	right:0px;
 	z-index: 1;
 }
 #poweredBy{

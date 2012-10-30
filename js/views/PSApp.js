@@ -29,12 +29,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             //this.collection.fetch();
         },
         loadSorter: function(){
-            this.$("#pidList").tablesorter({headers:{
-                    0:{sorter:false},1:{sorter:false},3:{sorter:false},4:{sorter:false},5:{sorter:false},
-                    6:{sorter:false},7:{sorter:false},8:{sorter:false},9:{sorter:false},10:{sorter:false},
-                    11:{sorter:false},12:{sorter:false},13:{sorter:false},14:{sorter:false}
-                }
-            });
+            
         },
         // Re-render the contents of the todo item.
         render: function() {
@@ -97,7 +92,12 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             // replace the old view element with the new one, in the DOM 
             
             this.$("#pidList  .tablebody").replaceWith($el);//.replaceWith($el);
-            
+            this.$("#pidList").tablesorter({headers:{
+                    0:{sorter:false},1:{sorter:false},3:{sorter:false},4:{sorter:false},5:{sorter:false},
+                    6:{sorter:false},7:{sorter:false},8:{sorter:false},9:{sorter:false},10:{sorter:false},
+                    12:{sorter:false},13:{sorter:false},14:{sorter:false}
+                }
+            });
             this.$('#collection-stats').html('Total lines: ' + this.filteredModels.length);
             E.hideLoading();             
         },

@@ -25,31 +25,13 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
             this.$el.append(this.template(temp));
             this.$el.find('#tabsmenu').buttonset();
             this.$('#links').menu({role: "null"});
-            this.$('#tabs').tabs({collapsible: true,active:false,
-                beforeActivate: function(event,ui){
-                    if(ui.oldTab.length==0){
-                        //ui.newTab.parent().parent().height('300px').width('300px')
-                    }
-                    if(ui.newTab.length==0){
-                        //ui.newTab.parent().parent().height('300px').width('300px')
-                    }
-                },
-                activate: function(event,ui){
-                    ui.newPanel.hide();                   
-                }            
-            });
-            this.$('#tabs').removeClass('ui-widget-content');
-            this.$( ".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *" )
-                .removeClass( "ui-corner-all ui-corner-top ui-widget-header" )            
-                .addClass( "ui-corner-bottom right" );
-            this.$('#tabs .ui-tabs-panel').css({'background' : '#bbb', 'opacity':'.75'});
             
             return this;
         },
         afterRender: function() {
             this.$('#testtable').tablesorter();
-            this.$('#tabs').position({my:'right bottom',at:'right top',of:'#footer'})
-            
+            //this.$('#sidebarBtns').position({my:'bottom',at:'right bottom',of:'body',collision:'none'})
+            this.$('#sidebarBtns > input').button();
             var height = this.$el.height();
             //alert(height)
             //this.$el.height(height-300);

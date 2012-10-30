@@ -25,21 +25,17 @@ function($, Backbone, E, Handlebars, require,user){
     
     var Router = Backbone.Router.extend({
         mainView: null,
-        initialize: function(){
-        
+        initialize: function(){        
             // Tells Backbone to start watching for hashchange events
             Backbone.history.start();
-
         },
 
         // All of your Backbone Routes (add more)
         routes: {
-
             // When there is no hash bang on the url, the home method is called
             '': 'home',
             'main/:view': 'main',
             'tab/:view': 'tab'
-
         },
 
         'home': function(){
