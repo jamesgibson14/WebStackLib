@@ -12,8 +12,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         events: {
             'blur .pid':'change',
             'click .loadtable': 'loadData',
+            'click .loadsorter': 'loadSorter',
             'click .btnRun': 'runEntry',
-            'click .filter': 'filter'        
+            'click .filter': 'filter',
+            'change .colfilter': 'filterList'        
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
@@ -25,6 +27,14 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var that = this;
             E.loading(this.$el,that.collection.fetch,this.collection);
             //this.collection.fetch();
+        },
+        loadSorter: function(){
+            this.$("#pidList").tablesorter({headers:{
+                    0:{sorter:false},1:{sorter:false},3:{sorter:false},4:{sorter:false},5:{sorter:false},
+                    6:{sorter:false},7:{sorter:false},8:{sorter:false},9:{sorter:false},10:{sorter:false},
+                    11:{sorter:false},12:{sorter:false},13:{sorter:false},14:{sorter:false}
+                }
+            });
         },
         // Re-render the contents of the todo item.
         render: function() {
@@ -60,6 +70,17 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var that = this;
             this.addAll();
         },
+        filterList: function(e){
+            var filter = $(e.currentTarget).val()
+            alert(filter);
+            _.each(this.filteredModels,function(model){
+                //alert(filter)
+                var machine = model.get('machine')+''
+                if (machine.indexOf(filter)>=0)
+                    alert(model.id);
+            })
+
+        },
         addAll: function() {
             // create in memory element
             
@@ -76,12 +97,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             // replace the old view element with the new one, in the DOM 
             
             this.$("#pidList  .tablebody").replaceWith($el);//.replaceWith($el);
-            this.$("#pidList").tablesorter({headers:{
-                    0:{sorter:false},1:{sorter:false},3:{sorter:false},4:{sorter:false},5:{sorter:false},
-                    6:{sorter:false},7:{sorter:false},8:{sorter:false},9:{sorter:false},10:{sorter:false},
-                    11:{sorter:false},12:{sorter:false},13:{sorter:false},14:{sorter:false}
-                }
-            });
+            
             this.$('#collection-stats').html('Total lines: ' + this.filteredModels.length);
             E.hideLoading();             
         },
