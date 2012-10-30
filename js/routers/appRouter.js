@@ -53,7 +53,8 @@ function($, Backbone, E, Handlebars, require,user){
                 that.mainView = new View();
                 var view = that.mainView.render().el;
                  $('#bodyview').html(view);
-                 that.mainView.afterRender();
+                 if(that.mainView.afterRender)
+                    that.mainView.afterRender();
             }); 
 
             // anotherView.js extends view.js.  anotherView.js does not have a promptUser method, so JavaScript looks up the prototype chain and uses the view.js promptUser method instead.
