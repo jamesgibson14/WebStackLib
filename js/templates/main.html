@@ -1,61 +1,22 @@
 <div id="header" class="relative"> 
 	<button type="button" id="restart" class="restart">Restart App</button>
 	<div id='tabsmenu'>
-		<input type="radio" id="radio5" name="radio" checked="checked" /><a href="#main/view" >Home</a>
-		<input type="radio" id="radio1" name="radio" /><a href="#main/TodoApp" >Todolist</a>
-		<input type="radio" id="radio2" name="radio" /><a href="#main/PSApp" >PeopleSoft Entry</a>
-		<input type="radio" id="radio4" name="radio" /><a href="#main/MachPerfApp" >Machine Performance</a>
-		<input type="radio" id="radio6" name="radio" /><a href="#main/IdeaApp" >Idea Tracking</a>
-		<input type="radio" id="radio7" name="radio" /><a href="#main/GraphApp" >Reports</a>
-		<input type="radio" id="radio8" name="radio" /><a href="#main/ProductionApp" >Production</a>
-		<input type="radio" id="radio9" name="radio" /><a href="#main/InventoryApp" >Inventory</a>
-		<input type="radio" id="radio10" name="radio" /><a href="#main/TasksApp" >Task</a>
-	</div>
-	<ul id='links'>
+		<input type="radio" id="radio5" name="radio" checked="checked" /><label for="radio5"><a href="#main/home" >Home</a></label>
+		<input type="radio" id="radio1" name="radio" /><label for="radio1"><a href="#main/TodoApp" >Todolist</a></label>
+		<input type="radio" id="radio2" name="radio" /><label for="radio2"><a href="#main/PSApp" >PeopleSoft Entry</a></label>
+		<input type="radio" id="radio4" name="radio" /><label for="radio4"><a href="#main/MachPerfApp" >Machine Performance</a></label>
+		<input type="radio" id="radio6" name="radio" /><label for="radio6"><a href="#main/IdeaApp" >Idea Tracking</a></label>
+		<input type="radio" id="radio7" name="radio" /><label for="radio7"><a href="#main/GraphApp" >Reports</a></label>
+		<input type="radio" id="radio8" name="radio" /><label for="radio8"><a href="#main/ProductionApp" >Production</a></label>
+		<input type="radio" id="radio9" name="radio" /><label for="radio9"><a href="#main/InventoryApp" >Inventory</a></label>
+		<input type="radio" id="radio10" name="radio" /><label for="radio10"><a href="#main/TasksApp" >Task</a></label>
+		<input type="radio" id="radio11" name="radio" /><label for="radio11"><a href="#main/ProdScheduleApp" >Prododuction Scheduling</a></label>
 		{{#each apps}}
-		<li ><a href="#main/{{this.path}}">{{this.title}}</a></li>
+			<input type="radio" id="r{{this.path}}" name="radio" /><label for="r{{this.path}}"><a href="#main/{{this.path}}" >{{this.title}}</a></label>
 		{{/each}}
-	</ul>
+	</div>
 </div>
-<table id="testtable" class="tablesorter">
-<thead>
-	<tr>
-		<th>Letters&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th><th>Numbers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-	</tr>
-</thead>
-<tbody>
-	<tr>
-		<td>a</td><td>5</td>
-	</tr>
-	<tr>
-		<td>b</td><td>4</td>
-	</tr>
-	<tr>
-		<td>c</td><td>3</td>
-	</tr>
-	<tr>
-		<td>d</td><td>2</td>
-	</tr>
-	<tr>
-		<td>e</td><td>1</td>
-	</tr>
-	<tr>
-		<td>a</td><td>1</td>
-	</tr>
-	<tr>
-		<td>b</td><td>2</td>
-	</tr>
-	<tr>
-		<td>c</td><td>3</td>
-	</tr>
-	<tr>
-		<td>d</td><td>4</td>
-	</tr>
-	<tr>
-		<td>e</td><td>5</td>
-	</tr>
-</tbody>
-</table>
+
 <div id="mainview" class="relative" style="z-index:1;width:100%">
 	<div id="appview">
 		<h1>Welcome {{Name}}</h1>

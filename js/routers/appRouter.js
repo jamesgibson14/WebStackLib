@@ -9,8 +9,14 @@ function($, Backbone, E, Handlebars, require,user){
             this.unbindAll();    
         this.unbind();
     };
-    E.sqldb = new E.ADODB({type: 'sqlserver'});
-    E.accessdb = new E.ADODB({type: 'access'});
+    try{
+        E.sqldb = new E.ADODB({type: 'sqlserver'});
+    }
+    catch(e){};
+    try{
+        E.accessdb = new E.ADODB({type: 'access'});
+    }
+    catch(e){};
     var username;    
     if ($.cookie("username")){
         username = $.cookie("username");

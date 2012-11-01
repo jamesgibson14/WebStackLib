@@ -15,7 +15,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             'click .loadsorter': 'loadSorter',
             'click .btnRun': 'runEntry',
             'click .filter': 'filter',
-            'change .colfilter': 'filterList'        
+            'change .colfilter': 'filterList',
+            'click #filterclear': 'filter'        
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
@@ -38,7 +39,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var temp = this.template({});
             
             this.$el.html( temp );
-
+             
             if((document.location + '').indexOf('.hta','.hta')>-1) 
                 this.$('#autoentry').attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
             return this;
@@ -67,13 +68,20 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         },
         filterList: function(e){
             var filter = $(e.currentTarget).val()
-            alert(filter);
-            _.each(this.filteredModels,function(model){
+            var tempmods = []
+            _.each(this.filteredModels,function(model, index){
                 //alert(filter)
                 var machine = model.get('machine')+''
-                if (machine.indexOf(filter)>=0)
-                    alert(model.id);
+                if (machine.indexOf(filter)<0){
+                    tempmods.push(model);
+                    alert('model added');
+                }
             })
+            alert(tempmods.length)
+            if(tempmods.length>0)
+                this.filteredModels = tempmods;
+            alert(this.filteredModels.length);
+            this.addAll();
 
         },
         addAll: function() {
@@ -92,12 +100,16 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             // replace the old view element with the new one, in the DOM 
             
             this.$("#pidList  .tablebody").replaceWith($el);//.replaceWith($el);
-            this.$("#pidList").tablesorter({headers:{
-                    0:{sorter:false},1:{sorter:false},3:{sorter:false},4:{sorter:false},5:{sorter:false},
+            this.$("#pidList").tablesorter({
+                headers:{
+                    1:{sorter:false},3:{sorter:false},4:{sorter:false},5:{sorter:false},
                     6:{sorter:false},7:{sorter:false},8:{sorter:false},9:{sorter:false},10:{sorter:false},
                     12:{sorter:false},13:{sorter:false},14:{sorter:false}
-                }
-            });
+                },
+                sortList: [[11,1],[2,0],[0,0]]
+            });            
+
+             
             this.$('#collection-stats').html('Total lines: ' + this.filteredModels.length);
             E.hideLoading();             
         },

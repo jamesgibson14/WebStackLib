@@ -1,10 +1,16 @@
 	<h1 class="tabletitle">PeopleSoft Entry</h1>
 	<button type="button" class='loadtable'>Load PIDs</button><button type="button" class='loadsorter'>Load Sorter</button><br /><span>Filters <input type="checkbox" id="filters" /></span>
+	<div id="pidfilters">
+		PID<input class="colfilter" filteron="pid" type="text" size="10" style="margin-right:10px" /><br />
+		Machine<input class="colfilter" filteron="machine" type="text" size="10" style="margin-right:10px" /><br />
+		<input class="colfilter" filteron="pid" type="text" size="10" style="margin-right:10px" /><br />
+		<button id="filterclear">Clear Filters</button>
+	</div>
 	<table id="pidList" class="psEntryTable tablesorter">
 	<thead class='row header'><tr>
-		<th class="hcell">pid<br /><input class="colfilter" filteron="pid" type="text" size="10" style="margin-right:10px" /></th>
+		<th class="hcell">pid<br /></th>
 		<th class="hcell">opseq</th>
-		<th class="hcell">machine<br /><input class="colfilter" filteron="machine" type="text" size="4" style="margin-right:10px" /></th>
+		<th class="hcell">machine<br /></th>
 		<th class="hcell">shift</th>
 		<th class="hcell">qtycompleted</th>
 		<th class="hcell">scrap<span class="ui-state-default ui-corner-all .ui-icon" style="float:right;" title="Counter - Total packed"><span class="ui-icon ui-icon-help"></span></span></th>

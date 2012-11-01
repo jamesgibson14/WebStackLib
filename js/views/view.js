@@ -29,7 +29,6 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
             return this;
         },
         afterRender: function() {
-            this.$('#testtable').tablesorter();
             //this.$('#sidebarBtns').position({my:'bottom',at:'right bottom',of:'body',collision:'none'})
             this.$('#sidebarBtns > input').button();
             var height = this.$el.height();
