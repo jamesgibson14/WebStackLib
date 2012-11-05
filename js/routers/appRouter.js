@@ -1,4 +1,4 @@
-define(['jquery','backbone','engine', 'handlebars', 'require','models/user', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min','jquery.cookie','jquery.tablesorter.min'], 
+define(['jquery','backbone','engine', 'handlebars', 'require','models/user', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min','jquery.cookie','jquery.tablesorter'], 
 function($, Backbone, E, Handlebars, require,user){
     Backbone.View.prototype.close = function () {    
         if (this.beforeClose) {        
