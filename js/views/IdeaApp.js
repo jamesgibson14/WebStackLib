@@ -41,6 +41,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             this.$inputs.igain = this.$('#igain');
             this.$inputs.iworkcenter = this.$('#sworkcenter');
             this.$inputs.icell = this.$('#scell');
+            this.$inputs.ialpha = this.$('#ialpha');
+            this.$inputs.inumeric = this.$('#inumeric');
             this.$inputs.iestimate = this.$('#iestimate');
             this.$inputs.iactual = this.$('#iactual');
             this.$('input, textarea').placeholder();
@@ -84,6 +86,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 //add on select: set associate_ID
             });
             this.$("#ialpha").combobox();
+            this.$("#inumeric").combobox();
             this.$('#tabs').tabs();
             return this;
         },
@@ -127,7 +130,6 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var view = new subView({model: model});
             this.$("#list").append(view.render().el);
             view.$el.toggleClass("dataSuccess",700).toggleClass("dataSuccess",700).toggleClass("dataSuccess",700).toggleClass("dataSuccess",700);
-
         },
         newAttributes: function() {
           return {
@@ -138,7 +140,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             idea: this.$inputs.iidea.val().replace("'","&#39;").replace('"','&#34;'),
             gain: this.$inputs.igain.val().replace("'","&#39;").replace('"','&#34;'),
             workcenter:this.$inputs.iworkcenter.html(),
-            cell:this.$inputs.icell.html()            
+            cell:this.$inputs.icell.html(),
+            alpha: this.$inputs.ialpha.val(),
+            numeric: this.$inputs.inumeric.val(),
+            estimate: this.$inputs.iestimate.val(),
+            actual: this.$inputs.iactual.val()           
           };
         },
         timeDelay:function(){

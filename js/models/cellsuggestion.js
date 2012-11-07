@@ -36,7 +36,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
     },
     sync: function(method, model,options){
         var sql ='SELECT MAX(CellSuggestionNum)+1 AS cellnum FROM CellSuggestions';
-        var sql2 = "INSERT INTO CellSuggestions (CellSuggestionNum, OpenDate, Suggestion, Cell, Submitter, CellorNew, Gain, OriginalMachine) VALUES (%s,'%s','%s', %s,'%s','%s','%s','%s')"
+        var sql2 = "INSERT INTO CellSuggestions (CellSuggestionNum, OpenDate, Suggestion, Cell, Submitter, CellorNew, Gain, OriginalMachine,alphaCode,numericCode,Estimate,ActualCost) VALUES (%s,'%s','%s', %s,'%s','%s','%s','%s','%s','%s','%s','%s')"
         var cellnum, cellid, 
         _error,
         machine = this.get('machine'),
@@ -44,7 +44,11 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         gain = this.get('gain'),
         workcenter = this.get('workcenter'),
         associateID = this.get('associateID')
-        cell = this.get('cell');
+        cell = this.get('cell'),
+        alpha = this.get('alpha'),
+        numeric = this.get('numeric'),
+        estimate = this.get('estimate'),
+        actual = this.get('actual');
         var opendate = new Date();
             
         var params = [];
@@ -61,7 +65,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             err = db.executeSql(sql, null, success, error);
             //alert('cellnum: ' + cellnum);
             success = function(sql,rs){return;};
-            params = [cellnum, opendate.format('mm/dd/yyyy'),suggestion,cell, associateID,'PE',gain,machine];
+            params = [cellnum, opendate.format('mm/dd/yyyy'),suggestion,cell, associateID,'PE',gain,machine,alpha,numeric,estimate,actual];
             err = db.executeSql(sql2, params, success, error);
             
             sql2 = 'SELECT CellSuggestionID FROM CellSuggestions WHERE CellSuggestionNum = ' + cellnum;

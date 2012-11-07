@@ -40,7 +40,8 @@ $.widget( "ui.combobox", {
         .addClass( "ui-state-default ui-combobox-input" )                    
         .autocomplete({                        
             delay: 0,                        
-            minLength: 0,                        
+            minLength: 0,
+            autoFocus:true,                        
             source: function( request, response ) {                            
                 var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );                            
                 response( select.children( "option" ).map(function() {                                
@@ -88,7 +89,7 @@ $.widget( "ui.combobox", {
                 text: false                    
             })                    
             .removeClass( "ui-corner-all" )                    
-            .addClass( "ui-corner-right ui-combobox-toggle" )                    
+            .addClass( "ui-corner-right ui-combobox-toggle" )                   
             .click(function() {                        
                 // close if already visible                        
                 if ( input.autocomplete( "widget" ).is( ":visible" ) ) {                            
@@ -105,9 +106,10 @@ $.widget( "ui.combobox", {
             input                        
             .tooltip({                            
                 position: {                                
+                    at: "right+20 top+10",
                     of: this.button                            
                 },                            
-                tooltipClass: "ui-state-highlight"                        
+                tooltipClass: "ui-state-highlight absolute"                        
             });            
         },             
         destroy: function() {                
