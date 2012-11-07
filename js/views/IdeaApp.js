@@ -41,6 +41,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             this.$inputs.igain = this.$('#igain');
             this.$inputs.iworkcenter = this.$('#sworkcenter');
             this.$inputs.icell = this.$('#scell');
+            this.$inputs.iestimate = this.$('#iestimate');
+            this.$inputs.iactual = this.$('#iactual');
             this.$('input, textarea').placeholder();
             this.$('#idate').datepicker();
             this.$('#btnCreate').button();
@@ -51,8 +53,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             this.$( "#imachine" ).autocomplete({
                 source: machines,
                 autoFocus: true,
-                minLength: 1,
-                delay: 50,
+                minLength: 0,
+                delay: 0,
                 select: function( event, ui ) {
                     that.$( "#imachine" ).val( ui.item.label );                    
                     that.$('#imachineCode').val( ui.item.code );
@@ -63,6 +65,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
 
                 //add on select: set machine_ID, set cell
             });
+            this.$("#imachine").on('focus',function(e){
+                that.$( "#imachine" ).autocomplete( "search", "" );
+            })
             var associates = this.model.get('associates');
             
             this.$( "#iassociate" ).autocomplete({
@@ -78,6 +83,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
 
                 //add on select: set associate_ID
             });
+            this.$("#ialpha").combobox();
+            this.$('#tabs').tabs();
             return this;
         },
         change: function(){

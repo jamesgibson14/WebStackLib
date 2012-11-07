@@ -25,7 +25,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
             this.$el.append(this.template(temp));
             this.$el.find('#tabsmenu').buttonset();
             this.$('#links').menu({role: "null"});
-            
+            this.$('#ialpha').combobox();
             return this;
         },
         afterRender: function() {
