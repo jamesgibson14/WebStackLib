@@ -66,19 +66,27 @@ _.extend(WebSQLStore.prototype,{
             this._executeSql(model.sql,[],success,error);		
 	},
 	
-	update: function (model, success, error) {
+	update: function (model, success, error, queue) {
 		//console.log("sql update")
 		var id = (model.id || model.attributes.id);
+		var sql = ''
 		success = function(){return;};
-		if(!model.storetype)
-		  this._executeSql("UPDATE "+this.tableName+" SET [value]='%s' WHERE id='%s'",[JSON.stringify(model.toJSON()),model.id], success, error);
+		if(!model.storetype){
+		  sql = "UPDATE "+this.tableName+" SET [value]='%s' WHERE id='%s'"
+		  if (!queue)
+		      this._executeSql(sql,[JSON.stringify(model.toJSON()),model.id], success, error);
+		  else
+		      model.collection.sqlqueue +=  vsprintf(sql, [JSON.stringify(model.toJSON()),model.id]) + ';';		    
+	   }
 		else {
 		    var fields = [],values = [], sql;
 		    
 		    this._executeSql(sql,values, success, error);
 		}
 	},
-	
+	updateAll: function(){
+	    
+	},
 	_save: function (model, success, error) {
 		//console.log("sql _save");
 		var id = (model.id || model.attributes.id);
@@ -107,6 +115,7 @@ _.extend(WebSQLStore.prototype,{
 Backbone.sync = function (method, model, options) {
 	var store = model.store || model.collection.store, success, error;
 	var db;
+	var queue =options.queue;
 	if(model.collection) 
 	   db = model.collection.db
 	if(model.db)
@@ -116,6 +125,7 @@ Backbone.sync = function (method, model, options) {
 		alert("Error: No Storage method available", model);
 		return;
 	}
+
 	 debugger;
 	success = function (tx, rs) {	   
 	    
@@ -172,8 +182,10 @@ Backbone.sync = function (method, model, options) {
 			break;
 		case "create":	store.create(model,success,error);
 			break;
-		case "update":	store.update(model,success,error);
+		case "update":	 store.update(model,success,error,queue);
 			break;
+	    case "updateAll":  store._executeSql(model.sqlqueue,[],function(){return;},error);
+            break;
 		case "delete":	store.destroy(model,success,error);
 			break;
 		default:

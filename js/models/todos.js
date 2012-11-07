@@ -10,6 +10,7 @@ define([
     model: Model,
     urlRoot: '/todos',
     url: function(){ return this.urlRoot;},
+    sqlqueue: ';',
     // set all of the todo items under the `"todos"` namespace.
     //localStorage: new Store("todos-backbone"),
     store: new WebSQLStore(new E.ADODB({type: 'sqlserver'}),'todos',false,true),
@@ -35,6 +36,9 @@ define([
     // Todos are sorted by their original insertion order.
     comparator: function(model) {
       return model.get('order');
+    },
+    saveQueued: function(){
+        Backbone.sync('updateAll',this,{});
     }
   });
 

@@ -790,6 +790,10 @@ table.tablesorter thead tr .headerSortDown {
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
 background-color: #8dbdd8;
 }
+.barcode {
+	font-family: "Smead39";
+	font-size: 30px;
+}
 #cellpriorityList, #machinepriorityList {float:left;}
 #sortable1, #sortable2 { margin: 0; padding: 0 0 2.5em; margin-right: 10px; }    
 #sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; width: 120px; }

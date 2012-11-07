@@ -10,7 +10,7 @@
 		<input type="radio" id="radio8" name="radio" /><label for="radio8"><a href="#main/ProductionApp" >Production</a></label>
 		<input type="radio" id="radio9" name="radio" /><label for="radio9"><a href="#main/InventoryApp" >Inventory</a></label>
 		<input type="radio" id="radio10" name="radio" /><label for="radio10"><a href="#main/TasksApp" >Task</a></label>
-		<input type="radio" id="radio11" name="radio" /><label for="radio11"><a href="#main/ProdScheduleApp" >Prododuction Scheduling</a></label>
+		<input type="radio" id="radio11" name="radio" /><label for="radio11"><a href="#main/ProdScheduleApp">Prododuction Scheduling</a></label>
 		{{#each apps}}
 			<input type="radio" id="r{{this.path}}" name="radio" /><label for="r{{this.path}}"><a href="#main/{{this.path}}" >{{this.title}}</a></label>
 		{{/each}}
@@ -34,21 +34,17 @@
   		<option value="z">Z	C.I. Support Items</option>
   	</select>
 
-
 </div>
-	
-<div id="sidebarBtns" class="fixed" style="bottom:0px;right:0px;z-index:1002;">      
-	<input type="radio" id="sbtn5" name="radio" /><label for="sbtn5">Updates</label>       
-	<input type="radio" id="sbtn6" name="radio" /><label for="sbtn6">Help</label>       
-	<input type="radio" id="sbtn4" name="radio" /><label for="sbtn4">Chat</label>
-	<input type="radio" id="sbtn3" name="radio" /><label for="sbtn3">Chat</label>
-	<input type="radio" id="sbtn2" name="radio" /><label for="sbtn2">Settings</label>    
-	<input type="radio" id="sbtn1" name="radio" /><label for="sbtn1">Debug</label>
+<div id="sidebarBtns" class="fixed" style="bottom:56px;right:0px;z-index:1002;">      
+	<input type="radio" id="sbtn5" name="radio" data-icon="ui-icon-info" /><label for="sbtn5">Updates</label>       
+	<input type="radio" id="sbtn6" name="radio" data-icon="ui-icon-help" /><label for="sbtn6">Help</label>       
+	<input type="radio" id="sbtn4" name="radio" data-icon="ui-icon-comment" /><label for="sbtn4">Chat</label>
+	<input type="radio" id="sbtn3" name="radio" data-icon="ui-icon-info" /><label for="sbtn3">Chat</label>
+	<input type="radio" id="sbtn2" name="radio" data-icon="ui-icon-gear" /><label for="sbtn2">Settings</label>    
+	<input type="radio" id="sbtn1" name="radio" data-icon="ui-icon-lock" /><label for="sbtn1">Debug</label>
 </div>
-
 
 <div id="footer">
-
 	<div class="left " style="z-index:1;">Logged in as: {{username}}</div><div id='poweredBy' class="" style="z-index:1;">Powered By SmeadEngineering<br />Cedar City</div> 
 </div>
 

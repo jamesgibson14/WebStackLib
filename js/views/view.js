@@ -29,8 +29,15 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
             return this;
         },
         afterRender: function() {
-            //this.$('#sidebarBtns').position({my:'bottom',at:'right bottom',of:'body',collision:'none'})
-            this.$('#sidebarBtns > input').button();
+            //this.$('#sidebarBtns').position({my:'bottom',at:'right bottom',of:'#footer',collision:'none'})
+            this.$('#sidebarBtns > input').button({icons:'ui-icon-cart',text:false})
+            this.$('#sidebarBtns > input').each(function(value){
+                var btn = $(this);
+                var icon = btn.attr('data-icon');
+                //alert(icon)
+                btn.button('option','icons',{primary:icon})
+            })
+            this.$('#sidebarBtns > label').css({'display':'block'});
             var height = this.$el.height();
             //alert(height)
             //this.$el.height(height-300);

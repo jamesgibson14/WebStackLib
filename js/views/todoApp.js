@@ -35,7 +35,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
             this.$el.html( temp );
              
             this.input = this.$("#new-todo");
-            this.renderStats();
+
             this.collection.fetch();
            
         },
@@ -90,9 +90,10 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
                 
                 var id = $(this).attr('data-id');
                 var model = that.collection.get(id); 
-                model.save({order: i + 1},{silent:true});
+                model.save({order: i + 1},{silent:true,queue:true});
             });
-            alert(new Date()-now);
+            this.collection.saveQueued();
+            //alert(new Date()-now);
         },
         
         // Add all items in the **Todos** collection at once.
@@ -112,7 +113,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
             });
             // replace the old view element with the new one, in the DOM 
             this.$("#todo-list").replaceWith($el);//.replaceWith($el); 
-            
+            this.renderStats();
         },
     
         // Generate the attributes for a new Todo item.
