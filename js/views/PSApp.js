@@ -12,7 +12,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         events: {
             'blur .pid':'change',
             'click .loadtable': 'loadData',
-            'click .loadsorter': 'loadSorter',
+            'click .printPIDs': 'printPIDs',
             'click .btnRun': 'runEntry',
             'click .filter': 'filter',
             'keypress .colfilter': 'filterList',
@@ -29,8 +29,37 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             E.loading(this.$el,that.collection.fetch,this.collection);
             //this.collection.fetch();
         },
-        loadSorter: function(){
-            
+        printPIDs: function(){
+            var HKEY_Root, HKEY_Path, HKEY_Key;
+            HKEY_Root = "HKEY_CURRENT_USER";
+            HKEY_Path = "\\Software\\Microsoft\\Internet Explorer\\PageSetup\\";
+            // Set the page footer to print the header is empty
+            function PageSetup_Null (){
+              try{
+                var Wsh = new ActiveXObject("WScript.Shell");
+                HKEY_Key = "header";
+                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key ,"");
+                HKEY_Key = "footer";
+                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key ,"");
+              }catch (e) {}
+            }
+            // Set the page footer to print the header for the default value
+            function PageSetup_Default (){
+              try{
+                var Wsh = new ActiveXObject ( "WScript.Shell");
+                HKEY_Key = "header";
+                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key, "&w &b on page 00 yards, &p / &P");
+                HKEY_Key = "footer";
+                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key, "&u &b &d");
+                HKEY_Key = "Shrink_To_Fit";
+                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key, "yes");
+              }
+              catch (e) {}
+            }
+            PageSetup_Default();
+            setTimeout(function(){
+                window.print();
+            },1000);
         },
         // Re-render the contents of the todo item.
         render: function() {

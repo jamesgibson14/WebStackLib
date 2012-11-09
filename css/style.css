@@ -107,11 +107,15 @@ h1.ui-widget-header, h2.ui-widget-header {
 	html {
 		background: #FFFFFF;
 	}
+	.noprint{
+		display:none;
+	}
 	#bodyview {
 		max-width:97%;
 		background-color: #FFFFFF;
 		padding: 5px;
-		border-radius: 15px;
+		border:0;
+		margin-bottom:50px;
 	}
 	
 	#header{
@@ -119,6 +123,9 @@ h1.ui-widget-header, h2.ui-widget-header {
 	}
 	#mainview{
 		
+	}
+	#sidebarBtns {
+		display:none;
 	}
 	#footer {
 		overflow:hidden;

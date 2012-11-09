@@ -3,7 +3,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
     var View = Backbone.View.extend({
         // Represents the actual DOM element that corresponds to your View (There is a one to one relationship between View Objects and DOM elements)
         tagName:  "div",
-        className: 'SmeadApp border relative',
+        className: 'SmeadApp relative',
         attributes: {},
         template: template,
         location: '' + window.location.href,
@@ -25,7 +25,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
             this.$el.append(this.template(temp));
             this.$el.find('#tabsmenu').buttonset();
             this.$('#links').menu({role: "null"});
-            
+            this.$( "#dialog-form" ).dialog();
             return this;
         },
         afterRender: function() {
