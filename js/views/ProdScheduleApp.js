@@ -33,14 +33,20 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
             this.statsTemplate = Handlebars.compile(this.statsTemplate);
             var temp = this.template({});
             this.$el.html( temp );
-            this.$('#sortable2').sortable({
+            this.$('#sortable2 tbody').sortable({
                 receive: function(e,ui){
                     alert('offset' + ui.offset.top + ' offset' + ui.offset.left + ' p' + ui.position.top + ' p' + ui.position.left + ' op' + ui.originalPosition.top + ' op' + ui.originalPosition.left);
                 }
             }).disableSelection();
-            this.$( "#sortable1 li").draggable({            
+                   
+           this.$( "#accordion" ).accordion({            
+                collapsible: true,
+                heightStyle: "content"        
+            });    
+            
+            this.$( "#sortable1 tbody tr").draggable({            
                 helper: "clone",
-                connectToSortable: '#sortable2'        
+                connectToSortable: '#sortable2  tbody'        
             }).disableSelection();
             this.$('#sortable').sortable({
                 sort: function() {              

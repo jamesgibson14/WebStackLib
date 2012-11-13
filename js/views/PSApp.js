@@ -375,9 +375,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var txtMachine = contents.find('#SM_SFRPTLINK_WK_MACHINE_CODE\\$0')
                     var op = contents.find('#SF_COMPL_WRK_COMPL_OP_SEQ\\$0');  
                     var txtScrapQty = contents.find('#SF_COMPL_WRK_SCRAPPED_QTY\\$0')
-                    alert(_model.scrap);
+                    //alert(_model.scrap);
                     if (parseInt(op.val()) != _model.opseq){
-                        //only enter endscrap which is process scrap converted to feet + endscrap
+                        //Enter Process Scrap
                         txtScrapQty.val(_model.scrap); 
                         var frm = fr.forms[1];
                         frm.ICAction.value = "SF_COMPL_WRK_COMPL_OP_SEQ$prompt$0";
@@ -447,9 +447,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             //alert('component row:' + ();
                             var txtEndScrap = contents.find('#SF_COMP_LIST_PEND_CONSUME_QTY\\$' + num);
                             var feedup = parseFloat(contents.find('#SF_COMPQTY_WRK_QTY_PER\\$' + num).val());
-                            alert('psfeedup: ' + feedup + ' CEDfeedup: ' + _model.feedup);
-                            alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.componentcode[i].es + ' = ' + (Math.round((parseFloat(txtEndScrap.val())+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
-                            txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + (_model.componentcode[i].es))*100)/100);
+                            var qty = txtEndScrap.val();
+                            //alert('psfeedup: ' + feedup + ' CEDfeedup: ' + _model.feedup + ',assort: ' + _model.assortment);
+                            //alert('row: ' + num + ', ' + qty + ' + ' + _model.componentcode[i].sc + ' + ' + _model.componentcode[i].es + ' = ' + (Math.round(((_model.assortment ? 0 : qty)+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
+                            txtEndScrap.val(Math.round(((_model.assortment ? 0 : qty) + (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100);
                         } 
                     } 
                     _model.endscrap = 0;  
@@ -469,6 +470,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             nextStep();
                             return;
                         }
+                        /*
                         if(!confirm('save scrap entries ')){
                             var temp = {}
                             temp.flag = _errors = true;
@@ -485,7 +487,15 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             context.one('load', function(){
                                 nextStep();       
                             });
-                        }                        
+                        }
+                        */
+                        var frm = fr.forms[1];
+                        frm.ICAction.value = "#ICSave";
+                        frm.submit();
+                        _step = 'step10';
+                        context.one('load', function(){
+                            nextStep();       
+                        });                        
                     }
                     else {
                         //set form to go to component screen

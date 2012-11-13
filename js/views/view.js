@@ -25,7 +25,17 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
             this.$el.append(this.template(temp));
             this.$el.find('#tabsmenu').buttonset();
             this.$('#links').menu({role: "null"});
-            this.$( "#dialog-form" ).dialog();
+            this.$( "#dialog-form" ).dialog({
+                buttons: {
+                    "Ok":function(){
+                        $(this).find('.content').append("<input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' />")
+                    }
+                },
+                open: function(e,ui){
+                    $(this).find('.content').append("<input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' />")
+                }
+            });
+            $( ".resizable" ).resizable({handles: "se"});
             return this;
         },
         afterRender: function() {

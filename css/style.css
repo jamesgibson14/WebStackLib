@@ -863,6 +863,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 background-color: #8dbdd8;
 }
 .barcode {
+	padding: 5px;
 	font-family: "Smead39";
 	font-size: 30px;
 }
