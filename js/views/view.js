@@ -1,4 +1,5 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!templates/main.html', 'models/collection'], function($, Backbone, E, Handlebars, Model, template, Collection){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!templates/main.html', 'models/collection','views/plot'], 
+function($, Backbone, E, Handlebars, Model, template, Collection,plotV){
 
     var View = Backbone.View.extend({
         // Represents the actual DOM element that corresponds to your View (There is a one to one relationship between View Objects and DOM elements)
@@ -26,6 +27,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
             this.$el.find('#tabsmenu').buttonset();
             this.$('#links').menu({role: "null"});
             this.$( "#dialog-form" ).dialog({
+                autoOpen:false,
                 buttons: {
                     "Ok":function(){
                         $(this).find('.content').append("<input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' />")
@@ -36,6 +38,10 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
                 }
             });
             $( ".resizable" ).resizable({handles: "se"});
+            
+            var graph = new plotV();
+            this.$el.append(graph.render().el)
+            
             return this;
         },
         afterRender: function() {

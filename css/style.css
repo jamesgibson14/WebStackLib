@@ -180,6 +180,12 @@ tr {
 .fixed {
 	position:fixed;
 }
+.block {
+	display:block;
+}
+.inline {
+	display:inline;
+}
  div.loading-invisible{    
  	/*make invisible*/    
  	display:none;  
@@ -202,6 +208,9 @@ tr {
  }
  .transparent {
  	background:none;
+ }
+ .vspacer {
+ 	height: 100px;
  }
  /*this is what we want the div to look like    when it IS showing*/  
  div.loading-visible{    

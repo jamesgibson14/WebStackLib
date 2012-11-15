@@ -53,10 +53,15 @@
 (function(engine) {
         engine.help = "Help Reached";
         engine.getwinuser = function(){
-            var wshshell=new ActiveXObject("wscript.shell");
-            var username=wshshell.ExpandEnvironmentStrings("%username%"); 
-
-            return username;
+            var username;
+            try {
+                var wshshell=new ActiveXObject("wscript.shell");
+                username=wshshell.ExpandEnvironmentStrings("%username%"); 
+            }
+            catch(e){
+                alert(e);
+            };
+            return username || "guest";
         }
     })(engine);
 
