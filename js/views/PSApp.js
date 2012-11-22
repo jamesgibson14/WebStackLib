@@ -14,7 +14,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             'click .loadtable': 'loadData',
             'click .printPIDs': 'printPIDs',
             'click .btnRun': 'runEntry',
-            'click .filter': 'filter',
+            'click .filter': 'filterList',
             'keypress .colfilter': 'filterList',
             'click #filterclear': 'filter'        
         },
@@ -85,9 +85,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             this.model.set({pid: newvalue})
         },
         filter: function(){
-            //alert('filter and sort');
-            debugger;
-            //this.collection.sort({silent:true});
+
+            
             //alert('filters: ' + this.filters);
             if(this.filters)
                 this.filteredModels = this.collection.filter(function(model){
@@ -102,28 +101,44 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             this.addAll();
         },
         filterList: function(e){
-            if(e.keyCode != 13) return;
             
+            if(e.keyCode != 13 && e.keyCode != undefined ) return;
+            var $el = $(e.currentTarget)
+            var filter = $el.val();
+            var type = $el.attr('type');
+            if (type == 'checkbox')
+                filter = !!$el.attr('checked');
             
-            var filter = $(e.currentTarget).val()
-            var tempmods = []
+            var attr = $el.attr('filteron');
+            //alert(filter + ' ' + type + ' '+ attr);
+            var tempmods = [];
+            //alert(this.filteredModels[0].get(attr) == 'true');
+            
             _.each(this.filteredModels,function(model, index){
                 //alert(filter)
-                var machine = model.get('machine')+''
-                if (machine.indexOf(filter)>=0){
+                var val = model.get(attr)
+                if (type == 'checkbox'){
+                    if(filter == !!val) 
+                        tempmods.push(model)
+                }
+                else if (val.indexOf(filter)>=0){
                     tempmods.push(model);
                 }
             })
-            alert(tempmods.length);
+            
+            //alert(tempmods.length);
             if(tempmods.length>0){
                 this.filteredModels = tempmods;
-                
+                this.addAll();
             }
-            this.addAll();
+            else{
+                alert('No matches found. Try clearing the filters')
+                e.preventDefault();
+            }
             
             
-            
-            e.preventDefault();
+            if(e.keyCode == 13)
+                e.preventDefault();
         },
         addAll: function() {
             // create in memory element
@@ -493,6 +508,22 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         frm.ICAction.value = "#ICSave";
                         frm.submit();
                         _step = 'step10';
+                        
+                        document.getElementById("autoentry").onreadystatechange = function(){   
+                            //alert('change ' + this.readyState);
+                            if (this.readyState == 'interactive'){
+                                //alert('I am inside the interactive state');
+                                //unbind the function
+                                document.getElementById("autoentry").onreadystatechange = null;
+                                //block alert popups
+                                //document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
+                                //document.getElementById("autoentry").contentWindow.alert = function(){};
+                                
+                                //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
+                                //document.getElementById("autoentry").contentWindow.alert("Alert");
+                            }
+                        }
+                        
                         context.one('load', function(){
                             nextStep();       
                         });                        

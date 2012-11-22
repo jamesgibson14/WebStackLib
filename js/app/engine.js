@@ -78,12 +78,12 @@
 
 
 //Loading - to add a loading icon
-(function(e) {
-    var l = e.loading = function(selector, callback,scope){       
+(function(E) {
+    var l = E.loading = function(selector, callback,scope){       
         $('#loading').addClass('loading-visible');
         setTimeout(function () {callback.call(scope);},100);
     }
-    e.hideLoading = function(){
+    E.hideLoading = function(){
         $('#loading').removeClass('loading-visible');
     }
     
@@ -114,8 +114,8 @@
 })(engine);
 
 //include - run code and append/insert html
-(function(e) {
-    e.include = function(options){
+(function(E) {
+    E.include = function(options){
         //can accept url as string or options as object
         //E.debug.log("<br> entered include: " + options);
         var htmldata;
@@ -157,8 +157,8 @@
     
 })(engine);
 //loadTemplate - load template
-(function(e) {
-    e.loadTemplate = function(options){
+(function(E) {
+    E.loadTemplate = function(options){
         //can accept url as string or options as object
         //E.debug.log("<br> entered include: " + options);
         var htmldata;
@@ -182,8 +182,8 @@
 })(engine);
 
 //loadAMDModule - load AMD module for use
-(function(e) {
-    e.loadModule= function(options){
+(function(E) {
+    E.loadModule= function(options){
         //can accept url as string or options as object
         //E.debug.log("<br> entered include: " + options);
         var htmldata;
@@ -252,7 +252,7 @@
     
     
 //Debugger
-(function(e) {
+(function(E) {
     var Debug = function(options){ 
         // Create some defaults, extending them with any options that were provided
         var settings =  {
@@ -296,7 +296,7 @@
         var logs = [];
         
     };
-    e.debug = new Debug();
+    E.debug = new Debug();
 })(engine);
 (function(E) {
     E.worker = {
@@ -398,6 +398,39 @@
     
     }
     E.GET = getUrlVars()
+    
+})(engine);
+(function(E) {
+    //Util from http://www.siteexperts.com/tips/html/ts16/page2.asp
+    E.getSelected = function(opt) {
+        var selected = new Array();
+        var index = 0;
+        for (var intLoop = 0; intLoop < opt.length; intLoop++) {
+           if ((opt[intLoop].selected) ||
+               (opt[intLoop].checked)) {
+              index = selected.length;
+              selected[index] = new Object;
+              selected[index].value = opt[intLoop].value;
+              selected[index].index = intLoop;
+           }
+        }
+        return selected;
+     }
+
+     E.outputSelected = function(opt) {
+        var sel = E.getSelected(opt);
+        alert(opt[1].value)
+        var strSel = "";
+        for (var item in sel)       
+           strSel += sel[item].value + "\n";
+        alert("Selected Items:\n" + strSel);
+     }
+     E.split = function ( val ) {            
+         return val.split( /,\s*/ );        
+     }        
+     E.extractLast = function ( term ) {            
+         return split( term ).pop();        
+     }
     
 })(engine);
 

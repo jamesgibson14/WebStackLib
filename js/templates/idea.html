@@ -1,6 +1,42 @@
-  <td id="_id" class="border cell">PE{{peNum}}</td>
-  <td class="border">{{date}}</td>
-  <td class="border">{{machine}}</td>
-  <td class="border">{{associate}}</td>
-  
+{{#if id}}
+	<td id="_id" class="border cell">PE{{peNum}}</td>
+	<td class="border">{{date}}</td>
+	<td class="border">{{machine}}</td>
+	<td class="border">{{associate}}</td>
+{{else}}
+	<label for="">Idea </label><br />
+	<textarea placeholder="idea" class="resizable">{{idea}} </textarea>
+	<button id="newidea">Submit Idea</button><br />
+	<h3>Tags</h3>
+	<style>    
+		#selectable .ui-selecting {        
+			background: #ccc;    
+		}    
+		#selectable .ui-selected {        
+			background: #999;    
+		}
+		#selectable li {        
+			 margin: 3px; padding: 1px; float: left; text-align: center;   
+		}     
+		</style>
+	<ul id="selectable">    
+		<li>Item 1</li>    
+		<li>Item 2</li>    
+		<li>Item 3</li>    
+		<li>Item 4</li>    
+		<li>Item 5</li>
+	</ul><br />	
+	<ul id="tags">    
+		<li>Computer Bug<input type="checkbox" name="tags" /></li>    
+		<li>Cell Enhacement<input type="checkbox" name="tags" /></li>    
+		<li>Stops Production<input type="checkbox" name="tags" /></li>    
+		<li>Slows<input type="checkbox" name="tags" /></li>    
+		<li>Critical<input type="checkbox" name="tags" /></li>
+	</ul><br />
+	Other Tags <input type="text" name="tags" /><label for="">QuickTip </label><br />			
+	<input type="radio" name="type" checked="checked" /><label for="">Production </label><br />
+	<input type="radio" name="type" /><label for="">Computer </label><br />
+	<input type="radio" name="type" /><label for="">QuickTip </label><br />
+	
+{{/if}}
 
