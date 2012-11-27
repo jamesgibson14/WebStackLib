@@ -128,8 +128,7 @@ h1.ui-widget-header, h2.ui-widget-header {
 		display:none;
 	}
 	#footer {
-		overflow:hidden;
-		background-color: #FFFFFF;
+		display:none;
 	}
 	#poweredBy{
 		float: right;
@@ -217,7 +216,8 @@ tr {
  	/*make visible*/    
  	display:block;    
  	/*position it at the very top-left corner*/    
- 	position:absolute;    top:0;    left:0;    width:100%;    height:100%;    text-align:center;    
+ 	position:absolute;    top:0;    left:0;    width:100%;    height:100%;    text-align:center;
+ 	z-index: 2001;    
  	/* in supporting browsers, make it      a little transparent*/    
  	background:#fff;    
  	_background:none; 
@@ -232,13 +232,13 @@ tr {
  	color:#5C93F0;  
  }
  .ui-autocomplete {
-		max-height: 250px;
-		overflow-y: auto;
-		/* prevent horizontal scrollbar */
-		overflow-x: hidden;
-		/* add padding to account for vertical scrollbar */
-		padding-right: 20px;
-	}
+	max-height: 250px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	/* add padding to account for vertical scrollbar */
+	padding-right: 20px;
+}
 
 #todoapp {
 	width: 480px;

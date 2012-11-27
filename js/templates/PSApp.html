@@ -1,13 +1,16 @@
 	<h1 class="tabletitle">PeopleSoft Entry</h1>
-	<button type="button" class='loadtable'>Load PIDs</button><button type="button" class='printPIDs'>Print</button><br />
-	<h1 class="ui-widget-header title"><span class="">Filters</span></h1>
-	<div id="pidfilters">
+	<button type="button" class='loadtable'>Load PIDs</button><button type="button" class='printPIDs'>Print</button><br />	
+	<div id="pidfilters" style="width:250px">
+		<h1 class="ui-widget-header title"><span class="">Filters</span></h1>
 		PID: <input class="colfilter" filteron="pid" type="text" size="10" style="margin-right:10px" /><br />
 		Machine: <input class="colfilter" filteron="machine" type="text" size="10" style="margin-right:10px" /><br />
-		<input class="colfilter" filteron="pid" type="text" size="10" style="margin-right:10px" /><br />
-		999 flaged: <input type="checkbox" checked="checked" filteron="flag"  class="filter" /><br />
+		Cell:<input class="colfilter" filteron="cell" type="text" size="10" style="margin-right:10px" /><br />
+		Day:<input class="filter" filteron="shift" type="radio" name="rShift" value="F" style="margin-right:10px" /> 
+		Swing:<input class="filter" filteron="shift" type="radio" name="rShift" value="G" style="margin-right:10px" /><br />
+		999 flaged:<input class="filter" filteron="flag" type="checkbox" name="rFlag" style="margin-right:10px" /><br />
 		<button type="button" id="filterclear">Clear Filters</button>
 	</div>
+	<h1 class="ui-widget-header title"><span class="">Current PIDs</span></h1>
 	<table id="pidList" class="psEntryTable tablesorter">
 	<thead class='row header'><tr>
 		<th class="hcell">pid<br /></th>

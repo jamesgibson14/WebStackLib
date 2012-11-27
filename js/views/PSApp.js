@@ -45,6 +45,14 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             }
             // Set the page footer to print the header for the default value
             function PageSetup_Default (){
+              /*
+               * &b = break/space
+               * &w = page title
+               * &p / &P = current page / Total pages
+               * &u = url
+               * &d = short date
+               */
+
               try{
                 var Wsh = new ActiveXObject ( "WScript.Shell");
                 HKEY_Key = "header";
@@ -57,9 +65,12 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
               catch (e) {}
             }
             PageSetup_Default();
+            
+            this.filter(false,'checkbox','flag');
+            
             setTimeout(function(){
                 window.print();
-            },1000);
+            },500);
         },
         // Re-render the contents of the todo item.
         render: function() {
@@ -84,21 +95,39 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var newvalue = this.$el.find('.pid').val();
             this.model.set({pid: newvalue})
         },
-        filter: function(){
-
+        filter: function(filter, type, attr){
             
             //alert('filters: ' + this.filters);
-            if(this.filters)
-                this.filteredModels = this.collection.filter(function(model){
-                    _.each(this.filters,function(filter){
-                        filter(model)
-                    })
-                });
-            else
-                this.filteredModels = this.collection.models
-            
-            var that = this;
-            this.addAll();
+            if(attr){
+                var tempmods = [];
+                //alert(this.filteredModels[0].get(attr) == 'true');
+                
+                _.each(this.filteredModels,function(model, index){
+                    //alert(filter)
+                    var val = model.get(attr) + ''
+                    if (type == 'checkbox'){
+                        if(filter == !!val) 
+                            tempmods.push(model)
+                    }
+                    else if (val.indexOf(filter)>=0){
+                        tempmods.push(model);
+                    }
+                })
+                
+                //alert(tempmods.length);
+                if(tempmods.length>0){
+                    this.filteredModels = tempmods;
+                    this.addAll();
+                }
+                else{
+                    alert('No matches found. Try clearing the filters')
+                }
+            }
+            else{
+                this.filteredModels = this.collection.models;
+                this.addAll();
+            }
+
         },
         filterList: function(e){
             
@@ -111,31 +140,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             
             var attr = $el.attr('filteron');
             //alert(filter + ' ' + type + ' '+ attr);
-            var tempmods = [];
-            //alert(this.filteredModels[0].get(attr) == 'true');
-            
-            _.each(this.filteredModels,function(model, index){
-                //alert(filter)
-                var val = model.get(attr)
-                if (type == 'checkbox'){
-                    if(filter == !!val) 
-                        tempmods.push(model)
-                }
-                else if (val.indexOf(filter)>=0){
-                    tempmods.push(model);
-                }
-            })
-            
-            //alert(tempmods.length);
-            if(tempmods.length>0){
-                this.filteredModels = tempmods;
-                this.addAll();
-            }
-            else{
-                alert('No matches found. Try clearing the filters')
-                e.preventDefault();
-            }
-            
+
+            this.filter(filter,type,attr);
             
             if(e.keyCode == 13)
                 e.preventDefault();
