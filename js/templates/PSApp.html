@@ -1,11 +1,16 @@
 	<h1 class="tabletitle">PeopleSoft Entry</h1>
-	<button type="button" class='loadtable'>Load PIDs</button><button type="button" class='loadsorter'>Load Sorter</button><br /><span>Filters <input type="checkbox" id="filters" /></span>
-	<div id="pidfilters">
-		PID<input class="colfilter" filteron="pid" type="text" size="10" style="margin-right:10px" /><br />
-		Machine<input class="colfilter" filteron="machine" type="text" size="10" style="margin-right:10px" /><br />
-		<input class="colfilter" filteron="pid" type="text" size="10" style="margin-right:10px" /><br />
+	<button type="button" class='loadtable'>Load PIDs</button><button type="button" class='printPIDs'>Print</button><br />	
+	<div id="pidfilters" style="width:250px">
+		<h1 class="ui-widget-header title"><span class="">Filters</span></h1>
+		PID: <input class="colfilter" filteron="pid" type="text" size="10" style="margin-right:10px" /><br />
+		Machine: <input class="colfilter" filteron="machine" type="text" size="10" style="margin-right:10px" /><br />
+		Cell:<input class="colfilter" filteron="cell" type="text" size="10" style="margin-right:10px" /><br />
+		Day:<input class="filter" filteron="shift" type="radio" name="rShift" value="F" style="margin-right:10px" /> 
+		Swing:<input class="filter" filteron="shift" type="radio" name="rShift" value="G" style="margin-right:10px" /><br />
+		999 flaged:<input class="filter" filteron="flag" type="checkbox" name="rFlag" style="margin-right:10px" /><br />
 		<button type="button" id="filterclear">Clear Filters</button>
 	</div>
+	<h1 class="ui-widget-header title"><span class="">Current PIDs</span></h1>
 	<table id="pidList" class="psEntryTable tablesorter">
 	<thead class='row header'><tr>
 		<th class="hcell">pid<br /></th>
@@ -13,7 +18,7 @@
 		<th class="hcell">machine<br /></th>
 		<th class="hcell">shift</th>
 		<th class="hcell">qtycompleted</th>
-		<th class="hcell">scrap<span class="ui-state-default ui-corner-all .ui-icon" style="float:right;" title="Counter - Total packed"><span class="ui-icon ui-icon-help"></span></span></th>
+		<th class="hcell">scrap <span class="ui-state-default ui-corner-all .ui-icon" style="float:right;" title="Counter - Total packed"><span class="ui-icon ui-icon-help"></span></span></th>
 		<th class="hcell">endscrap</th>
 		<th class="hcell">setuptime</th>
 		<th class="hcell">runtime</th>
@@ -21,7 +26,7 @@
 		<th class="hcell">operator</th>
 		<th class="hcell">date</th>
 		<th class="hcell">componentcode</th>
-		<th class="hcell">999 Flag<br /><input type="checkbox" id="flag" class="filter" /></th>
+		<th class="hcell">999 Flag</th>
 		<th class="hcell">Entered</th>
 		</tr>
 	</thead>

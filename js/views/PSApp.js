@@ -12,9 +12,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         events: {
             'blur .pid':'change',
             'click .loadtable': 'loadData',
-            'click .loadsorter': 'loadSorter',
+            'click .printPIDs': 'printPIDs',
             'click .btnRun': 'runEntry',
-            'click .filter': 'filter',
+            'click .filter': 'filterList',
             'keypress .colfilter': 'filterList',
             'click #filterclear': 'filter'        
         },
@@ -29,8 +29,48 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             E.loading(this.$el,that.collection.fetch,this.collection);
             //this.collection.fetch();
         },
-        loadSorter: function(){
+        printPIDs: function(){
+            var HKEY_Root, HKEY_Path, HKEY_Key;
+            HKEY_Root = "HKEY_CURRENT_USER";
+            HKEY_Path = "\\Software\\Microsoft\\Internet Explorer\\PageSetup\\";
+            // Set the page footer to print the header is empty
+            function PageSetup_Null (){
+              try{
+                var Wsh = new ActiveXObject("WScript.Shell");
+                HKEY_Key = "header";
+                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key ,"");
+                HKEY_Key = "footer";
+                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key ,"");
+              }catch (e) {}
+            }
+            // Set the page footer to print the header for the default value
+            function PageSetup_Default (){
+              /*
+               * &b = break/space
+               * &w = page title
+               * &p / &P = current page / Total pages
+               * &u = url
+               * &d = short date
+               */
+
+              try{
+                var Wsh = new ActiveXObject ( "WScript.Shell");
+                HKEY_Key = "header";
+                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key, "&w &b on page 00 yards, &p / &P");
+                HKEY_Key = "footer";
+                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key, "&u &b &d");
+                HKEY_Key = "Shrink_To_Fit";
+                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key, "yes");
+              }
+              catch (e) {}
+            }
+            PageSetup_Default();
             
+            this.filter(false,'checkbox','flag');
+            
+            setTimeout(function(){
+                window.print();
+            },500);
         },
         // Re-render the contents of the todo item.
         render: function() {
@@ -55,46 +95,56 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var newvalue = this.$el.find('.pid').val();
             this.model.set({pid: newvalue})
         },
-        filter: function(){
-            //alert('filter and sort');
-            debugger;
-            //this.collection.sort({silent:true});
-            //alert('filters: ' + this.filters);
-            if(this.filters)
-                this.filteredModels = this.collection.filter(function(model){
-                    _.each(this.filters,function(filter){
-                        filter(model)
-                    })
-                });
-            else
-                this.filteredModels = this.collection.models
+        filter: function(filter, type, attr){
             
-            var that = this;
-            this.addAll();
+            //alert('filters: ' + this.filters);
+            if(attr){
+                var tempmods = [];
+                //alert(this.filteredModels[0].get(attr) == 'true');
+                
+                _.each(this.filteredModels,function(model, index){
+                    //alert(filter)
+                    var val = model.get(attr) + ''
+                    if (type == 'checkbox'){
+                        if(filter == !!val) 
+                            tempmods.push(model)
+                    }
+                    else if (val.indexOf(filter)>=0){
+                        tempmods.push(model);
+                    }
+                })
+                
+                //alert(tempmods.length);
+                if(tempmods.length>0){
+                    this.filteredModels = tempmods;
+                    this.addAll();
+                }
+                else{
+                    alert('No matches found. Try clearing the filters')
+                }
+            }
+            else{
+                this.filteredModels = this.collection.models;
+                this.addAll();
+            }
+
         },
         filterList: function(e){
-            if(e.keyCode != 13) return;
             
+            if(e.keyCode != 13 && e.keyCode != undefined ) return;
+            var $el = $(e.currentTarget)
+            var filter = $el.val();
+            var type = $el.attr('type');
+            if (type == 'checkbox')
+                filter = !!$el.attr('checked');
             
-            var filter = $(e.currentTarget).val()
-            var tempmods = []
-            _.each(this.filteredModels,function(model, index){
-                //alert(filter)
-                var machine = model.get('machine')+''
-                if (machine.indexOf(filter)>=0){
-                    tempmods.push(model);
-                }
-            })
-            alert(tempmods.length);
-            if(tempmods.length>0){
-                this.filteredModels = tempmods;
-                
-            }
-            this.addAll();
+            var attr = $el.attr('filteron');
+            //alert(filter + ' ' + type + ' '+ attr);
+
+            this.filter(filter,type,attr);
             
-            
-            
-            e.preventDefault();
+            if(e.keyCode == 13)
+                e.preventDefault();
         },
         addAll: function() {
             // create in memory element
@@ -131,6 +181,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             E.hideLoading();
         },
         runEntry: function(){
+            if (this.filteredModels.length <=0)
+                return;
             var url = 'http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login';
             var node =this.$el.find('#autoentry')
             var that = this;
@@ -346,9 +398,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var txtMachine = contents.find('#SM_SFRPTLINK_WK_MACHINE_CODE\\$0')
                     var op = contents.find('#SF_COMPL_WRK_COMPL_OP_SEQ\\$0');  
                     var txtScrapQty = contents.find('#SF_COMPL_WRK_SCRAPPED_QTY\\$0')
-                    alert(_model.scrap);
+                    //alert(_model.scrap);
                     if (parseInt(op.val()) != _model.opseq){
-                        //only enter endscrap which is process scrap converted to feet + endscrap
+                        //Enter Process Scrap
                         txtScrapQty.val(_model.scrap); 
                         var frm = fr.forms[1];
                         frm.ICAction.value = "SF_COMPL_WRK_COMPL_OP_SEQ$prompt$0";
@@ -418,9 +470,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             //alert('component row:' + ();
                             var txtEndScrap = contents.find('#SF_COMP_LIST_PEND_CONSUME_QTY\\$' + num);
                             var feedup = parseFloat(contents.find('#SF_COMPQTY_WRK_QTY_PER\\$' + num).val());
-                            alert('psfeedup: ' + feedup + ' CEDfeedup: ' + _model.feedup);
-                            alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.componentcode[i].es + ' = ' + (Math.round((parseFloat(txtEndScrap.val())+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
-                            txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + (_model.componentcode[i].es))*100)/100);
+                            var qty = txtEndScrap.val();
+                            //alert('psfeedup: ' + feedup + ' CEDfeedup: ' + _model.feedup + ',assort: ' + _model.assortment);
+                            //alert('row: ' + num + ', ' + qty + ' + ' + _model.componentcode[i].sc + ' + ' + _model.componentcode[i].es + ' = ' + (Math.round(((_model.assortment ? 0 : qty)+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
+                            txtEndScrap.val(Math.round(((_model.assortment ? 0 : qty) + (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100);
                         } 
                     } 
                     _model.endscrap = 0;  
@@ -440,6 +493,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             nextStep();
                             return;
                         }
+                        /*
                         if(!confirm('save scrap entries ')){
                             var temp = {}
                             temp.flag = _errors = true;
@@ -456,7 +510,31 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             context.one('load', function(){
                                 nextStep();       
                             });
-                        }                        
+                        }
+                        */
+                        var frm = fr.forms[1];
+                        frm.ICAction.value = "#ICSave";
+                        frm.submit();
+                        _step = 'step10';
+                        
+                        document.getElementById("autoentry").onreadystatechange = function(){   
+                            //alert('change ' + this.readyState);
+                            if (this.readyState == 'interactive'){
+                                //alert('I am inside the interactive state');
+                                //unbind the function
+                                document.getElementById("autoentry").onreadystatechange = null;
+                                //block alert popups
+                                //document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
+                                //document.getElementById("autoentry").contentWindow.alert = function(){};
+                                
+                                //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
+                                //document.getElementById("autoentry").contentWindow.alert("Alert");
+                            }
+                        }
+                        
+                        context.one('load', function(){
+                            nextStep();       
+                        });                        
                     }
                     else {
                         //set form to go to component screen

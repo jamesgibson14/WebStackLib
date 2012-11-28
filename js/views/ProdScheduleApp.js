@@ -18,7 +18,8 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
           "click .todo-clear a": "clearCompleted",
           "click .mark-all-done": "toggleAllComplete",
           "click .filter-all-done": "filter",
-          'click #btnTest': 'test'
+          'click #btnTest': 'test',
+          'click .btnAdd': 'addToMachineList'
         },
     
         // At initialization we bind to the relevant events on the `Todos`
@@ -33,14 +34,37 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
             this.statsTemplate = Handlebars.compile(this.statsTemplate);
             var temp = this.template({});
             this.$el.html( temp );
-            this.$('#sortable2').sortable({
+            this.$('#sortable2 tbody').sortable({
+
+                stop: function(e, ui){
+                  //alert('Stop helper.index: ' + ui.helper + ' ' + ui.item.index())                    
+
+                },
+                beforeStop: function(e, ui){
+                  //alert('beforeStop helper.index: ' + ui.helper.index() + ' ' + ui.item.index()) 
+
+
+                },
+                update: function(e, ui){
+                  //alert('update helper.index: ')
+                  
+                },
                 receive: function(e,ui){
-                    alert('offset' + ui.offset.top + ' offset' + ui.offset.left + ' p' + ui.position.top + ' p' + ui.position.left + ' op' + ui.originalPosition.top + ' op' + ui.originalPosition.left);
+                    var str = '<tr><td class="border cell">99</td><td class="border cell">PID1569999</td><td class="border cell">9999</td><td class="border cell boxpad barcode">*PID1560496*</td></tr>'
+                    var item = $(this).data().sortable.currentItem
+                    //alert(item.html());
+                    item.replaceWith(str)
                 }
             }).disableSelection();
-            this.$( "#sortable1 li").draggable({            
+                   
+           this.$( "#accordion" ).accordion({            
+                collapsible: true,
+                heightStyle: "content"        
+            });    
+            
+            this.$( "#sortable1 tbody tr").draggable({            
                 helper: "clone",
-                connectToSortable: '#sortable2'        
+                connectToSortable: '#sortable2  tbody'        
             }).disableSelection();
             this.$('#sortable').sortable({
                 sort: function() {              
@@ -57,7 +81,11 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
             alert("Test Code");
             
         },
-    
+        addToMachineList: function(e){
+            var str = '<tr><td class="border cell">99</td><td class="border cell">PID1569999</td><td class="border cell">9999</td><td class="border cell boxpad barcode">*PID1560496*</td></tr>'
+            
+
+        },
         // Re-rendering the App just means refreshing the statistics -- the rest
         // of the app doesn't change.
         render: function() {

@@ -107,11 +107,15 @@ h1.ui-widget-header, h2.ui-widget-header {
 	html {
 		background: #FFFFFF;
 	}
+	.noprint{
+		display:none;
+	}
 	#bodyview {
 		max-width:97%;
 		background-color: #FFFFFF;
 		padding: 5px;
-		border-radius: 15px;
+		border:0;
+		margin-bottom:50px;
 	}
 	
 	#header{
@@ -120,9 +124,11 @@ h1.ui-widget-header, h2.ui-widget-header {
 	#mainview{
 		
 	}
+	#sidebarBtns {
+		display:none;
+	}
 	#footer {
-		overflow:hidden;
-		background-color: #FFFFFF;
+		display:none;
 	}
 	#poweredBy{
 		float: right;
@@ -173,6 +179,12 @@ tr {
 .fixed {
 	position:fixed;
 }
+.block {
+	display:block;
+}
+.inline {
+	display:inline;
+}
  div.loading-invisible{    
  	/*make invisible*/    
  	display:none;  
@@ -197,12 +209,16 @@ tr {
  .transparent {
  	background:none;
  }
+ .vspacer {
+ 	height: 100px;
+ }
  /*this is what we want the div to look like    when it IS showing*/  
  div.loading-visible{    
  	/*make visible*/    
  	display:block;    
  	/*position it at the very top-left corner*/    
- 	position:absolute;    top:0;    left:0;    width:100%;    height:100%;    text-align:center;    
+ 	position:absolute;    top:0;    left:0;    width:100%;    height:100%;    text-align:center;
+ 	z-index: 2001;    
  	/* in supporting browsers, make it      a little transparent*/    
  	background:#fff;    
  	_background:none; 
@@ -217,13 +233,13 @@ tr {
  	color:#5C93F0;  
  }
  .ui-autocomplete {
-		max-height: 250px;
-		overflow-y: auto;
-		/* prevent horizontal scrollbar */
-		overflow-x: hidden;
-		/* add padding to account for vertical scrollbar */
-		padding-right: 20px;
-	}
+	max-height: 250px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	/* add padding to account for vertical scrollbar */
+	padding-right: 20px;
+}
 
 #todoapp {
 	width: 480px;
@@ -788,6 +804,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 background-color: #8dbdd8;
 }
 .barcode {
+	padding: 5px;
 	font-family: "Smead39";
 	font-size: 30px;
 }

@@ -1,104 +1,55 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/GraphApp', 'text!templates/GraphApp.html', 'models/PSDetails','views/PSDetail', 'jqplot'], 
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSAdminApp.html', 'models/PSDetails','views/PSDetail'], 
 function($, Backbone, E, Handlebars, Model, template, Collection, subView){
 
     var View = Backbone.View.extend({
 
         tagName:  "div",
-        className: 'ReportApp',
-        attributes: {style:'border:3px solid black;'},
+        className: 'PSApp ofh',
         collection: new Collection(),
-        model: new Model(),
         filteredModels: [],
         filters: false,
+        psactive:false,
         template: template,
         events: {
-            'blur .pid':'change',
-            'click #btnTest': 'loadData',
-            'click .btnRun': 'runEntry',
-            'click .filter': 'filter'        
+            'click #autoentry':'gotClick',
+            'click button': 'gotClick'       
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','enterPeopleSoftScript','tester','filter');
+            _.bindAll(this, 'render','tester','runEntry');
             this.collection.bind('reset',     this.filter);
-        },
-        loadData: function(){
-            var that = this;
-            //E.loading(this.$el,that.collection.fetch,this.collection);
-             var plot1 = $.jqplot ('chart1', [this.model.get('data')]);
             
-            this.$('#chart1').bind('resize', function(event, ui) {plot1.replot( { resetAxes: true } );});
-
-            //this.collection.fetch();
         },
+
         // Re-render the contents of the todo item.
         render: function() {
-            var that = this;
+            //var temp = this.model.toJSON();
             
             var temp = this.template({});
             
             this.$el.html( temp );
-            this.$('#slider').slider({
-                range: true,
-                min: this.model.get('datemin'),
-                max: this.model.get('datemax'),
-                values: [this.model.get('datemin')+15, this.model.get('datemax')-20],
-                slide: function(event, ui) {
-                    //alert(ui.values);
-                    that.$('#dtFrom').html(new Date(ui.values[0],1).format("yyyy"));
-                    that.$('#dtTo').html(new Date(ui.values[1],1).format("yyyy"));
-                }
-            });
-            this.$('#chart1').resizable({delay:20,minHeight: 326,minWidth: 650});
-            
-            return this;
-        },
-        change: function(){
-            
-            var newvalue = this.$el.find('.pid').val();
-            this.model.set({pid: newvalue})
-        },
-        filter: function(){
-            //alert('filter and sort');
-            debugger;
-            //this.collection.sort({silent:true});
-            //alert('filters: ' + this.filters);
-            if(this.filters)
-                this.filteredModels = this.collection.filter(function(model){
-                    _.each(this.filters,function(filter){
-                        filter(model)
-                    })
-                });
-            else
-                this.filteredModels = this.collection.models
-            
-            var that = this;
-            this.addAll();
-        },
-        addAll: function() {
-            // create in memory element
-            
-            var $el = this.$('#pidList').clone(true,true);
-            var header = $el.find('.header').clone(true,true);
-            // also get the `className`, `id`, `attributes` if you need them 
-            $el.empty();
-            $el.append(header);
-            // append everything to the in-memory element 
-            _.each(this.filteredModels, function(model){ 
-                var rowView = new subView({model: model}); 
-                $el.append(rowView.render().el); 
-            }); 
-            // replace the old view element with the new one, in the DOM 
-            this.$("#pidList").replaceWith($el);//.replaceWith($el);
-            E.hideLoading();             
-        },
-        runEntry: function(){
-            var url = 'http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login';
             var node =this.$el.find('#autoentry')
+            
+            if((document.location + '').indexOf('.hta','.hta')>-1) 
+                node.attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
+            
+            node.one('load',this.runEntry);
+            node.on('click',this.gotClick);
             var that = this;
             //alert(node.attr('src'));
             
             node.show()
+            return this;
+        },
+        gotClick: function(e){
+            alert('got it!');
+        },
+        
+        runEntry: function(){
+            var url = 'http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login';
+
+            var that = this;
+     
             
             this.job = this.tester('step1');
             this.job.run();
@@ -113,7 +64,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var _collection = this.filteredModels;
             var _model;
             var _errors=false;
-            var context = $('#autoentry');
+            var context = this.$('#autoentry');
             var debug = false;
             var map = {
                 step1: function(){
@@ -137,7 +88,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         fr.login.submit();
                          _step = 'step2';
                         context.one('load', function(){
-                            nextStep();       
+                            //nextStep();       
                         });
                     }           
                     
@@ -267,7 +218,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step6: function(){
                     //alert('step6: goto Scrap Entry PID lookup page');
-                    if (!(_model.scrap > 0 || _model.PaperConverting == 1)){
+                    if (_model.status >40 || !(_model.scrap > 0 || _model.PaperConverting == 1)){
                         //no scrap or endscrap goto next record
                         //alert("No Scrap/EndScrap: go to next record");
                         _step = 'step10';
@@ -306,59 +257,85 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var txtMachine = contents.find('#SM_SFRPTLINK_WK_MACHINE_CODE\\$0')
-                    if (_model.assortment && _model.PaperConverting){
+                    var op = contents.find('#SF_COMPL_WRK_COMPL_OP_SEQ\\$0');  
+                    var txtScrapQty = contents.find('#SF_COMPL_WRK_SCRAPPED_QTY\\$0')
+                    alert(_model.scrap);
+                    if (parseInt(op.val()) != _model.opseq){
                         //only enter endscrap which is process scrap converted to feet + endscrap
+                        txtScrapQty.val(_model.scrap); 
                         var frm = fr.forms[1];
-                        frm.ICAction.value = "#ICPanel18";
+                        frm.ICAction.value = "SF_COMPL_WRK_COMPL_OP_SEQ$prompt$0";
                         frm.submit();
-                        _step = 'step9';
-                        context.one('load', function(){
-                            nextStep();       
-                        }); 
-                    }
-                    else if(txtMachine.length==0){
-                        var txtScrapQty = contents.find('#SF_COMPL_WRK_SCRAPPED_QTY\\$0').val(_model.scrap);
-                        var op = contents.find('#SF_COMPL_WRK_COMPL_OP_SEQ\\$0');               
-                        op.val(_model.opseq);
-                        var frm = fr.forms[1];
-                        frm.ICAction.value="SF_COMPL_WRK_COMPL_OP_SEQ$0";
-                        frm.submit();
-                        _step = 'step8';
+                        _step = 'step8_1';
                         context.one('load', function(){
                             nextStep();       
                         }); 
                     }
                     else {
+                        txtScrapQty.val(_model.scrap);  
                         txtMachine.val(_model.machine);
-                        alert('doublecheck values');         
+                        //alert('doublecheck values');         
                         
                         _step = 'stepSaveScrap';                        
                         nextStep();       
                          
                     }
                 },
+                step8_1: function(){
+                    var contents = context.contents();
+                    var fr = document.getElementById("autoentry").contentWindow.document;
+                    var table = contents.find('tr td:first-child :contains(' + _model.opseq + ')')
+                    //alert(table.parent().html());
+                    var index = (table.attr('href')+'').indexOf('#');
+                    //alert(index);
+                    var row = (table.attr('href')+'').slice(index,index +7);
+                    var scrap = table.parent().next().next().next().next().next().next().children().first();
+                    
+                    scrap = parseInt(scrap.html());
+                    if (scrap > 0)
+                        _model.endscrap = 0;
+                    
+                    _model.scrap -= scrap;
+                    if (_model.scrap<0){
+                        _model.scrap = 0;
+                    }                         
+                    var frm = fr.forms[1];
+                    _model.step8_1=true;
+                    frm.ICAction.value=row;
+                    frm.submit();
+                    _step = 'step8';
+                    context.one('load', function(){
+                        nextStep();       
+                    }); 
+                },
                 step9: function(){
                     //alert('step9: Find Paper component and add on endscrap length, Save and go to next PID')
                     var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var temp = {}
-                    for(var i=0,len=_model.componentcode.length;i<len;i++){
-                        var num = contents.find('input[value="' + _model.componentcode[i].cc + '"]');
-                        if (num.length ==0){
-                            alert("step9-PeopleSoftEntry" + " Could not find paper component");
+                    if(_model.enterendscrap){
+                        for(var i=0,len=_model.componentcode.length;i<len;i++){
+                            var num = contents.find('input[value="' + _model.componentcode[i].cc + '"]');
+                            if (num.length ==0){
+                                alert("step9-PeopleSoftEntry" + " Could not find paper component");
+                                
+                                temp.flag = _errors = true;
+                                temp.flagreason = 'AutoEntry: incorrect paper component: ' + _model.componentcode[i].cc;
+                                _collection[_currentModel].set(temp);
+                                _step = 'step10';
+                                nextStep(); 
+                                return;
+                            }
+                            num = num.attr("id").substr(-1);
                             
-                            temp.flag = _errors = true;
-                            temp.flagreason = 'AutoEntry: incorrect paper component: ' + _model.componentcode[i].cc;
-                            _collection[_currentModel].set(temp);
-                        }
-                        num = num.attr("id").substr(-1);
-                        
-                        //alert('component row:' + ();
-                        var txtEndScrap = contents.find('#SF_COMP_LIST_PEND_CONSUME_QTY\\$' + num);
-                        //alert('parsed: ' + parseFloat(txtEndScrap.val()));
-                        alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.componentcode[i].es + ' + ' + _model.componentcode[i].sc +' = ' + (Math.round((parseFloat(txtEndScrap.val())+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
-                        txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100);
-                    }  
+                            //alert('component row:' + ();
+                            var txtEndScrap = contents.find('#SF_COMP_LIST_PEND_CONSUME_QTY\\$' + num);
+                            var feedup = parseFloat(contents.find('#SF_COMPQTY_WRK_QTY_PER\\$' + num).val());
+                            alert('psfeedup: ' + feedup + ' CEDfeedup: ' + _model.feedup);
+                            alert('row: ' + num + ', ' + txtEndScrap.val() + ' + ' + _model.componentcode[i].es + ' = ' + (Math.round((parseFloat(txtEndScrap.val())+ (_model.componentcode[i].es + _model.componentcode[i].sc))*100)/100));
+                            txtEndScrap.val(Math.round((parseFloat(txtEndScrap.val()) + (_model.componentcode[i].es))*100)/100);
+                        } 
+                    } 
                     _model.endscrap = 0;  
                    //submitAction_main0(document.main0, '#ICPanel18')
                    _step = 'stepSaveScrap';
@@ -371,9 +348,16 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //alert('endscrap: ' +_model.endscrap )
                     if (_model.endscrap <= 0){
                         //save page here
-                        
+                        if (_model.scrap == 0){
+                            _step = 'step10';
+                            nextStep();
+                            return;
+                        }
                         if(!confirm('save scrap entries ')){
-                            _errors = true;
+                            var temp = {}
+                            temp.flag = _errors = true;
+                            temp.flagreason = 'AutoEntry: ProcessScrap/EndScrap not entered';
+                            _collection[_currentModel].set(temp);
                             _step = 'step10';
                             nextStep(); 
                         }

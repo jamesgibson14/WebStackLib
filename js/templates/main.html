@@ -1,7 +1,7 @@
 <div id="header" class="relative"> 
 	<button type="button" id="restart" class="restart">Restart App</button>
 	<div id='tabsmenu'>
-		<input type="radio" id="radio5" name="radio" checked="checked" /><label for="radio5"><a href="#main/home" >Home</a></label>
+		<input type="radio" id="radio5" name="radio" checked="checked" href="#main/home" /><label for="radio5">Home</label>
 		<input type="radio" id="radio1" name="radio" /><label for="radio1"><a href="#main/TodoApp" >Todolist</a></label>
 		<input type="radio" id="radio2" name="radio" /><label for="radio2"><a href="#main/PSApp" >PeopleSoft Entry</a></label>
 		<input type="radio" id="radio4" name="radio" /><label for="radio4"><a href="#main/MachPerfApp" >Machine Performance</a></label>
@@ -20,9 +20,10 @@
 <div id="mainview" class="relative" style="z-index:1;width:100%">
 	<div id="appview">
 		<h1>Welcome {{Name}}</h1>
-		<img src="assets/images/AID{{Associate_ID}}.jpg" width="95%" height="250px"  />
+		<img src="assets/images/AID{{Associate_ID}}.jpg" width="400px" height="250px"  />
 		
 	</div>
+
 	<label for="alpha">Alpha </label><select id="ialpha" placeholder="Numeric:">        
   		<option value="">Select one...</option>
   		<option value="a">A	Items that STOP production (Downtime)</option>
@@ -35,13 +36,26 @@
   	</select>
 
 </div>
-<div id="sidebarBtns" class="fixed" style="bottom:56px;right:0px;z-index:1002;">      
-	<input type="radio" id="sbtn5" name="radio" data-icon="ui-icon-info" /><label for="sbtn5">Updates</label>       
-	<input type="radio" id="sbtn6" name="radio" data-icon="ui-icon-help" /><label for="sbtn6">Help</label>       
-	<input type="radio" id="sbtn4" name="radio" data-icon="ui-icon-comment" /><label for="sbtn4">Chat</label>
-	<input type="radio" id="sbtn3" name="radio" data-icon="ui-icon-info" /><label for="sbtn3">Quotes</label>
-	<input type="radio" id="sbtn2" name="radio" data-icon="ui-icon-gear" /><label for="sbtn2">Settings</label>    
-	<input type="radio" id="sbtn1" name="radio" data-icon="ui-icon-lock" /><label for="sbtn1">Debug</label>
+<div id="dialog-form" title="Create New Idea">
+	<div class="content border">
+		<label for="">Idea </label><br />
+			<textarea placeholder="idea" class="resizable"> </textarea><br />
+		<h3>Tags</h3>				
+		<input type="radio" name="type" checked="checked" /><label for="">Production </label><br />
+		<input type="radio" name="type" /><label for="">Computer </label><br />
+		<input type="radio" name="type" /><label for="">QuickTip </label><br />
+		Other Tags <input type="text" name="tags" /><label for="">QuickTip </label><br />
+	</div>
+</div>
+	
+
+<div id="sidebarBtns" class="fixed" style="bottom:56px;left:-5px;z-index:1002;">      
+	<input type="radio" id="sbtn5" name="radio" data-view="newIdea" data-icon="ui-icon-info" /><label for="sbtn5">Updates</label>       
+	<input type="radio" id="sbtn6" name="radio" data-view="helpasdfaf asd fasdf adf adfasdf a dfasd fadfadfadfadfadfasdf<br />" data-icon="ui-icon-help" /><label for="sbtn6">Help</label>       
+	<input type="radio" id="sbtn4" name="radio" data-view="chat" data-icon="ui-icon-comment" /><label for="sbtn4">Chat</label>
+	<input type="radio" id="sbtn3" name="radio" data-view="chat" data-icon="ui-icon-info" /><label for="sbtn3">Chat</label>
+	<input type="radio" id="sbtn2" name="radio" data-view="settings" data-icon="ui-icon-gear" /><label for="sbtn2">Settings</label>    
+	<input type="radio" id="sbtn1" name="radio" data-view="debug" data-icon="ui-icon-lock" /><label for="sbtn1">Debug</label>
 </div>
 
 <div id="footer">

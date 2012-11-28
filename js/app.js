@@ -21,10 +21,10 @@ require.config({
       	backboneADO: '../app/backbone.ado',
       	backbone: "backbone-0.9.2",
 		ieconfig: 'ieconfig',
-		jqall: 'jqplotAllPlugins',
+		jqpall: 'jqplotAllPlugins',
 		jq: 'jqplot/',
-		jqp: 'jqplot/pluggins',
-		jqplot: "jqplot/jquery.jqplot.min",
+		jqp: 'jqplot/jquery.jqplot.min',
+		jqpp: "jqplot/plugins",
       	// Require.js Plugins
       	text: "plugins/text-2.0.0"
     },
@@ -41,8 +41,7 @@ require.config({
         'engine': ['jquery'],
         'jqueryUI': ['jquery'],
         'database': ['engine'],
-        'backboneADO': ['backbone'],
-        'jqplot': ['jquery']
+        'backboneADO': ['backbone']
     }
 
 });

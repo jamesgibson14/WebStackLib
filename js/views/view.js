@@ -1,11 +1,13 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!templates/main.html', 'models/collection'], function($, Backbone, E, Handlebars, Model, template, Collection){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!templates/main.html', 'models/collection','views/plot','views/idea',], 
+function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
 
     var View = Backbone.View.extend({
         // Represents the actual DOM element that corresponds to your View (There is a one to one relationship between View Objects and DOM elements)
         tagName:  "div",
-        className: 'SmeadApp border relative',
+        className: 'SmeadApp relative',
         attributes: {},
         template: template,
+        sidebuttons: {},
         location: '' + window.location.href,
         // View constructor
         initialize: function() {
@@ -21,21 +23,63 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!temp
 	    },
         render: function() {
             var temp = this.model.toJSON();
+            var that = this;
             _.extend(temp,E.user.toJSON());
             this.$el.append(this.template(temp));
-            this.$el.find('#tabsmenu').buttonset();
+            
+            this.$('#tabsmenu').buttonset()
             this.$('#links').menu({role: "null"});
             this.$('#ialpha').combobox();
+            var dialog = this.$( "#dialog-form" ).dialog({
+                autoOpen:false,
+                buttons: {
+                    "Ok":function(){
+                        $(this).find('.content').append("<input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' />")
+                    }
+                },
+                close:function(){
+                    $('.ui-state-active').click();
+                }
+            });
+            $( ".resizable" ).resizable({handles: "se"});
+            this.$('#sidebarBtns').on('click','label', function(e){
+                var curView = $(this).prev().attr('data-view');
+                
+                if(that.sidebuttons.active == curView){
+                    $(this).removeClass('ui-state-active');
+                    dialog.dialog('close')
+                    that.sidebuttons.active = null
+                }
+                else{
+                    var view = new ideaV();
+                    var html = view.render().el;
+                
+                    that.sidebuttons.active = curView;
+                    
+                    $('#dialog-form .content').html(html);
+                    dialog.dialog('option','buttons',{cancel:function(){
+                        $(this).dialog('close');
+                    }});
+                    dialog.dialog('open')
+                    
+                }
+                e.preventDefault()
+            })
+            var graph = new plotV();
+            this.$('#mainview').append(graph.render().el)         
+
             return this;
         },
         afterRender: function() {
             //this.$('#sidebarBtns').position({my:'bottom',at:'right bottom',of:'#footer',collision:'none'})
-            this.$('#sidebarBtns > input').button({icons:'ui-icon-cart',text:false})
+            this.$('#sidebarBtns > input').button({text:false})
             this.$('#sidebarBtns > input').each(function(value){
                 var btn = $(this);
                 var icon = btn.attr('data-icon');
                 //alert(icon)
+                
                 btn.button('option','icons',{primary:icon})
+                btn.css('height','50px')
             })
             this.$('#sidebarBtns > label').css({'display':'block'});
             var height = this.$el.height();

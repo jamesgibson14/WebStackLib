@@ -1,11 +1,5 @@
-{{#if id}}
-	<td id="_id" class="border cell">PE{{peNum}}</td>
-	<td class="border">{{date}}</td>
-	<td class="border">{{machine}}</td>
-	<td class="border">{{associate}}</td>
-{{else}}
 	<label for="">Idea </label><br />
-	<textarea placeholder="idea" class="resizable">{{idea}} </textarea>
+	<textarea placeholder="idea" cols="10" rows="4" class="resizable">{{idea}} </textarea>
 	<button id="newidea">Submit Idea</button><br />
 	<h3>Tags</h3>
 	<style>    
@@ -19,6 +13,11 @@
 			 margin: 3px; padding: 1px; float: left; text-align: center;   
 		}     
 		</style>
+		Applies to: <select>
+			<option>3191</option>
+			<option>3191</option>
+			<option>3191</option>
+		</select>
 	<ul id="selectable">    
 		<li>Item 1</li>    
 		<li>Item 2</li>    
@@ -37,6 +36,4 @@
 	<input type="radio" name="type" checked="checked" /><label for="">Production </label><br />
 	<input type="radio" name="type" /><label for="">Computer </label><br />
 	<input type="radio" name="type" /><label for="">QuickTip </label><br />
-	
-{{/if}}
-
+	<button id='btnCreate'>Create Idea</button>
