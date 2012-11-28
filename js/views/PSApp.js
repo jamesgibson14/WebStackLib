@@ -181,6 +181,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             E.hideLoading();
         },
         runEntry: function(){
+            if (this.filteredModels.length <=0)
+                return;
             var url = 'http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login';
             var node =this.$el.find('#autoentry')
             var that = this;
