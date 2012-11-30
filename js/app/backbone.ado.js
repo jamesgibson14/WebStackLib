@@ -120,7 +120,7 @@ Backbone.sync = function (method, model, options) {
 	   db = model.collection.db
 	if(model.db)
 	   db = model.db
-	   
+	 
 	if (store == null && db == null) {
 		alert("Error: No Storage method available", model);
 		return;

@@ -41,7 +41,8 @@ require.config({
         'engine': ['jquery'],
         'jqueryUI': ['jquery'],
         'database': ['engine'],
-        'backboneADO': ['backbone']
+        'backboneADO': ['backbone'],
+        'jquery.ui.widgets': ['jqueryUI']
     }
 
 });

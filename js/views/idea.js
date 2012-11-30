@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/idea.html', 'models/idea'], 
+define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/newIdea.html', 'models/idea'], 
 function($, Backbone, E, Handlebars, template,model){
 
     var View = Backbone.View.extend({

@@ -29,7 +29,8 @@ $.widget( "ui.combobox", {
                 setTimeout(function() {                            
                     input.tooltip( "close" ).attr( "title", "" );                        
                 }, 2500 );                        
-                input.data( "autocomplete" ).term = "";                        
+                input.data( "autocomplete" ).term = "";
+                input.focus()                        
                 return false;                    
             }                
         }                 
@@ -37,7 +38,7 @@ $.widget( "ui.combobox", {
         .appendTo( wrapper )                    
         .val( value )                    
         .attr( "title", "" )                    
-        .addClass( "ui-state-default ui-combobox-input" )                    
+        .addClass( "ui-combobox-input" )                    
         .autocomplete({                        
             delay: 0,                        
             minLength: 0,
@@ -76,11 +77,11 @@ $.widget( "ui.combobox", {
             .data( "item.autocomplete", item )                        
             .append( "<a>" + item.label + "</a>" )                        
             .appendTo( ul );                
-            };                 
+        };                 
             $( "<a>" )                    
             .attr( "tabIndex", -1 )                    
             .attr( "title", "Show All Items" )                    
-            .tooltip({track:true,hide: 4000,position:{collision:'none'},tooltipClass:"absolute"})                    
+            .tooltip({track:true,hide: 4000,position:{collision:'none'},tooltipClass:"absolute z2k"})                    
             .appendTo( wrapper )                    
             .button({                        
                 icons: {                            
@@ -105,17 +106,18 @@ $.widget( "ui.combobox", {
             });                     
             input                        
             .tooltip({                            
-                position: {                                
+                position: { 
+                    my: 'bottom',                               
                     at: "right+20 top+10",
                     of: this.button                            
                 },                            
-                tooltipClass: "ui-state-highlight absolute"                        
+                tooltipClass: "ui-state-highlight absolute z2k"                        
             });            
         },             
         destroy: function() {                
             this.wrapper.remove();                
             this.element.show();                
             $.Widget.prototype.destroy.call( this );            
-        }        
-    });    
+    }        
+});    
 })( jQuery );
