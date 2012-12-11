@@ -22,6 +22,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             _.bindAll(this, 'render','change','filter', 'newCellSuggestion','addOne', 'timeDelay');
             this.collection.bind('reset',     this.filter);
             this.collection.bind('add',     this.addOne);
+            //if (this.options.modelid)
+                //open to specific 
             this.model.fetch({wait:true});
         },
         loadData: function(){
@@ -30,9 +32,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         // Re-render the contents of the todo item.
         render: function() {
             var that = this;
+            
             var temp = this.template({});
-            debugger;
-            alert(this.modelid)
+
+            
             this.$el.html( temp );
             this.$inputs.iassociateID = this.$('#iassociateID');
             this.$inputs.iassociate = this.$('#iassociate');
