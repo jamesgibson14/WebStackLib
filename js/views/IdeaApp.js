@@ -4,7 +4,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
     var View = Backbone.View.extend({
 
         tagName:  "div",
-        className: 'PSApp',
+        className: 'IdeaApp',
         collection: new Collection(),
         model: new Model(),
         filteredModels: [],
@@ -31,7 +31,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         render: function() {
             var that = this;
             var temp = this.template({});
-            
+            debugger;
+            alert(this.modelid)
             this.$el.html( temp );
             this.$inputs.iassociateID = this.$('#iassociateID');
             this.$inputs.iassociate = this.$('#iassociate');

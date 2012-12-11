@@ -51,15 +51,14 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
                     that.sidebuttons.active = null
                 }
                 else{
+                    debugger;
                     var view = new ideaV();
                     var html = view.render().el;
                 
                     that.sidebuttons.active = curView;
                     
                     $('#dialog-form .content').html(html);
-                    dialog.dialog('option','buttons',{cancel:function(){
-                        $(this).dialog('close');
-                    }});
+                    dialog.dialog('option','buttons',{});
                     dialog.dialog('open')
                     
                 }
@@ -80,6 +79,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
                 
                 btn.button('option','icons',{primary:icon})
                 btn.css('height','50px')
+            })
+            this.$('#sidebarBtns > label').hover(function(e){
+                $(this).width(function(index, width){return width+50}).prepend( "<span class='tempspan'>title</span>" );
+            },function(e){
+                $(this).width(function(index, width){return width-50}).find('.tempspan').remove();
             })
             this.$('#sidebarBtns > label').css({'display':'block'});
             var height = this.$el.height();

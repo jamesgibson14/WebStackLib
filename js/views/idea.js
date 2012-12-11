@@ -1,38 +1,42 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/newIdea.html', 'models/idea'], 
+define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/idea.html', 'models/idea'], 
 function($, Backbone, E, Handlebars, template,model){
 
     var View = Backbone.View.extend({
 
         //... is a list tag.
         tagName:  "div",
-        className: '',
+        className: 'model',
+        id: 'create-model',
         model: new model(),
         // Cache the template function for a single item.
         template: template,
     
         // The DOM events specific to an item.
         events: {
-            'click #newidea':'updateOnEnter',
-          "click .check"              : "toggleDone",
-          "dblclick label.todo-content" : "edit",
-          "click span.todo-destroy"   : "clear",
-          "keypress .todo-input"      : "updateOnEnter",
-          "blur .todo-input"          : "close"
+          'click #newidea'              :'updateOnEnter',
+          "click .check"                : "toggleDone",
+          "dblclick .editable"          : "edit",
+          "click span.todo-destroy"     : "clear",
+          "keypress .todo-input"        : "updateOnEnter",
+          "blur #iidea"                 : "close"
         },
     
         initialize: function() {
-            this.template = Handlebars.compile(this.template);
+            
             _.bindAll(this, 'render', 'close', 'remove');
-            this.model.bind('change', this.render);
+            this.model.bind('change:id', this.render);
             this.model.bind('destroy', this.remove,this);
         },
     
         // Re-render the contents of the todo item.
         render: function() {
           //alert('view render');
+          var ctemp = Handlebars.compile(this.template);
           var context = this.model.toJSON();
-                     
-          var html = this.template(context);    
+          context.tags = {bug:false}
+          context.isNew = this.model.isNew(); 
+          alert(JSON.stringify(context));        
+          var html = ctemp(context);    
           this.$el.html( html );
           this.$( "#selectable" ).selectable({
               
@@ -53,14 +57,17 @@ function($, Backbone, E, Handlebars, template,model){
         
         // Switch this view into `"editing"` mode, displaying the input field.
         edit: function() {
-          $(this.el).addClass("editing");
-          this.$('.todo-input').focus();
+            alert('gotcha');
+            //$(this.el).addClass("editing");
+            //this.$('.todo-input').focus();
         },
     
         // Close the `"editing"` mode, saving changes to the todo.
-        close: function() {
-          this.model.set({content: this.$('.todo-input').val()});
-          $(this.el).removeClass("editing");
+        close: function(e) {
+          var val = this.$('#iidea').val()
+          if (val=='') return;
+          
+          this.model.save({idea: val},{wait:true});
         },
     
         // If you hit `enter`, we're through editing the item.

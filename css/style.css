@@ -274,8 +274,7 @@ tr {
 	border: 1px solid #999999;
 	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
 }
-#create-model input {
-	
+#create-model input {	
 	font-size: 18px;
 	font-family: inherit;
 	line-height: 1.1em;
@@ -285,6 +284,18 @@ tr {
 	margin:2px;
 	border: 1px solid #999999;
 	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
+}
+#create-model textarea {
+	font-size: 18px;
+	font-family: inherit;
+	line-height: 1.1em;
+	border: 0;
+	outline: none;
+	padding: 6px;
+	margin:2px;
+	border: 1px solid #999999;
+	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
+	height: 5em;
 }
 #create-model select {
 	font-size:14px;
@@ -302,7 +313,9 @@ tr {
 	margin-left: 7px;
 
 }
-
+.editable .hidden {
+	display:none;
+}
 .ui-combobox {        
 	position: relative;        
 	display: inline-block;    
@@ -811,6 +824,10 @@ background-color: #8dbdd8;
 .z2k {
 	z-index: 2000;
 }
+textarea:focus, input:focus {
+	border: 1px solid #09C;
+}
+
 #cellpriorityList, #machinepriorityList {float:left;}
 #sortable1, #sortable2 { margin: 0; padding: 0 0 2.5em; margin-right: 10px; }    
 #sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; width: 120px; }

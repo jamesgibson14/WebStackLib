@@ -41,6 +41,7 @@ function($, Backbone, E, Handlebars, require,user){
             // When there is no hash bang on the url, the home method is called
             '': 'home',
             'main/:view': 'main',
+            'main/:view/:modelid': 'main',
             'tab/:view': 'tab'
         },
 
@@ -63,13 +64,13 @@ function($, Backbone, E, Handlebars, require,user){
             //!!! I could extend view for security ie: Dev view extends "editor view" which extends "read only view"
             //anotherView.promptUser();
         },
-        'main': function(view){
+        'main': function(view,modelid){
             if(E.GET['module'] != undefined)
                view = E.GET['module'];
-
+            alert('modelid: ' + modelid)
             require(['views/' + view], function(View) { 
                 
-                var view = new View().render().el;
+                var view = new View({modelid:modelid}).render().el;
                 
                 $('#mainview').html(view);
             }); 

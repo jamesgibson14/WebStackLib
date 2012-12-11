@@ -1,6 +1,6 @@
 	<label for="">Idea </label><br />
 	<textarea placeholder="idea" cols="10" rows="4" class="resizable">{{idea}} </textarea>
-	<button id="newidea">Submit Idea</button><br />
+	
 	<h3>Tags</h3>
 	<style>    
 		#selectable .ui-selecting {        
@@ -26,7 +26,7 @@
 		<li>Item 5</li>
 	</ul><br />	
 	<ul id="tags">    
-		<li>Computer Bug<input type="checkbox" name="tags" /></li>    
+		<li>Computer Bug<input type="checkbox" {{#if tags}}checked="checked"{{/if}} name="tags" /></li>    
 		<li>Cell Enhacement<input type="checkbox" name="tags" /></li>    
 		<li>Stops Production<input type="checkbox" name="tags" /></li>    
 		<li>Slows<input type="checkbox" name="tags" /></li>    
