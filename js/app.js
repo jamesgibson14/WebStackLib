@@ -23,7 +23,7 @@ require.config({
 		ieconfig: 'ieconfig',
 		jqpall: 'jqplotAllPlugins',
 		jq: 'jqplot/',
-		jqp: 'jqplot/jquery.jqplot.min',
+		jqp: 'jqplot/jquery.jqplot',
 		jqpp: "jqplot/plugins",
       	// Require.js Plugins
       	text: "plugins/text-2.0.0"

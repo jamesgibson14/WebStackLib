@@ -709,9 +709,7 @@ textarea {
 	color: #4D926F;
 	font-size:16px;
 }
-.column {
-	display:table-column;
-}
+
 .border {
 	border:1px solid black;
 }
@@ -831,3 +829,11 @@ textarea:focus, input:focus {
 #cellpriorityList, #machinepriorityList {float:left;}
 #sortable1, #sortable2 { margin: 0; padding: 0 0 2.5em; margin-right: 10px; }    
 #sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; width: 120px; }
+
+.column { min-width: 170px; float: left; padding-bottom: 100px; }    
+.portlet { margin: 0 1em 1em 0; }    
+.portlet-header { margin: 0.3em; padding-bottom: 4px; padding-left: 0.2em; }    
+.portlet-header .ui-icon { float: right; }    
+.portlet-content { padding: 0.4em; }    
+.ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }    
+.ui-sortable-placeholder * { visibility: hidden; }

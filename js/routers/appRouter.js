@@ -28,6 +28,7 @@ function($, Backbone, E, Handlebars, require,user){
     E.user = new user({username: username});
     E.user.fetch();
     //alert(E.user.get('PicturePath'));
+    E.loadCss("js/lib/jqplot/jquery.jqplot.css")
     
     var Router = Backbone.Router.extend({
         mainView: null,
@@ -67,7 +68,7 @@ function($, Backbone, E, Handlebars, require,user){
         'main': function(view,modelid){
             if(E.GET['module'] != undefined)
                view = E.GET['module'];
-            alert('modelid: ' + modelid)
+            //alert('modelid: ' + modelid)
             require(['views/' + view], function(View) { 
                 
                 var view = new View({modelid:modelid}).render().el;

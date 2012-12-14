@@ -3434,6 +3434,7 @@
         this.onClick = function(ev) {
             // Event passed in is normalized and will have data attribute.
             // Event passed out is unnormalized.
+			//alert('click');
             var positions = getEventPosition(ev);
             var p = ev.data.plot;
             var neighbor = checkIntersection(positions.gridPos, p);
@@ -3456,6 +3457,7 @@
         };
         
         this.onMouseDown = function(ev) {
+			//alert('down');
             var positions = getEventPosition(ev);
             var p = ev.data.plot;
             var neighbor = checkIntersection(positions.gridPos, p);
@@ -3466,6 +3468,7 @@
         };
         
         this.onMouseUp = function(ev) {
+			//alert('up');
             var positions = getEventPosition(ev);
             var evt = $.Event('jqplotMouseUp');
             evt.pageX = ev.pageX;
@@ -3494,6 +3497,7 @@
         };
         
         this.onMouseMove = function(ev) {
+			//alert('move');
             var positions = getEventPosition(ev);
             var p = ev.data.plot;
             var neighbor = checkIntersection(positions.gridPos, p);
@@ -5890,7 +5894,8 @@
     
     
     function handleMove(ev, gridpos, datapos, neighbor, plot) {
-        if (neighbor) {
+        //alert('mouse move');
+		if (neighbor) {
             var ins = [neighbor.seriesIndex, neighbor.pointIndex, neighbor.data];
             var evt1 = jQuery.Event('jqplotDataMouseOver');
             evt1.pageX = ev.pageX;
@@ -5911,7 +5916,8 @@
     }
     
     function handleMouseDown(ev, gridpos, datapos, neighbor, plot) {
-        if (neighbor) {
+        //alert('mouse down');
+		if (neighbor) {
             var ins = [neighbor.seriesIndex, neighbor.pointIndex, neighbor.data];
             if (plot.series[ins[0]].highlightMouseDown && !(ins[0] == plot.plugins.lineRenderer.highlightedSeriesIndex)) {
                 var evt = jQuery.Event('jqplotDataHighlight');
@@ -5935,6 +5941,7 @@
     }
     
     function handleClick(ev, gridpos, datapos, neighbor, plot) {
+		//alert('click')
         if (neighbor) {
             var ins = [neighbor.seriesIndex, neighbor.pointIndex, neighbor.data];
             var evt = jQuery.Event('jqplotDataClick');

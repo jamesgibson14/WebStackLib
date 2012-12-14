@@ -86,7 +86,23 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
                 $(this).width(function(index, width){return width-50}).find('.tempspan').remove();
             })
             this.$('#sidebarBtns > label').css({'display':'block'});
-            var height = this.$el.height();
+            
+             $( ".column" ).sortable({            
+                 connectWith: ".column"        
+             });         
+             $( ".portlet" ).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )            
+                 .find( ".portlet-header" )                
+                 .addClass( "ui-widget-header ui-corner-all" )                
+                 .prepend( "<span class='ui-icon ui-icon-minusthick'></span>")                
+                 .end()            
+                 .find( ".portlet-content" );         
+             $( ".portlet-header .ui-icon" ).click(function() {            
+                 $( this ).toggleClass( "ui-icon-minusthick" ).toggleClass( "ui-icon-plusthick" );            
+                 $( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();        
+             });         
+             $( ".column" ).disableSelection();
+            
+            //var height = this.$el.height();
             //alert(height)
             //this.$el.height(height-300);
         },

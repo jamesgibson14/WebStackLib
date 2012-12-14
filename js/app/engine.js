@@ -31,7 +31,15 @@
                 }     
                 return -1;   
             }; 
-        }    
+        } 
+        this.loadCss = function(url) {
+            var link = document.createElement("link");
+            link.type = "text/css";
+            link.rel = "stylesheet";
+            link.href = url;
+            document.getElementsByTagName("head")[0].appendChild(link);
+        }
+   
         //alert("inside Engine");
         //engine.support = alert("support inside engine");
         //engine.fn = engine.prototype = {test: = alert(test2 + test3)};
