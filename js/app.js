@@ -26,9 +26,10 @@ require.config({
 		jqp: 'jqplot/jquery.jqplot',
 		jqpp: "jqplot/plugins",
       	// Require.js Plugins
+      	sg: 'SlickGrid-2.02',
       	text: "plugins/text-2.0.0"
     },
-    //packages: ["app/jqplotAll", "store"],
+    //packages: ["SlickGrid-2.02"],
     shim: {
         'backbone': {
             //These script dependencies should be loaded before loading

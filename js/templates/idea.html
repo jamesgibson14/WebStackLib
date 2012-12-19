@@ -1,3 +1,21 @@
+	<div class="right border" style="max-height: 100px; overflow: auto">Comments
+		<ul>
+			<li>Comment 1</li>
+			<li>Comment 2</li>
+			<li>Comment 3</li>
+			<li>Comment 4</li>
+			<li>Comment 5</li>
+			<li>Comment 6</li>
+		</ul></div>
+		<div class="right border" style="height: 100%;right:0px">History
+		<ul>
+			<li>Comment 1</li>
+			<li>Comment 2</li>
+			<li>Comment 3</li>
+			<li>Comment 4</li>
+			<li>Comment 5</li>
+			<li>Comment 6</li>
+		</ul></div>
 	<fieldset>
 {{#if isNew}}
   	<label>Enter Idea: </label>
@@ -13,32 +31,15 @@
 {{/if}}
 	</fieldset>
 	<h3>Tags</h3>
-	<style>    
-		#selectable .ui-selecting {        
-			background: #ccc;    
-		}    
-		#selectable .ui-selected {        
-			background: #999;    
-		}
-		#selectable li {        
-			 margin: 3px; padding: 1px; float: left; text-align: center;   
-		}     
-		</style>
-	<ul id="selectable">    
-		<li>Item 1</li>    
-		<li>Item 2</li>    
-		<li>Item 3</li>    
-		<li>Item 4</li>    
-		<li>Item 5</li>
-	</ul><br />	
-	<ul id="tags">    
-		<li>Computer Bug<input type="checkbox" {{#if tags.bug}}checked="checked"{{/if}} name="tags" /></li>    
-		<li>Cell Enhacement<input type="checkbox" name="tags" /></li>    
-		<li>Stops Production<input type="checkbox" name="tags" /></li>    
-		<li>Slows<input type="checkbox" name="tags" /></li>    
-		<li>Critical<input type="checkbox" name="tags" /></li>
-	</ul><br />
+	<div id="tags">    
+		<input type="checkbox" id='check1' {{#if tags.bug}}checked="checked"{{/if}} name="tags" /><label for='check1'>Computer Bug</label>
+		<input type="checkbox" id='check2' {{#if tags.bug}}checked="checked"{{/if}} name="tags" /><label for='check2'>Cell Enhacement</label>  
+		<input type="checkbox" id='check3' {{#if tags.bug}}checked="checked"{{/if}} name="tags" /><label for='check3'>Stops Production</label>
+		<input type="checkbox" id='check4' {{#if tags.bug}}checked="checked"{{/if}} name="tags" /><label for='check4'>Slows Production</label>
+		<input type="checkbox" id='check5' {{#if tags.bug}}checked="checked"{{/if}} name="tags" /><label for='check5'>Critical</label>
+	</div><br />
 	Other Tags <input type="text" name="tags" /><label for="">QuickTip </label><br />			
 	<input type="radio" name="type" checked="checked" /><label for="">Production </label><br />
 	<input type="radio" name="type" /><label for="">Computer </label><br />
 	<input type="radio" name="type" /><label for="">QuickTip </label><br />
+	

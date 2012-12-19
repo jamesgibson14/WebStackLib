@@ -11,6 +11,8 @@
 		<input type="radio" id="radio9" name="radio" /><label for="radio9"><a href="#main/InventoryApp" >Inventory</a></label>
 		<input type="radio" id="radio10" name="radio" /><label for="radio10"><a href="#main/TasksApp" >Task</a></label>
 		<input type="radio" id="radio11" name="radio" /><label for="radio11"><a href="#main/ProdScheduleApp">Prododuction Scheduling</a></label>
+		<input type="radio" id="radio12" name="radio" /><label for="radio12"><a href="#main/idea">Idea</a></label>
+		<input type="radio" id="radio13" name="radio" /><label for="radio13"><a href="#main/slicktesting">SlickTesting</a></label>
 		{{#each apps}}
 			<input type="radio" id="r{{this.path}}" name="radio" /><label for="r{{this.path}}"><a href="#main/{{this.path}}" >{{this.title}}</a></label>
 		{{/each}}
@@ -26,12 +28,29 @@
 			<img src="assets/images/AID{{Associate_ID}}.jpg" width="400px" height="250px"  />  
 		</div>     
 		<div class="portlet">        
-			<div class="portlet-header">News</div>        
-			<div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>    
+			<div class="portlet-header">My Tasks</div>        
+			<div class="portlet-content">
+				<ul>
+					<li>Task 1</li>
+					<li>Task 2</li>
+					<li>Task 3</li>
+					<li>Task 4</li>
+					<li>Task 5</li>
+					<li>Task 6</li>
+				</ul></div>    
 		</div> 
 		<div class="portlet">        
-			<div class="portlet-header">News</div>        
-			<div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</div>    
+			<div class="portlet-header">Latest Ideas</div>        
+			<div class="portlet-content">
+				<ul>
+					<li>Idea 1</li>
+					<li>Idea 2</li>
+					<li>Idea 3</li>
+					<li>Idea 4</li>
+					<li>Idea 5</li>
+					<li>Idea 6</li>
+				</ul>
+			</div>    
 		</div> 
 		<div class="portlet">        
 			<div class="portlet-header">News</div>        

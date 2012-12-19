@@ -5,7 +5,7 @@ function($, Backbone, E, Handlebars, template,model){
 
         //... is a list tag.
         tagName:  "div",
-        className: 'model',
+        className: 'model ofh',
         id: 'create-model',
         model: new model(),
         // Cache the template function for a single item.
@@ -35,12 +35,11 @@ function($, Backbone, E, Handlebars, template,model){
           var context = this.model.toJSON();
           context.tags = {bug:false}
           context.isNew = this.model.isNew(); 
-          alert(JSON.stringify(context));        
+          //alert(JSON.stringify(context));        
           var html = ctemp(context);    
           this.$el.html( html );
-          this.$( "#selectable" ).selectable({
-              
-          });
+
+          this.$('#tags > input').button();
           return this;
         },
     

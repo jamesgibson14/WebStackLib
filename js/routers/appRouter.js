@@ -29,6 +29,7 @@ function($, Backbone, E, Handlebars, require,user){
     E.user.fetch();
     //alert(E.user.get('PicturePath'));
     E.loadCss("js/lib/jqplot/jquery.jqplot.css")
+    //E.loadCss("js/lib/SlickGrid-2.02/slick.grid.css")
     
     var Router = Backbone.Router.extend({
         mainView: null,
@@ -56,14 +57,12 @@ function($, Backbone, E, Handlebars, require,user){
             require(['views/'+view], function(View) { 
                 that.mainView = new View();
                 var view = that.mainView.render().el;
-                 $('#bodyview').html(view);
-                 if(that.mainView.afterRender)
+                $('#bodyview').html(view);
+                if(that.mainView.afterRender)
                     that.mainView.afterRender();
+                
             }); 
-
-            // anotherView.js extends view.js.  anotherView.js does not have a promptUser method, so JavaScript looks up the prototype chain and uses the view.js promptUser method instead.
-            //!!! I could extend view for security ie: Dev view extends "editor view" which extends "read only view"
-            //anotherView.promptUser();
+            
         },
         'main': function(view,modelid){
             if(E.GET['module'] != undefined)
@@ -74,6 +73,7 @@ function($, Backbone, E, Handlebars, require,user){
                 var view = new View({modelid:modelid}).render().el;
                 
                 $('#mainview').html(view);
+                
             }); 
         },
         'tab': function(view){
