@@ -19,7 +19,7 @@ require.config({
       	engine: '../app/engine',
       	database: '../app/database',
       	backboneADO: '../app/backbone.ado',
-      	backbone: "backbone-0.9.2",
+      	backbone: "backbone-0.9.9.min",
 		ieconfig: 'ieconfig',
 		jqpall: 'jqplotAllPlugins',
 		jq: 'jqplot/',

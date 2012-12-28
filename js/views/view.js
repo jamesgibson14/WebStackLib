@@ -27,6 +27,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
             _.extend(temp,E.user.toJSON());
             this.$el.append(this.template(temp));
             
+            this.$('#testbuttons > div').button();
             this.$('#tabsmenu').buttonset()
             this.$('#links').menu({role: "null"});
             this.$('#ialpha').combobox();
@@ -65,7 +66,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
                 e.preventDefault()
             })
             var graph = new plotV();
-            this.$('#mainview').append(graph.render().el)         
+            this.$('#mainview').prepend(graph.render().el)         
 
             return this;
         },
@@ -80,12 +81,17 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
                 btn.button('option','icons',{primary:icon})
                 btn.css('height','50px')
             })
-            this.$('#sidebarBtns > label').hover(function(e){
-                $(this).width(function(index, width){return width+50}).prepend( "<span class='tempspan'>title</span>" );
+            this.$('#sidebarBtns > label').css({'display':'block'})
+            .hover(function(e){
+                var $el = $(this)
+                $el.prepend( "<span class='tempspan'>title</span>" )
+                $el.width(function(index, width){return width+150});
             },function(e){
-                $(this).width(function(index, width){return width-50}).find('.tempspan').remove();
+                var $el = $(this)
+                $el.find('.tempspan').remove()
+                $el.width(function(index, width){return width-150});
             })
-            this.$('#sidebarBtns > label').css({'display':'block'});
+            //this.$('#sidebarBtns > label').css({'display':'block'});
             
              $( ".column" ).sortable({            
                  connectWith: ".column"        

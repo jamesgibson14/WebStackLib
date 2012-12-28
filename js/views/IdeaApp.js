@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/IdeaApp', 'text!templates/IdeaApp.html', 'models/cellsuggestions','views/idea'], 
-function($, Backbone, E, Handlebars, Model, template, Collection, subView){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/IdeaApp', 'text!templates/IdeaApp.html', 'models/cellsuggestions','views/ideaList'], 
+function($, Backbone, E, Handlebars, Model, template, Collection, ideaList){
 
     var View = Backbone.View.extend({
 
@@ -20,8 +20,6 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         initialize: function() {
           this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','change','filter', 'newCellSuggestion','addOne', 'timeDelay');
-            this.collection.bind('reset',     this.filter);
-            this.collection.bind('add',     this.addOne);
             //if (this.options.modelid)
                 //open to specific 
             this.model.fetch({wait:true});
@@ -37,9 +35,15 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
 
             
             this.$el.html( temp );
+
+            var view = new ideaList({collection: this.collection});
+
+            this.$("#tabs-1").append(view.render().el);
+            
             this.$inputs.iassociateID = this.$('#iassociateID');
             this.$inputs.iassociate = this.$('#iassociate');
             this.$inputs.idate = this.$('#idate');
+            this.$inputs.imachine= this.$('#imachine');
             this.$inputs.imachineCode = this.$('#imachineCode');
             this.$inputs.iidea = this.$('#iidea');
             this.$inputs.igain = this.$('#igain');
@@ -130,11 +134,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             // replace the old view element with the new one, in the DOM 
             this.$("#list").replaceWith($el);//.replaceWith($el);             
         },
-        addOne: function(model) {
-            var view = new subView({model: model});
-            this.$("#list").append(view.render().el);
-            view.$el.toggleClass("dataSuccess",700).toggleClass("dataSuccess",700).toggleClass("dataSuccess",700).toggleClass("dataSuccess",700);
-        },
+        
         newAttributes: function() {
           return {
             associateID: this.$inputs.iassociateID.val(),
@@ -188,8 +188,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 })
                 return;
             } 
+            //this.$("#imachine").val('')
             
-            this.$('#todo-stats').html('Total Suggesions Entered: ' + this.collection.length);
             //alert('creating new Cell Suggestion')
             _.each(this.$inputs,function(value,key){
                 value.val('');

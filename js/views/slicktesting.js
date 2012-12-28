@@ -46,7 +46,9 @@ function($, Backbone, E, Handlebars,slick, template,model){
           var options = {
             enableCellNavigation: true,
             enableColumnReorder: false,
-            explicitInitialization: true
+            explicitInitialization: true,
+            leaveSpaceForNewRows: true,
+            addNewRows: true
           };
         
 

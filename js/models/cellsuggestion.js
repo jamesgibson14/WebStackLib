@@ -35,6 +35,12 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
       this.set({done: !this.get("done")});
     },
     sync: function(method, model,options){
+        if (1==1){
+            var rand = Math.random() * 10
+            options.success({peNum: '123412', id:rand})
+            return {peNum: '123412', id:rand};
+        }
+            
         var sql ='SELECT MAX(CellSuggestionNum)+1 AS cellnum FROM CellSuggestions';
         var sql2 = "INSERT INTO CellSuggestions (CellSuggestionNum, OpenDate, Suggestion, Cell, Submitter, CellorNew, Gain, OriginalMachine,alphaCode,numericCode,Estimate,ActualCost) VALUES (%s,'%s','%s', %s,'%s','%s','%s','%s','%s','%s','%s','%s')"
         var cellnum, cellid, 
@@ -45,10 +51,10 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         workcenter = this.get('workcenter'),
         associateID = this.get('associateID')
         cell = this.get('cell'),
-        alpha = this.get('alpha'),
-        numeric = this.get('numeric'),
-        estimate = this.get('estimate'),
-        actual = this.get('actual');
+        alpha = this.get('alpha') || 'n/a',
+        numeric = this.get('numeric') || 0,
+        estimate = this.get('estimate') || 0,
+        actual = this.get('actual') || 0;
         var opendate = new Date();
             
         var params = [];

@@ -1,4 +1,3 @@
-
 ol, ul {
 	list-style: none;
 }
@@ -82,6 +81,9 @@ h1.ui-widget-header, h2.ui-widget-header {
 	left:0px;
 	right:0px;
 	z-index: 1;
+}
+.clearfloat {
+	clear:both
 }
 #poweredBy{
 	float: right;
