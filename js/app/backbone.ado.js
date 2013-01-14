@@ -62,8 +62,11 @@ _.extend(WebSQLStore.prototype,{
 		//console.log("sql findAll");
 		if(!model.sql)
 		    this._executeSql("SELECT * FROM "+this.tableName,[], success, error);	
-		else
-            this._executeSql(model.sql,[],success,error);		
+		else {
+            var args = (model.sqlArgs) ? model.sqlArgs : null;
+            this._executeSql(model.sql,args,success,error);
+            
+        }		
 	},
 	
 	update: function (model, success, error, queue) {
@@ -125,10 +128,14 @@ Backbone.sync = function (method, model, options) {
 		alert("Error: No Storage method available", model);
 		return;
 	}
-
+    var dtime;
+    if (options.now) dtime = options.now
 	 debugger;
 	success = function (tx, rs) {	   
-	    
+	    if (options.now){
+	        alert('data from server in: ' + (dtime = (new Date() - dtime)))
+	        dtime = new Date()
+	    }
 		var count = 0,len = rs.Fields.Count,result = [];
 		if(store.isJSON) {		
     		try{
@@ -141,6 +148,9 @@ Backbone.sync = function (method, model, options) {
     		catch(err){
     		    
     		}		
+		}
+		else if (rs.fields(0).name == 'jsonmodels') {
+		    result = JSON.parse(rs.fields(0).value);
 		}
 		else {
     		while (!rs.ActiveConnection || !rs.eof){
@@ -167,7 +177,15 @@ Backbone.sync = function (method, model, options) {
                 count++;
             }
 	   }
+	   if (options.now){ 
+	       alert('data from server parsed in: ' + (dtime = (new Date() - dtime)))
+	       dtime = new Date()
+        }
 	   options.success(result);
+	   if (options.now){ 
+           alert('Backbone ready: ' + (dtime = (new Date() - dtime)))
+           dtime = new Date()
+        }
 	};
 	error = function (tx,error) {
 		//console.log("sql error");
