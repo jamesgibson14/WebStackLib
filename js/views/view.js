@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!templates/main.html', 'models/collection','views/plot','views/idea',], 
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!templates/main.html', 'models/collection','views/plot','views/idea','app/engine.outlook'], 
 function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
 
     var View = Backbone.View.extend({
@@ -67,7 +67,15 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
             })
             var graph = new plotV();
             this.$('#mainview').prepend(graph.render().el)         
+            //var wshshell=new ActiveXObject("wscript.shell");
+            //var objShell = new ActiveXObject("shell.application");
+            //wshshell.run("powershell ./test.ps1")
+            //objShell.ShellExecute('powershell.exe','./test.ps1','c:\temp',null,0);
+            
+            
 
+            
+            
             return this;
         },
         afterRender: function() {

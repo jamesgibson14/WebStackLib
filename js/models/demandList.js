@@ -28,10 +28,16 @@ define([
     toDataView: function(headers){
         return this.map(function(model){
             var obj = {};
+            var pidt = model.get('pidTotals')
             obj.id = model.id;
             for (var i = 0; i < headers.length; i++) {
                obj[headers[i]] = model.get(headers[i]); 
             }
+            obj.pidCount = (pidt.count) ? pidt.count : 0;
+            obj.pidExpectedQty = pidt.exptQty;
+            obj.pidCompletedQty = pidt.compQty;
+            obj.differenceQty = pidt.diffQty;
+            obj.oversold = ((parseInt(obj.available) + parseInt(obj.differenceQty))-parseInt(obj.eaches))
             return obj;           
         })
     }

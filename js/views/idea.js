@@ -38,7 +38,10 @@ function($, Backbone, E, Handlebars, template,model){
           //alert(JSON.stringify(context));        
           var html = ctemp(context);    
           this.$el.html( html );
-
+          this.$( "#accordion" ).accordion({      
+              heightStyle: "content"
+                  
+          });
           this.$('#tags > input').button();
           return this;
         },

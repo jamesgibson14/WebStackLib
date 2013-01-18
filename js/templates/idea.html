@@ -1,21 +1,5 @@
-	<div class="right border" style="max-height: 100px; overflow: auto">Comments
-		<ul>
-			<li>Comment 1</li>
-			<li>Comment 2</li>
-			<li>Comment 3</li>
-			<li>Comment 4</li>
-			<li>Comment 5</li>
-			<li>Comment 6</li>
-		</ul></div>
-		<div class="right border" style="height: 100%;right:0px">History
-		<ul>
-			<li>Comment 1</li>
-			<li>Comment 2</li>
-			<li>Comment 3</li>
-			<li>Comment 4</li>
-			<li>Comment 5</li>
-			<li>Comment 6</li>
-		</ul></div>
+<div class="layout ofh border" style="">
+<div class="left" style="width: 40%">
 	<fieldset>
 {{#if isNew}}
   	<label>Enter Idea: </label>
@@ -42,4 +26,42 @@
 	<input type="radio" name="type" checked="checked" /><label for="">Production </label><br />
 	<input type="radio" name="type" /><label for="">Computer </label><br />
 	<input type="radio" name="type" /><label for="">QuickTip </label><br />
-	
+</div>
+<div class="left" style="width: 30%">
+	<div id="accordion">
+		<h3><span class="moveright">Comments</span></h3>
+		<div>Comments
+			<ul>
+				<li>Comment 1</li>
+				<li>Comment 2</li>
+				<li>Comment 3</li>
+				<li>Comment 4</li>
+				<li>Comment 5</li>
+				<li>Comment 6</li>
+			</ul>
+		</div>
+		<h3><span class="moveright">History</span></h3>
+		<div >History
+			<ul>
+				<li>History 1</li>
+				<li>History 2</li>
+				<li>History 3</li>
+				<li>History 4</li>
+				<li>History 5</li>
+				<li>History 6</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="left"  style="width: 30%">
+	Tasks
+	<ul>
+		<li>Task 1</li>
+		<li>Task 2</li>
+		<li>Task 3</li>
+		<li>Task 4</li>
+		<li>Task 5</li>
+		<li>Task 6</li>
+	</ul>
+</div>
+</div>	

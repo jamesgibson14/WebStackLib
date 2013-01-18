@@ -28,10 +28,7 @@ h2 {
 	margin:8px;
 	font-size:20px;
 }
-h3 {
-	margin:6px;
-	font-size:16px;
-}
+
 h1.ui-widget-header, h2.ui-widget-header {
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -826,6 +823,11 @@ textarea:focus, input:focus {
 .portlet-content { padding: 0.4em; }    
 .ui-sortable-placeholder { border: 1px dotted black; visibility: visible !important; height: 50px !important; }    
 .ui-sortable-placeholder * { visibility: hidden; }
+.ui-accordion-header span.moveright {
+	margin-left: 25px;
+}
+
+
 
 /*
 IMPORTANT:
