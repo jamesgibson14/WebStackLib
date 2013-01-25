@@ -39,7 +39,7 @@ function($, Backbone, E, Handlebars, template, itemTemp){
         },
         addOne: function(model) {
 
-            var html = this.itemTemplate(model)
+            var html = this.itemTemplate(model.toJSON())
 
             var $temp = $(html);
             

@@ -1,10 +1,10 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/idea.html'], function($, Backbone, E, Handlebars, template){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'], function($, Backbone, E, Handlebars, template){
 
     var View = Backbone.View.extend({
 
         //... is a list tag.
-        tagName:  "tr",
-        className: 'border centered',
+        tagName:  "li",
+        className: 'border',
         // Cache the template function for a single item.
         template: template,
     
@@ -38,7 +38,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/idea.html'
         },
     
         // Toggle the `"done"` state of the model.
-        toggleDone: function() {
+        toggleDone: function() {           
           this.model.toggle();
         },
         
@@ -56,7 +56,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/idea.html'
     
         // Close the `"editing"` mode, saving changes to the todo.
         close: function() {
-          this.model.set({content: this.$('.todo-input').val()});
+          this.model.save({Task: this.$('.todo-input').val()});
           $(this.el).removeClass("editing");
         },
     

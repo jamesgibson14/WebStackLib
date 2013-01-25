@@ -1,5 +1,7 @@
 <div class="layout ofh border" style="">
-<div class="left" style="width: 40%">
+	<h1 class="ui-widget-header title"><span class="">Idea</span></h1>	
+<div id="create-model" class="left" style="width: 40%">
+	<h2 class="ui-widget-header"><span>Idea Details</span></h2>	
 	<fieldset>
 {{#if isNew}}
   	<label>Enter Idea: </label>
@@ -28,6 +30,7 @@
 	<input type="radio" name="type" /><label for="">QuickTip </label><br />
 </div>
 <div class="left" style="width: 30%">
+	<h2 class="ui-widget-header"><span>Comments/History</span></h2>
 	<div id="accordion">
 		<h3><span class="moveright">Comments</span></h3>
 		<div>Comments
@@ -53,15 +56,7 @@
 		</div>
 	</div>
 </div>
-<div class="left"  style="width: 30%">
-	Tasks
-	<ul>
-		<li>Task 1</li>
-		<li>Task 2</li>
-		<li>Task 3</li>
-		<li>Task 4</li>
-		<li>Task 5</li>
-		<li>Task 6</li>
-	</ul>
+<div id="tasksList" class="left"  style="width: 30%">
+
 </div>
 </div>	

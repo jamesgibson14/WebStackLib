@@ -3,17 +3,18 @@ define([
   'underscore',
   'backbone',
   'engine',
-  'models/todo'
+  'models/task'
 ], function($, _, Backbone, E, Model){
   var collection = Backbone.Collection.extend({
 // Reference to this collection's model.
     model: Model,
     urlRoot: '/todos',
     url: function(){ return this.urlRoot;},
+    sql: 'Execute dbo.spTasks',
     sqlqueue: ';',
     // set all of the todo items under the `"todos"` namespace.
     //localStorage: new Store("todos-backbone"),
-    store: new WebSQLStore(E.sqldb,'todos',false,true),
+    store: new WebSQLStore(E.sqldb,'Tasks',false,false),
     
     // Filter down the list of all todo items that are finished.
     done: function() {

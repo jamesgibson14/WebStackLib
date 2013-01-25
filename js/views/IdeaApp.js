@@ -57,9 +57,32 @@ function($, Backbone, E, Handlebars, Model, template, Collection, ideaList){
             this.$('#idate').datepicker();
             this.$('#btnCreate').button();
             //var machines = this.model.get('machines'); [{id:35,code: 3555,cell: 520,workcenter:52004},{etc},{etc}]
-
+            function removeIfInvalid(element) {                    
+                var $el = $( element )
+                var value = $el.val(),                        
+                matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( value ) + "$", "i" ),                        
+                valid = false;                    
+                _.each(machines, function(mod) {                      
+                    if ( mod.label.match( matcher ) ) {                            
+                        valid = true;                            
+                        return false;                        
+                    }                    
+                });                    
+                if ( !valid ) {                        
+                    // remove invalid value, as it didn't match anything                        
+                    $el                            
+                    .val( "" )                            
+                    .attr( "title", value + " didn't match any item" )                            
+                    .tooltip( "open" )
+                    .focus();                         
+                    setTimeout(function() {                            
+                        $el.tooltip( "close" ).attr( "title", "" );                        
+                    }, 2500 );                                               
+                    return false;                    
+                }                
+            }  
             var machines = this.model.get('machines');
-  
+    
             this.$( "#imachine" ).autocomplete({
                 source: machines,
                 autoFocus: true,
@@ -71,9 +94,21 @@ function($, Backbone, E, Handlebars, Model, template, Collection, ideaList){
                     that.$('#scell').html( ui.item.cell );
                     that.$('#sworkcenter').html( ui.item.wc );
                     return false;
-                }
+                },
+                change: function( event, ui ) {                            
+                    if ( !ui.item )                                
+                    return removeIfInvalid( this );                        
+                }   
 
                 //add on select: set machine_ID, set cell
+            })
+            .tooltip({                            
+                position: { 
+                    my: 'bottom',                               
+                    at: "right+20 top+10",
+                    of: this.button                            
+                },                            
+                tooltipClass: "ui-state-highlight absolute z2k"                        
             });
             this.$("#imachine").on('focus',function(e){
                 that.$( "#imachine" ).autocomplete( "search", "" );

@@ -1,12 +1,11 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/idea.html', 'models/idea'], 
-function($, Backbone, E, Handlebars, template,model){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'views/taskList', 'text!templates/idea.html', 'models/idea'], 
+function($, Backbone, E, Handlebars, taskList, template, model){
 
     var View = Backbone.View.extend({
 
         //... is a list tag.
         tagName:  "div",
         className: 'model ofh',
-        id: 'create-model',
         model: new model(),
         // Cache the template function for a single item.
         template: template,
@@ -14,7 +13,6 @@ function($, Backbone, E, Handlebars, template,model){
         // The DOM events specific to an item.
         events: {
           'click #newidea'              :'updateOnEnter',
-          "click .check"                : "toggleDone",
           "dblclick .editable"          : "edit",
           "click span.todo-destroy"     : "clear",
           "keypress .todo-input"        : "updateOnEnter",
@@ -26,6 +24,7 @@ function($, Backbone, E, Handlebars, template,model){
             _.bindAll(this, 'render', 'close', 'remove');
             this.model.bind('change:id', this.render);
             this.model.bind('destroy', this.remove,this);
+            this.taskList = taskList
         },
     
         // Re-render the contents of the todo item.
@@ -43,12 +42,10 @@ function($, Backbone, E, Handlebars, template,model){
                   
           });
           this.$('#tags > input').button();
+          var nview = new this.taskList();
+          var html = nview.render().el;
+          this.$('#tasksList').html(html);
           return this;
-        },
-    
-        // Toggle the `"done"` state of the model.
-        toggleDone: function() {
-          this.model.toggle();
         },
         
         // Alert the Order of this todo.

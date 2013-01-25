@@ -74,16 +74,20 @@ _.extend(WebSQLStore.prototype,{
 		var id = (model.id || model.attributes.id);
 		var sql = ''
 		success = function(){return;};
+		debugger;
 		if(!model.storetype){
 		  sql = "UPDATE "+this.tableName+" SET [value]='%s' WHERE id='%s'"
-		  if (!queue)
-		      this._executeSql(sql,[JSON.stringify(model.toJSON()),model.id], success, error);
+		  if (!queue){
+		      var attrs = model.toJSON()
+		      this._executeSql(sql,[JSON.stringify(attrs),model.id], success, error);
+		      
+		  }
 		  else
 		      model.collection.sqlqueue +=  vsprintf(sql, [JSON.stringify(model.toJSON()),model.id]) + ';';		    
 	   }
 		else {
 		    var fields = [],values = [], sql;
-		    
+		    sql = "UPDATE "+this.tableName+" SET " + this._parseUpdateString(model.changed) + " WHERE id='" + model.id + "'"
 		    this._executeSql(sql,values, success, error);
 		}
 	},
@@ -110,7 +114,24 @@ _.extend(WebSQLStore.prototype,{
 		this.db.transaction(function(db) {
 			return db.executeSql(SQL, params, success, error);
 		});
-	}
+	},
+	_parseUpdateString: function(attrs, attrMap){
+	    var string = '';
+	    for (var attr in attrs){
+	        if (attr in attrMap)
+	           string = string + attr + " = '" + attrs[attr] + "', "
+	    }
+	    return string.slice(0,-2)
+	},
+	_parseInsertString: function(attrs, attrMap){
+        var columns = '';
+        var values = '';
+        for (var attr in attrMap){
+            columns = columns + "'" + attr + "', ";
+            values = values + "'" + attrs[attr] + "', "
+        }
+        return "(" + columns.slice(0,-2) + ") VALUES (" + values.slice(0,-2) + ")";
+    }
 });
 
 // ====== [ Backbone.sync WebSQL implementation ] ======

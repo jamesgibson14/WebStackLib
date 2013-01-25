@@ -90,7 +90,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
                 
                 var id = $(this).attr('data-id');
                 var model = that.collection.get(id); 
-                model.save({order: i + 1},{silent:true,queue:true});
+                model.set({order: i + 1},{silent:true,queue:true});
             });
             this.collection.saveQueued();
             //alert(new Date()-now);

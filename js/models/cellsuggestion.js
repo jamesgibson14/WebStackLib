@@ -35,12 +35,13 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
       this.set({done: !this.get("done")});
     },
     sync: function(method, model,options){
+        /* Test without db connection
         if (1==1){
             var rand = Math.random() * 10
-            options.success({peNum: '123412', id:rand})
-            return {peNum: '123412', id:rand};
+            options.success({peNum: '123412', id:rand, opendate: '1/24/2013', machine: '3191',associate: this.get('associate')})
+            return {peNum: '123412', id:rand, opendate: '1/24/2013', machine: '3191'};
         }
-            
+        */
         var sql ='SELECT MAX(CellSuggestionNum)+1 AS cellnum FROM CellSuggestions';
         var sql2 = "INSERT INTO CellSuggestions (CellSuggestionNum, OpenDate, Suggestion, Cell, Submitter, CellorNew, Gain, OriginalMachine,alphaCode,numericCode,Estimate,ActualCost) VALUES (%s,'%s','%s', %s,'%s','%s','%s','%s','%s','%s','%s','%s')"
         var cellnum, cellid, 

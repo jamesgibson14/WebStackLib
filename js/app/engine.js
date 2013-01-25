@@ -3,21 +3,10 @@
 (function( window, undefined ) {
     
     var engine = function() {
-        
-        var privatevar = "Private Variable Reached";
-        this.test1 = "Engine Public Variable";
+
         this.callbackque = []
         //Engine Setup
         
-        this.getprivatevar = function() {
-            return 'privatevar: ' + privatevar;
-        }
-        this.setprivatevar = function(value) {
-             privatevar = value;
-        }
-        privatefunction = function(){ 
-            return 'You have reached a Private Function';
-        }
         if (!Array.prototype.indexOf) {   
             Array.prototype.indexOf = function (obj, fromIndex) {     
                 if (fromIndex == null) {         
@@ -39,27 +28,13 @@
             link.href = url;
             document.getElementsByTagName("head")[0].appendChild(link);
         }
-   
-        //alert("inside Engine");
-        //engine.support = alert("support inside engine");
-        //engine.fn = engine.prototype = {test: = alert(test2 + test3)};
-        //engine.fn.init.prototype = engine.fn;
     }
-    
-    engine.prototype.support = function(){
-        return "Support prototype called: " + privatefunction();
-    }
-    
-    /*
-    
-    */
     
     window.engine = window.E = new engine;
 })(window);
 
     //Get window username variable
 (function(engine) {
-        engine.help = "Help Reached";
         engine.getwinuser = function(){
             var username;
             try {
@@ -72,18 +47,6 @@
             return username || "guest";
         }
     })(engine);
-
-//Validation
-(function(e) {
-    var v = e.validate = {};
-    
-    v.time = function(timestr) {
-        return timestr;
-    }
-    
-})(engine);
-
-
 
 //Loading - to add a loading icon
 (function(E) {
@@ -98,8 +61,8 @@
 })(engine);
 
 //tick - code run on every certain interval
-(function(e) {
-    var t = e.tick = function(options){     
+(function(E) {
+    var t = E.tick = function(options){     
         // input her:
         // automated code and process
         // chating
@@ -111,8 +74,8 @@
 })(engine);
 
 //Freeze - lock up the browser by runing code for testing.
-(function(e) {
-    var l = e.freeze = function(){      
+(function(E) {
+    var l = E.freeze = function(){      
         for(var i=0;i<10000000;i++){
             var b = 1+1+1+1;
         }
@@ -189,34 +152,9 @@
     
 })(engine);
 
-//loadAMDModule - load AMD module for use
-(function(E) {
-    E.loadModule= function(options){
-        //can accept url as string or options as object
-        //E.debug.log("<br> entered include: " + options);
-        var htmldata;
-        var settings = {
-            url: 'html/request.html',
-            dataType: 'text',
-            success: function(data) {
-                htmldata = data
-            }
-        }
-        if (typeof(options)=='string')
-            settings.url = options
-        else
-            $.extend(settings,options);
-        
-           
-
-        return $.getScript(settings.url);
-    }
-    
-})(engine);
-
 //Queue - a queue for events and callback.
-(function(e) {
-    var v = e.queue = function(){
+(function(E) {
+    var v = E.queue = function(){
 
       // store your callbacks
       this._methods = [];

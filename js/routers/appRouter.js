@@ -11,6 +11,7 @@ function($, Backbone, E, Handlebars, require,user){
     };
     try{
         E.sqldb = new E.ADODB({type: 'sqlserver'});
+        E.sqlProd2 = new E.ADODB({type: 'sqlserver',sqlsource: 'SQLPROD2'});
     }
     catch(e){};
     try{
@@ -28,6 +29,7 @@ function($, Backbone, E, Handlebars, require,user){
     E.user = new user({username: username});
     E.user.fetch();
     //alert(E.user.get('PicturePath'));
+    //E.loadCss("js/lib/css/dark-hive/jquery-ui.css")
     E.loadCss("js/lib/jqplot/jquery.jqplot.css")
     //E.loadCss("js/lib/SlickGrid-2.02/slick.grid.css")
     

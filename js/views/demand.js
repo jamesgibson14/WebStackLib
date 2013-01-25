@@ -147,7 +147,7 @@ function($, Backbone, E, Handlebars,slick, template,col){
                 for (var columnId in columnFilters) {
                   if (columnId !== undefined && columnFilters[columnId] !== "") {
                     var c = grid.getColumns()[grid.getColumnIndex(columnId)];
-                    if (item[c.field].indexOf(columnFilters[columnId])<0) {
+                    if (item[c.field].toLowerCase().indexOf(columnFilters[columnId])<0) {
                       return false;
                     }
                   }

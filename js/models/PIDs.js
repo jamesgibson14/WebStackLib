@@ -11,7 +11,7 @@ define([
         sql: 'Execute dbo.spDataIntegrity',
         modelsToSave: [],
         sqlToExecute: null,
-        store: new WebSQLStore(new E.ADODB(),'dbo.spGetDataForPeopleSoftEntry',false),
+        store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
         sqldb: new E.ADODB({type: 'sqlserver'}),
         accessdb: new E.ADODB({type: 'access'}),
         applyFilters: function(){
