@@ -9,6 +9,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         filteredModels: [],
         filters: false,
         template: template,
+        noScan: false,
         events: {
             'blur .pid':'change',
             'click .loadtable': 'loadData',
@@ -16,7 +17,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             'click .btnRun': 'runEntry',
             'click .filter': 'filterList',
             'keypress .colfilter': 'filterList',
-            'click #filterclear': 'filter'        
+            'click #filterclear': 'filter',
+            'keypress #pidSearch': 'scanPID',
+            'keypress #opSearch': 'scanPID',      
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
@@ -28,6 +31,19 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var that = this;
             E.loading(this.$el,that.collection.fetch,this.collection);
             //this.collection.fetch();
+        },
+        scanPID: function(e){
+            var $el = $(e.currentTarget);
+            var id = $el.attr('id');
+
+            if (e.key == 'Enter') {
+                if(id == 'pidSearch')
+                    this.$('#opSearch').val('').focus();
+                else {
+                    //searchAndMarkPID()
+                    this.$('#pidSearch').val('').focus();
+                }
+            }
         },
         printPIDs: function(){
             var HKEY_Root, HKEY_Path, HKEY_Key;

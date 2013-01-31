@@ -71,8 +71,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
             //var objShell = new ActiveXObject("shell.application");
             //wshshell.run("powershell ./test.ps1")
             //objShell.ShellExecute('powershell.exe','./test.ps1','c:\temp',null,0);
-            
-            
+            //E.outlook.sendMail('test','testing email','gibsonj')
+            //E.outlook.getTasks()
 
             
             

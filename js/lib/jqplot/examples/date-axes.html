@@ -65,14 +65,16 @@ $(document).ready(function(){
 <script class="code" type="text/javascript">
 $(document).ready(function(){
   var line1=[['2008-06-30 8:00AM',4], ['2008-7-14 8:00AM',6.5], ['2008-7-28 8:00AM',5.7], ['2008-8-11 8:00AM',9], ['2008-8-25 8:00AM',8.2]];
-  var plot2 = $.jqplot('chart2', [line1], {
+  var line2=[['2008-07-30 8:00AM',4], ['2008-8-14 8:00AM',6.5], ['2008-9-28 8:00AM',5.7], ['2008-10-11 8:00AM',9], ['2008-11-25 8:00AM',8.2]];
+  var plot2 = $.jqplot('chart2', [line1,line2], {
       title:'Customized Date Axis', 
       axes:{
         xaxis:{
           renderer:$.jqplot.DateAxisRenderer, 
-          tickOptions:{formatString:'%b %#d, %#I %p'},
+          tickOptions:{formatString:'%b %#d, %#I %p',angle: -30 },
           min:'June 16, 2008 8:00AM', 
-          tickInterval:'2 weeks'
+          tickInterval:'2 weeks',
+		  tickRenderer: $.jqplot.CanvasAxisTickRenderer
         }
       },
       series:[{lineWidth:4, markerOptions:{style:'square'}}]
@@ -86,6 +88,9 @@ $(document).ready(function(){
 
 
     <script class="include" type="text/javascript" src="../jquery.jqplot.min.js"></script>
+	<script type="text/javascript" src="../plugins/jqplot.categoryAxisRenderer.min.js"></script>
+	<script type="text/javascript" src="../plugins/jqplot.canvasTextRenderer.min.js"></script>
+	<script type="text/javascript" src="../plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
     <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.min.js"></script>
     <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.min.js"></script>
     <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.min.js"></script>

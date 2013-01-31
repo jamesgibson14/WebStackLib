@@ -105,8 +105,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, ideaList){
             .tooltip({                            
                 position: { 
                     my: 'bottom',                               
-                    at: "right+20 top+10",
-                    of: this.button                            
+                    at: "right+25 top-5"                           
                 },                            
                 tooltipClass: "ui-state-highlight absolute z2k"                        
             });

@@ -95,23 +95,30 @@ $(document).ready(function(){
       dataType:"json",
       success: function(data) {
         ret = data;
+		alert("data" + data)
       }
     });
     return ret;
   };
 
   // The url for our json data
-  var jsonurl = "./jsondata.txt";
+  var jsonurl = "./jsondata2.txt";
 
   // passing in the url string as the jqPlot data argument is a handy
   // shortcut for our renderer.  You could also have used the
   // "dataRendererOptions" option to pass in the url.
+  var line1=[['2008-06-30 8:00AM',4], ['2008-7-14 8:00AM',6.5], ['2008-7-28 8:00AM',5.7], ['2008-8-11 8:00AM',9], ['2008-8-25 8:00AM',8.2]];
   var plot2 = $.jqplot('chart2', jsonurl,{
     title: "AJAX JSON Data Renderer",
     dataRenderer: ajaxDataRenderer,
     dataRendererOptions: {
       unusedOptionalUrl: jsonurl
-    }
+    },
+	axes:{        
+		xaxis:{            
+			renderer:$.jqplot.DateAxisRenderer        
+		}    
+	}
   });
 });
 </script>
@@ -126,6 +133,7 @@ $(document).ready(function(){
     <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.min.js"></script>
     <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.min.js"></script>
     <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.min.js"></script>
+	<script type="text/javascript" src="../plugins/jqplot.dateAxisRenderer.min.js"></script>
 <!-- End Don't touch this! -->
 
 <!-- Additional plugins go here -->

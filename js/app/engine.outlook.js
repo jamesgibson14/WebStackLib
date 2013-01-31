@@ -6,21 +6,46 @@ define([
 ], function($, _, Backbone, E){
   var outlook = function(options){
       var settings = {}
-      
-      return {
+      var inboxFolder = 6;
+      var oldFolder = 5;
+      var CalenderFolder = 9;
+      var deletedFolder = 3;
+      var outbox = 4;
+      var contacts = 10;
+      var journal = 11;
+      var notes = 12;
+      var tasks = 13,
+      reminders = 14,
+      reminders = 15,
+      drafts = 16,
+      conflicts = 17
+    return {
       getTasks: function(){
           outlookApp = new ActiveXObject("Outlook.Application");
           nameSpace = outlookApp.getNameSpace("MAPI");
           nameSpace.logon("","",false,false);
-          Tasks = nameSpace.getDefaultFolder(13);
+          Tasks = nameSpace.getDefaultFolder(6);
           myTasks = Tasks.Items;
           count = myTasks.Count;
           result = '';
           for(x = 1; x <= count; x++) {
               result += "-"+myTasks(x)+ "\n";
+              //result += "-"+myTasks(x)+ "\n";
           }
+          alert('Name: ' + Tasks.Name + "\n" + 'count: ' + count + "\n" + 'taks: ' + result);
       },
-        setTask: function(sSubject, sBody, dtDueDate, dtReminderDate){
+      getTodoList: function(){
+          //function that loops though all outlook email folders looking for emails mark as a Todo/Task
+          outlookApp = new ActiveXObject("Outlook.Application");
+          nameSpace = outlookApp.getNameSpace("MAPI");
+          nameSpace.logon("","",false,false);
+          Tasks = nameSpace.getDefaultFolder(6);
+          myTasks = Tasks.Items;
+          count = myTasks.Count;
+          // loops need to be created that will check each email in each folder and sub-folder
+         
+      },
+      setTask: function(sSubject, sBody, dtDueDate, dtReminderDate){
             var outlookApp = new ActiveXObject("Outlook.Application");
             var nameSpace = outlookApp.getNameSpace("MAPI");
             var mailFolder = nameSpace.getDefaultFolder(9); //olFolderTask
@@ -64,7 +89,7 @@ define([
                 this.Start  = Start;  
                 this.ReminderMinutesBeforeStart = ReminderMinutesBeforeStart;
             }
-            function saveAppt( obj ){  
+            function saveAppointment( obj ){  
                 /* Create the Outlook Object and Appointment Item */  
                 out = new ActiveXObject( "Outlook.Application" );   
                 /* Create an Appointment Item */  
@@ -85,8 +110,39 @@ define([
             /* Tell User to review the information */
            //alert("Please Review the following Appointment Information");
         
-      }
-      }
+      },
+        sendMail: function(p_subject,p_body, p_recipient){
+            /*
+            //Opens outlook email window
+            var objO = new ActiveXObject('Outlook.Application'); 
+            var objNS = objO.GetNameSpace('MAPI'); 
+            var mItm = objO.CreateItem(0); 
+            mItm.Display(); 
+            mItm.To = p_recipient; 
+            mItm.Subject = p_subject; 
+            mItm.Body = p_body; 
+            mItm.GetInspector.WindowState = 0; 
+            */
+            
+            var outlookApp = new ActiveXObject("Outlook.Application");
+            var nameSpace = outlookApp.getNameSpace("MAPI");
+            var mailFolder = nameSpace.getDefaultFolder(6);
+            var mailItem = mailFolder.Items.add('IPM.Note.FormA');
+            with (mailItem) {
+            Subject="CUSTOMER SERVICE";
+            To = 'gibsonj'
+            Attachments.Add ("c:\\temp\\barchart2-64px.ico");
+            HTMLBody = "<html><body><p>some body script</p><img src='cid:'barchart2-64px.ico'><img src='cid:'barchart2-64px.ico'></body></html>";
+            Display (0);
+            Send();
+            }
+            mailItem=null;
+            mailFolder=null;
+            nameSpace=null;
+            outlookApp=null;
+            
+        }
+    }
   }
     E.outlook = outlook()
     //E.outlook.setTask("check scripting",'can outlook tasks be scripted','1/21/2013','1/20/2013');
