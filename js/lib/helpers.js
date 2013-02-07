@@ -58,7 +58,7 @@ function getUrlVars() {
   }
   
 
-
+var MAX_DUMP_DEPTH = 5;
 function dumpObj(obj, name, indent, depth) {
         if (depth > MAX_DUMP_DEPTH) {
             return indent + name + ": <Maximum Depth Reached>\n";

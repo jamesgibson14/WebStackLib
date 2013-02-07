@@ -212,8 +212,8 @@ Backbone.sync = function (method, model, options) {
 		//console.log("sql error");
 		//console.log(error);
 		//console.log(tx);
-		
-		options.error(error);
+		if (options.error)
+		  options.error(error);
 	};
 	
 	switch(method) {

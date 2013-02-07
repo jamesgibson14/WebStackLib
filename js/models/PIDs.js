@@ -12,8 +12,8 @@ define([
         modelsToSave: [],
         sqlToExecute: null,
         store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
-        sqldb: new E.ADODB({type: 'sqlserver'}),
-        accessdb: new E.ADODB({type: 'access'}),
+        sqldb: E.sqlProd2,
+        accessdb: E.accessdb,
         applyFilters: function(){
             
         }    

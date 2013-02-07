@@ -142,6 +142,40 @@ define([
             outlookApp=null;
             
         }
+        /*
+        Public Sub ListOutlookFolders() 
+     
+            Dim olApp As Outlook.Application 
+            Dim olNamespace As Outlook.Namespace 
+            Dim olFolder As Outlook.MAPIFolder 
+             
+            Set olApp = New Outlook.Application 
+            Set olNamespace = olApp.GetNamespace("MAPI") 
+             
+            For Each olFolder In olNamespace.Folders 
+                Debug.Print olFolder.Name; ":", olFolder.Description 
+                ListFolders olFolder, 1 
+            Next 
+             
+            Set olFolder = Nothing 
+            Set olNamespace = Nothing 
+            Set olApp = Nothing 
+             
+        End Sub 
+        Sub ListFolders(MyFolder As Outlook.MAPIFolder, Level As Integer) 
+             '
+             '
+             '
+            Dim olFolder As Outlook.MAPIFolder 
+             
+            For Each olFolder In MyFolder.Folders 
+                Debug.Print ":"; String(Level * 2, "-"); olFolder.Name 
+                If olFolder.Folders.Count > 0 Then 
+                    ListFolders olFolder, Level + 1 
+                End If 
+            Next 
+        End Sub         
+         */
     }
   }
     E.outlook = outlook()

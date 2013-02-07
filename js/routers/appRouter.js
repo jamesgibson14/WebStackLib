@@ -10,7 +10,7 @@ function($, Backbone, E, Handlebars, require,user){
         this.unbind();
     };
     try{
-        E.sqldb = new E.ADODB({type: 'sqlserver'});
+        E.sqldb = new E.ADODB({type: 'sqlserver',sqlsource: 'SQLTEST2'});
         E.sqlProd2 = new E.ADODB({type: 'sqlserver',sqlsource: 'SQLPROD2'});
     }
     catch(e){};

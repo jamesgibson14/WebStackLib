@@ -40,9 +40,31 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 if(id == 'pidSearch')
                     this.$('#opSearch').val('').focus();
                 else {
-                    //searchAndMarkPID()
-                    this.$('#pidSearch').val('').focus();
+                    $pid = this.$('#pidSearch')
+                    this.searchAndMarkPID($pid.val(),$el.val())
+                    $pid.val('').focus();
                 }
+            }
+        },
+        searchAndMarkPID: function(fPID, fOp){
+            var i=0;
+            
+            _.each(this.filteredModels,function(model, index){
+                //alert(filter)
+                var pid = model.get('pid') + ''
+                var op = model.get('opseq') + ''
+                if (pid == fPID && op == fOp){
+                    model.set({flag:false});
+                    //find row and move to top 
+                    //or re-order by Ready
+                    //or nothing
+                    i++;
+                }
+                
+            })
+            if(i<1) {
+                alert('not found')
+                //error checking why isnt PID&OP found
             }
         },
         printPIDs: function(){
@@ -120,12 +142,12 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 
                 _.each(this.filteredModels,function(model, index){
                     //alert(filter)
-                    var val = model.get(attr) + ''
+                    
                     if (type == 'checkbox'){
-                        if(filter == !!val) 
+                        if(filter === model.get(attr)) 
                             tempmods.push(model)
                     }
-                    else if (val.indexOf(filter)>=0){
+                    else if (model.get(attr) + ''.indexOf(filter)>=0){
                         tempmods.push(model);
                     }
                 })
@@ -177,9 +199,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             }); 
             // replace the old view element with the new one, in the DOM 
             
-            this.$("#pidlisttbody").replaceWith($el);//.replaceWith($el);
-                      
-            
+            this.$("#pidlisttbody").replaceWith($el);//.replaceWith($el);            
             
             this.$('#collection-stats').html('Total lines: ' + this.filteredModels.length);
             E.loading(this.$el,this.resort,this);
