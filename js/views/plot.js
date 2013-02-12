@@ -19,8 +19,7 @@ function($, Backbone, E, Handlebars, Model, template, opTrack){
         initialize: function() {
           this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','change','enterPeopleSoftScript','tester','filter');
-            this.optrack = new opTrack()
-            this.optrack.fetch();
+            
         },
         loadData: function(){
             var that = this;
@@ -87,7 +86,8 @@ function($, Backbone, E, Handlebars, Model, template, opTrack){
             }); 
             
             var jsonurl = "js/lib/jqplot/examples/KCPsample4.csv";
-            
+            this.optrack = new opTrack()
+            this.optrack.fetch();
             var coll = this.optrack.dataRenderer();
             var data = coll.data; //infos[0];
             var labels = coll.labels; //infos[1]; ['3700_Target','2_two','3_three','4_four'] //

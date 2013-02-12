@@ -55,7 +55,8 @@ function($, Backbone, E, Handlebars, template, Collection){
                         show: false,
                         type: 'linear'
                     },
-                    isDragable:false             
+                    isDragable:false,
+                    showMarker:false             
                 },
                 axesDefaults: {
                     labelRenderer: $.jqplot.CanvasAxisLabelRenderer
@@ -112,20 +113,27 @@ function($, Backbone, E, Handlebars, template, Collection){
                  zoom: true
                }
             });
-            this.$('#resizable').bind('resize', function(event, ui) {
+            this.$('#plot').bind('resize', function(event, ui) {
                 if (that.plot)
                     that.plot.replot( { resetAxes: true } );
             });
-            this.$('#plot').bind('jqplotDataUnhighlight',         
+            this.$('#plot').on('jqplotDataUnhighlight',         
                 function (ev) {
-                    //alert("this worked: unhighlight")            
-                    $('#info1b').html('Nothing');        
+                    debugger;             
+                    that.$('#info1b').html('Nothing');        
             }); 
-            this.$('#plot').bind('jqplotDataHighlight',         
+            this.$('#plot').on('jqplotDataHighlight',         
                 function (ev, seriesIndex, pointIndex, data) { 
-                    //alert('highlight');           
-                    $('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
+                    debugger;             
+                    that.$('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
             }); 
+            this.$('#plot').on('jqplotDataClick',             
+                function (ev, seriesIndex, pointIndex, data) { 
+                    debugger;               
+                    that.$('#info1c').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data+ ', pageX: '+ev.pageX+', pageY: '+ev.pageY);            
+                }        
+            );
+
         },
         render: function() {
             var that = this;
@@ -134,10 +142,8 @@ function($, Backbone, E, Handlebars, template, Collection){
             
             this.$el.html( temp );
             
-            function removeIfInvalid(element, list) {                    
-                var $el = $( element )
-                var value = $el.val(),                        
-                matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( value ) + "$", "i" ),                        
+            function removeIfInvalid(value, list) {                    
+                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( value ) + "$", "i" ),                        
                 valid = false;                    
                 _.each(list, function(mod) {                      
                     if ( mod.label.match( matcher ) ) {                            
@@ -175,10 +181,10 @@ function($, Backbone, E, Handlebars, template, Collection){
                     that.$('#atq_id').html( ui.item.id );
                     that.$('#scell').html( ui.item.AssciateCell );
                     that.$('#sAssociate').html( ui.item.label.split('-')[1] );
-                    if(removeIfInvalid( this,qualificationList)) {
+                    if(removeIfInvalid( ui.item.label,qualificationList)) {
                         success(ui.item.id )
                     }
-                    $(this).blur();
+                    $(this).val('').blur();
                     return false;
                 }
 
@@ -192,6 +198,7 @@ function($, Backbone, E, Handlebars, template, Collection){
                 tooltipClass: "ui-state-highlight absolute z2k"                        
             });
             this.$("#iqualification").on('focus',function(e){
+                that.$( "#iqualification" ).val('');
                 that.$( "#iqualification" ).autocomplete( "search", "" );
             })
             
