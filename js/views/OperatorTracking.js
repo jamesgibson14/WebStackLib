@@ -101,6 +101,7 @@ function($, Backbone, E, Handlebars, template, Collection){
                     background: "white"
                 },
                 highlighter: {
+                    show: false,
                     sizeAdjust: 10,
                     tooltipLocation: 'se',
                     tooltipAxes: 'xy',
@@ -109,7 +110,7 @@ function($, Backbone, E, Handlebars, template, Collection){
                     useAxesFormatters: true
                },
                cursor: {
-                 show: true,
+                 show: false,
                  zoom: true
                }
             });
@@ -118,18 +119,16 @@ function($, Backbone, E, Handlebars, template, Collection){
                     that.plot.replot( { resetAxes: true } );
             });
             this.$('#plot').on('jqplotDataUnhighlight',         
-                function (ev) {
-                    debugger;             
+                function (ev) {            
                     that.$('#info1b').html('Nothing');        
             }); 
             this.$('#plot').on('jqplotDataHighlight',         
-                function (ev, seriesIndex, pointIndex, data) { 
-                    debugger;             
+                function (ev, seriesIndex, pointIndex, data) {             
+                    alert('highlighted')
                     that.$('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
             }); 
             this.$('#plot').on('jqplotDataClick',             
-                function (ev, seriesIndex, pointIndex, data) { 
-                    debugger;               
+                function (ev, seriesIndex, pointIndex, data) {              
                     that.$('#info1c').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data+ ', pageX: '+ev.pageX+', pageY: '+ev.pageY);            
                 }        
             );
@@ -198,7 +197,7 @@ function($, Backbone, E, Handlebars, template, Collection){
                 tooltipClass: "ui-state-highlight absolute z2k"                        
             });
             this.$("#iqualification").on('focus',function(e){
-                that.$( "#iqualification" ).val('');
+                
                 that.$( "#iqualification" ).autocomplete( "search", "" );
             })
             
