@@ -247,18 +247,7 @@ tr {
 #create-todo {
 	position: relative;
 }
-#create-todo input {
-	width: 466px;
-	font-size: 24px;
-	font-family: inherit;
-	line-height: 1.4em;
-	border: 0;
-	outline: none;
-	padding: 6px;
-	margin:2px;
-	border: 1px solid #999999;
-	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-}
+
 #create-model input {	
 	font-size: 18px;
 	font-family: inherit;
@@ -301,17 +290,7 @@ tr {
 	font-family: inherit;
 	line-height: 1.1em;
 }
-.defaultForm input {
-	font-size: 24px;
-	font-family: inherit;
-	line-height: 1.4em;
-	border: 0;
-	outline: none;
-	padding: 6px;
-	margin:2px;
-	border: 1px solid #999999;
-	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-}
+
 .defaultForm input {	
 	font-size: 18px;
 	font-family: inherit;
@@ -351,6 +330,17 @@ tr {
 .defaultForm label {
 	margin-left: 7px;
 }
+.defaultForm .spanInput {
+	font-size: 24px;
+	font-family: inherit;
+	line-height: 1.4em;
+	border: 0;
+	outline: none;
+	padding: 2px;
+	margin: 2px;
+	margin-left:5px;
+}
+
 .editable .hidden {
 	display:none;
 }

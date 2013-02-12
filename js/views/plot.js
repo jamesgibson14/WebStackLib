@@ -25,7 +25,7 @@ function($, Backbone, E, Handlebars, Model, template, opTrack){
         loadData: function(){
             var that = this;
             //E.loading(this.$el,that.collection.fetch,this.collection);
-            
+            $.jqplot.config.enablePlugins = true;
             var attrs = this.model.toJSON()
             var plot1 = $.jqplot('plot4', attrs.data, $.extend(true, {}, attrs.theme, attrs.plotOptions));
             this.model.on('change:data',function(){
@@ -83,7 +83,7 @@ function($, Backbone, E, Handlebars, Model, template, opTrack){
             this.$('#plot3').bind('jqplotDataHighlight',         
                 function (ev, seriesIndex, pointIndex, data) { 
                     //alert('highlight');           
-                    $('#info1b').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);        
+                    $('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
             }); 
             
             var jsonurl = "js/lib/jqplot/examples/KCPsample4.csv";
@@ -95,11 +95,18 @@ function($, Backbone, E, Handlebars, Model, template, opTrack){
             var plot4 = $.jqplot("plot", data, {
                 title: "John Doe's Performance",
                 //animate: true,
+                seriesDefaults:{                    
+                    pointLabels: { 
+                        show: false
+                    },
+                    trendline: {
+                        show: true,
+                        type: 'linear'
+                    },
+                    isDragable:false             
+                },
                 axesDefaults: {
                     labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-                },
-                seriesDefaults: {
-                    showMarker: false
                 },
                 legend: {
                     show: true,
@@ -139,7 +146,21 @@ function($, Backbone, E, Handlebars, Model, template, opTrack){
                     shadow: false,
                     // background: 'rgba(0,0,0,0)'  works to make transparent.
                     background: "white"
-                }
+                },
+                highlighter: {
+                    sizeAdjust: 10,
+                    tooltipLocation: 'n',
+                    tooltipAxes: 'y',
+                    tooltipFormatString: '<b><i><span style="color:red;">hello</span></i></b> %.3f %s %s',
+                    useAxesFormatters: false,
+                    yvalues: 5,          
+                    formatString:'<table class="jqplot-highlighter"> \          <tr><td>date:</td><td>%s</td></tr> \          <tr><td>open:</td><td>%s</td></tr> \          <tr><td>hi:</td><td>%s</td></tr> \          <tr><td>low:</td><td>%s</td></tr> \          <tr><td>close:</td><td>%s</td></tr> \          <tr><td>letter:</td><td>%s</td></tr></table>'
+               },
+               cursor: {
+                 show: true,
+                 zoom: true,
+                 draggable: false
+               }
             });
             
             var ajaxDataRenderer = function(url, plot, options) {
@@ -173,8 +194,7 @@ function($, Backbone, E, Handlebars, Model, template, opTrack){
                 },
                 axes:{        
                     xaxis:{            
-                        renderer:$.jqplot.DateAxisRenderer,           
-                        tickInterval:'6 months',          
+                        renderer:$.jqplot.DateAxisRenderer,                     
                         tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                         tickOptions: {
                             showGridline: false,
@@ -182,7 +202,17 @@ function($, Backbone, E, Handlebars, Model, template, opTrack){
                             angle: -30 
                         }       
                     }    
-                }
+                },
+                highlighter: {
+                    sizeAdjust: 10,
+                    tooltipLocation: 'n',
+                    tooltipAxes: 'y',
+                    tooltipFormatString: '<div class="fixed z2k"><b><i><span style="color:red;">hello</span></i></b> %.2f</div>',
+                    useAxesFormatters: false
+               },
+               cursor: {
+                 show: true
+               }
             });
             
             
