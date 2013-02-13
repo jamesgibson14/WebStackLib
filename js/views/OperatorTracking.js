@@ -31,7 +31,8 @@ function($, Backbone, E, Handlebars, template, Collection){
             //E.loading(this.$el,that.collection.fetch,this.collection);
             $.jqplot.config.enablePlugins = true;
             var attrs = this.model.toJSON()
-            
+            if (this.plot)
+                this.plot.destroy();
             //no data check
             if (this.collection.length==0){
                 alert('No data found for this Qualification\nPlease contact James Gibson if this seems like an error')
@@ -42,8 +43,7 @@ function($, Backbone, E, Handlebars, template, Collection){
             var data = coll.data; //infos[0];
             var labels = coll.labels; //infos[1]; ['3700_Target','2_two','3_three','4_four'] //
             //var ticks = infos[2];
-            if (this.plot)
-                this.plot.destroy();
+            
             this.plot = $.jqplot("plot", data, {
                 title: "Machine Performance and Target",
                 //animate: true,
@@ -101,25 +101,26 @@ function($, Backbone, E, Handlebars, template, Collection){
                     background: "white"
                 },
                 highlighter: {
-                    show: false,
+                    show: true,
                     sizeAdjust: 10,
                     tooltipLocation: 'se',
                     tooltipAxes: 'xy',
                     yvalues: 3,
-                    formatString:'<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr></table>',
+                    formatString:'<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr></table>',
                     useAxesFormatters: true
                },
                cursor: {
-                 show: false,
+                 show: true,
                  zoom: true
                }
             });
-            this.$('#plot').bind('resize', function(event, ui) {
+            this.$('#plot').on('resize', function(event, ui) {
                 if (that.plot)
                     that.plot.replot( { resetAxes: true } );
             });
             this.$('#plot').on('jqplotDataUnhighlight',         
-                function (ev) {            
+                function (ev) {   
+                    //alert('unhighlighted')          
                     that.$('#info1b').html('Nothing');        
             }); 
             this.$('#plot').on('jqplotDataHighlight',         
@@ -141,11 +142,10 @@ function($, Backbone, E, Handlebars, template, Collection){
             
             this.$el.html( temp );
             
-            function removeIfInvalid(value, list) {                    
-                var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( value ) + "$", "i" ),                        
-                valid = false;                    
+            function removeIfInvalid(value, list) {               
+                var valid = false;                    
                 _.each(list, function(mod) {                      
-                    if ( mod.label.match( matcher ) ) {                            
+                    if ( mod.label == value ) {                            
                         valid = true;                            
                         return false;                        
                     }                    
@@ -178,8 +178,8 @@ function($, Backbone, E, Handlebars, template, Collection){
                 select: function( event, ui ) {
                     that.$( "#iqualification" ).val( ui.item.label );                    
                     that.$('#atq_id').html( ui.item.id );
-                    that.$('#scell').html( ui.item.AssciateCell );
-                    that.$('#sAssociate').html( ui.item.label.split('-')[1] );
+                    that.$('#scell').html( ui.item.cell );
+                    that.$('#sAssociate').html( ui.item.label.split('-')[0] );
                     if(removeIfInvalid( ui.item.label,qualificationList)) {
                         success(ui.item.id )
                     }
@@ -196,13 +196,13 @@ function($, Backbone, E, Handlebars, template, Collection){
                 },                            
                 tooltipClass: "ui-state-highlight absolute z2k"                        
             });
-            this.$("#iqualification").on('focus',function(e){
-                
+            this.$("#iqualification").on('click',function(e){
+                //$(this).val('')
                 that.$( "#iqualification" ).autocomplete( "search", "" );
             })
             
             this.$('#resizable').resizable({delay:20,minHeight: 326,minWidth: 400});
-            this.$('input, textarea').placeholder();
+            //this.$('input, textarea').placeholder();
             return this;
         },
         renderPlot: function(){
