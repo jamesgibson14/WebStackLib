@@ -27,7 +27,7 @@ function($, Backbone, E, Handlebars, template, Collection){
             this.collection.fetch();
         },
         loadData: function(){
-            var that = this;
+           
             //E.loading(this.$el,that.collection.fetch,this.collection);
             $.jqplot.config.enablePlugins = true;
             var attrs = this.model.toJSON()
@@ -114,20 +114,25 @@ function($, Backbone, E, Handlebars, template, Collection){
                  zoom: true
                }
             });
-            this.$('#plot').on('resize', function(event, ui) {
+            var that = this;
+            this.$('#resizable').off('resize')
+            this.$('#resizable').on('resize', function(event, ui) {
                 if (that.plot)
                     that.plot.replot( { resetAxes: true } );
             });
+            this.$('#plot').off('jqplotDataUnhighlight');
             this.$('#plot').on('jqplotDataUnhighlight',         
                 function (ev) {   
                     //alert('unhighlighted')          
                     that.$('#info1b').html('Nothing');        
             }); 
+            this.$('#plot').off('jqplotDataHighlight');
             this.$('#plot').on('jqplotDataHighlight',         
                 function (ev, seriesIndex, pointIndex, data) {             
                     alert('highlighted')
                     that.$('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
             }); 
+            this.$('#plot').off('jqplotDataClick');
             this.$('#plot').on('jqplotDataClick',             
                 function (ev, seriesIndex, pointIndex, data) {              
                     that.$('#info1c').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data+ ', pageX: '+ev.pageX+', pageY: '+ev.pageY);            
