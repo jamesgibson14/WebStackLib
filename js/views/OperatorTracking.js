@@ -5,11 +5,16 @@ function($, Backbone, E, Handlebars, template, Collection){
 
         tagName:  "div",
         className: 'ReportApp ofh',
-        attributes: {style:'border:3px solid black;'},
+        attributes: {style:'border:none;'},
         model: Backbone.Model.extend({
             sql: "Execute spGetLists 'operatorQualifications'",
             store: new WebSQLStore(E.sqldb,'dbo.spGetDataForPeopleSoftEntry',false), }),
+        modelStageTotals: Backbone.Model.extend({
+            sql: "SELECT m.Code, m.Cell_ID, m.WorkCenter_ID, m.Stage5Target, m.Inactive, qa.Stage1Minutes, qa.Stage2Minutes, qa.Stage3Minutes, qa.Stage4Minutes, qa.Stage5Minutes, atq.CurrentStage,(SELECT CONVERT(varchar,MAX(ReviewDate),126) AS MaxOfReviewDate FROM dbo.MachineOperatorReviews mor WHERE (mor.QualID=atq.ID)) AS LastReviewDate FROM AssociatesToQualifications atq INNER JOIN Qualifications AS q ON atq.Qualifications_ID = q.ID INNER JOIN QualificationsToMachines ON q.ID = QualificationsToMachines.Qualifications_ID INNER JOIN Machines AS m ON QualificationsToMachines.Machines_ID = m.ID INNER JOIN QualificationsAttributes qa ON q.ID = qa.Qualifications_ID WHERE atq.ID = %s",
+            sqlArgs: [430],
+            store: new WebSQLStore(E.sqldb,'dbo.spGetDataForPeopleSoftEntry',false), }),
         collection: new Collection(),
+        associateToQualification_ID: 0,
         filteredModels: [],
         filters: false,
         plot: null,
@@ -23,6 +28,7 @@ function($, Backbone, E, Handlebars, template, Collection){
           this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','change','loadData');
             this.model = new this.model()
+            this.modelStageTotals = new this.modelStageTotals();
             this.model.fetch();
             this.collection.fetch();
         },
@@ -138,6 +144,23 @@ function($, Backbone, E, Handlebars, template, Collection){
                     that.$('#info1c').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data+ ', pageX: '+ev.pageX+', pageY: '+ev.pageY);            
                 }        
             );
+            this.modelStageTotals.sqlArgs = new Array(this.associateToQualification_ID);
+            this.modelStageTotals.fetch()
+            var cs = this.collection.getCurrentStage()
+            var cd = this.modelStageTotals.get('LastReviewDate')
+            var cm = (this.collection.getStageMinutes(cd)/440).toFixed(2);
+            var ns = this.nextStage(cs);
+            if(ns==5)
+                ns = 90 - cm;
+            else {
+                ns = this.modelStageTotals.get('Stage' + ns +  'Minutes');
+                ns = ((ns / 440) - cm).toFixed(2);
+            }
+            this.$('#cS').html(cs)
+            this.$('#cD').html(cd.slice(0,10))
+            this.$('#cM').html(cm)
+            this.$('#nS').html(ns)
+            
 
         },
         render: function() {
@@ -181,8 +204,10 @@ function($, Backbone, E, Handlebars, template, Collection){
                 minLength: 0,
                 delay: 0,
                 select: function( event, ui ) {
-                    that.$( "#iqualification" ).val( ui.item.label );                    
+                    that.$( "#iqualification" ).val( ui.item.label );
+                    that.associateToQualification_ID = ui.item.id;                    
                     that.$('#atq_id').html( ui.item.id );
+                    that.$('#qualName').html( ui.item.qualification );
                     that.$('#scell').html( ui.item.cell );
                     that.$('#sAssociate').html( ui.item.label.split('-')[0] );
                     if(removeIfInvalid( ui.item.label,qualificationList)) {
@@ -213,6 +238,9 @@ function($, Backbone, E, Handlebars, template, Collection){
         renderPlot: function(){
             //Instead of destroying plot just reload data, lables and then re-plot  
         },
+        renderTable: function(){
+            //Instead of destroying plot just reload data, lables and then re-plot  
+        },
         change: function(){
             
             var newvalue = this.$el.find('.pid').val();
@@ -220,6 +248,19 @@ function($, Backbone, E, Handlebars, template, Collection){
         },
         runEntry: function(){
             this.model.set('data',[1,2,3,4,5,6,7,8,9,10])          
+        },
+        nextStage: function(cs){
+            if(cs == 1)
+                cs = 2;
+            if(cs == 2)
+                cs = 3;
+            if(cs == 3)
+                cs = 4;
+            if(cs == 4)
+                cs = 5;
+            if(cs == 5)
+                cs = 5;
+            return cs   
         }
          
     });
