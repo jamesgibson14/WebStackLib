@@ -11,6 +11,7 @@ function($, Backbone, E, Handlebars, require,user){
     };
     try{
         E.sqldb = new E.ADODB({type: 'sqlserver',sqlsource: 'SQLTEST2'});
+        E.sqlTest2 = new E.ADODB({type: 'sqlserver',sqlsource: 'SQLTEST2'});
         E.sqlProd2 = new E.ADODB({type: 'sqlserver',sqlsource: 'SQLPROD2'});
     }
     catch(e){};
@@ -28,6 +29,8 @@ function($, Backbone, E, Handlebars, require,user){
     }
     E.user = new user({username: username});
     E.user.fetch();
+    var loc = document.location + ''
+    E.appState = loc.indexOf('prodweb')>=0 ? 'Production' : (loc.indexOf('webdev')>=0 ? 'Test' : (loc.indexOf('DevProjects')>=0 ? 'Developer' : 'n/a'))
     //alert(E.user.get('PicturePath'));
     //E.loadCss("js/lib/css/dark-hive/jquery-ui.css")
     E.loadCss("js/lib/jqplot/jquery.jqplot.css")

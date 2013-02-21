@@ -25,6 +25,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
             var temp = this.model.toJSON();
             var that = this;
             _.extend(temp,E.user.toJSON());
+            temp.appState = E.appState;
             this.$el.append(this.template(temp));
             
             this.$('#testbuttons > div').button();

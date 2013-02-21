@@ -48,7 +48,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         },
         searchAndMarkPID: function(fPID, fOp){
             var i=0;
-            
+            fPID = fPID.toUpperCase()
             _.each(this.filteredModels,function(model, index){
                 //alert(filter)
                 var pid = model.get('pid') + ''
@@ -164,6 +164,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             else{
                 this.filteredModels = this.collection.models;
                 this.addAll();
+                this.$('#pidSearch').focus();
             }
 
         },

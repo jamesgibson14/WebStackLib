@@ -12,7 +12,7 @@ function($, Backbone, E, Handlebars, template, Collection){
         modelStageTotals: Backbone.Model.extend({
             sql: "SELECT m.Code, m.Cell_ID, m.WorkCenter_ID, m.Stage5Target, m.Inactive, qa.Stage1Minutes, qa.Stage2Minutes, qa.Stage3Minutes, qa.Stage4Minutes, qa.Stage5Minutes, atq.CurrentStage,(SELECT CONVERT(varchar,MAX(ReviewDate),126) AS MaxOfReviewDate FROM dbo.MachineOperatorReviews mor WHERE (mor.QualID=atq.ID)) AS LastReviewDate FROM AssociatesToQualifications atq INNER JOIN Qualifications AS q ON atq.Qualifications_ID = q.ID INNER JOIN QualificationsToMachines ON q.ID = QualificationsToMachines.Qualifications_ID INNER JOIN Machines AS m ON QualificationsToMachines.Machines_ID = m.ID INNER JOIN QualificationsAttributes qa ON q.ID = qa.Qualifications_ID WHERE atq.ID = %s",
             sqlArgs: [430],
-            store: new WebSQLStore(E.sqldb,'dbo.spGetDataForPeopleSoftEntry',false), }),
+            store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         collection: new Collection(),
         associateToQualification_ID: 0,
         filteredModels: [],
@@ -39,11 +39,7 @@ function($, Backbone, E, Handlebars, template, Collection){
             var attrs = this.model.toJSON()
             if (this.plot)
                 this.plot.destroy();
-            //no data check
-            if (this.collection.length==0){
-                alert('No data found for this Qualification\nPlease contact James Gibson if this seems like an error')
-                return false;
-            }  
+            
               
             var coll = this.collection.dataRenderer();
             var data = coll.data; //infos[0];
@@ -147,7 +143,7 @@ function($, Backbone, E, Handlebars, template, Collection){
             this.modelStageTotals.sqlArgs = new Array(this.associateToQualification_ID);
             this.modelStageTotals.fetch()
             var cs = this.collection.getCurrentStage()
-            var cd = this.modelStageTotals.get('LastReviewDate')
+            var cd = this.modelStageTotals.get('LastReviewDate') || "n/a"
             var cm = (this.collection.getStageMinutes(cd)/440).toFixed(2);
             var ns = this.nextStage(cs);
             if(ns==5)
@@ -166,7 +162,7 @@ function($, Backbone, E, Handlebars, template, Collection){
         render: function() {
             var that = this;
             
-            var temp = this.template({});
+            var temp = this.template({debug:true});
             
             this.$el.html( temp );
             
@@ -196,7 +192,13 @@ function($, Backbone, E, Handlebars, template, Collection){
             var success = function(atq_id){
                 that.collection.sql = "EXECUTE dbo.spOperatorTracking @AssociateToQualification_ID = " + atq_id;
                 that.collection.fetch();
+                //no data check
+                if (that.collection.length==0){
+                    alert('No data found for this Qualification\nPlease contact James Gibson if this seems like an error')
+                    return false;
+                }  
                 that.loadData()
+                E.hideLoading();
             }
             this.$( "#iqualification" ).autocomplete({
                 source: qualificationList,
@@ -211,7 +213,7 @@ function($, Backbone, E, Handlebars, template, Collection){
                     that.$('#scell').html( ui.item.cell );
                     that.$('#sAssociate').html( ui.item.label.split('-')[0] );
                     if(removeIfInvalid( ui.item.label,qualificationList)) {
-                        success(ui.item.id )
+                        E.loading(that.$el, function() {success(ui.item.id );},that)
                     }
                     $(this).val('').blur();
                     return false;

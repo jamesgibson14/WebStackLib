@@ -1,6 +1,6 @@
-	<h1 class="tabletitle">PeopleSoft Entry</h1>
-	<button type="button" class='loadtable'>Load PIDs</button><button type="button" class='printPIDs'>Print</button><br />	
-	<div id="pidfilters" style="width:250px">
+	<h1 class="ui-widget-header title"><span class="">PeopleSoft Entry</span></h1>
+	<div class="noprint"><button type="button" class='loadtable'>Load PIDs</button><button type="button" class='printPIDs'>Print</button></div><br />	
+	<div id="pidfilters" class="noprint" style="width:250px">
 		<h1 class="ui-widget-header title"><span class="">Filters</span></h1>
 		PID: <input class="colfilter" filteron="pid" type="text" size="10" style="margin-right:10px" /><br />
 		Machine: <input class="colfilter" filteron="machine" type="text" size="10" style="margin-right:10px" /><br />
@@ -10,10 +10,9 @@
 		999 flaged:<input class="filter" filteron="flag" type="checkbox" name="rFlag" style="margin-right:10px" /><br />
 		<button type="button" id="filterclear">Clear Filters</button>
 	</div>
-	<div class="defaultForm" style="width: 100%; padding-left: 30%">
+	<div class="defaultForm noprint" style="width: 100%; padding-left: 30%">
 		<label>PID</label> <input type="text" id="pidSearch" /> <label>OP</label> <input type="text" id="opSearch" /> 
-	</div>
-	<h1 class="ui-widget-header title"><span class="">Current PIDs</span></h1>
+	</div>	
 	<table id="pidList" class="psEntryTable tablesorter">
 	<thead class='row header'><tr>
 		<th class="hcell">pid<br /></th>
