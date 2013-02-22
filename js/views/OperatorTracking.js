@@ -10,7 +10,7 @@ function($, Backbone, E, Handlebars, template, Collection){
             sql: "Execute spGetLists 'operatorQualifications'",
             store: new WebSQLStore(E.sqldb,'dbo.spGetDataForPeopleSoftEntry',false), }),
         modelStageTotals: Backbone.Model.extend({
-            sql: "SELECT m.Code, m.Cell_ID, m.WorkCenter_ID, m.Stage5Target, m.Inactive, qa.Stage1Minutes, qa.Stage2Minutes, qa.Stage3Minutes, qa.Stage4Minutes, qa.Stage5Minutes, atq.CurrentStage,(SELECT CONVERT(varchar,MAX(ReviewDate),126) AS MaxOfReviewDate FROM dbo.MachineOperatorReviews mor WHERE (mor.QualID=atq.ID)) AS LastReviewDate FROM AssociatesToQualifications atq INNER JOIN Qualifications AS q ON atq.Qualifications_ID = q.ID INNER JOIN QualificationsToMachines ON q.ID = QualificationsToMachines.Qualifications_ID INNER JOIN Machines AS m ON QualificationsToMachines.Machines_ID = m.ID INNER JOIN QualificationsAttributes qa ON q.ID = qa.Qualifications_ID WHERE atq.ID = %s",
+            sql: "SELECT m.Code, m.Cell_ID, m.WorkCenter_ID, m.Stage5Target, m.Inactive, qa.Stage1Minutes, qa.Stage2Minutes, qa.Stage3Minutes, qa.Stage4Minutes, qa.Stage5Minutes, atq.CurrentStage,(SELECT MAX(ReviewDate) AS MaxOfReviewDate FROM dbo.MachineOperatorReviews mor WHERE (mor.QualID=atq.ID)) AS LastReviewDate FROM AssociatesToQualifications atq INNER JOIN Qualifications AS q ON atq.Qualifications_ID = q.ID INNER JOIN QualificationsToMachines ON q.ID = QualificationsToMachines.Qualifications_ID INNER JOIN Machines AS m ON QualificationsToMachines.Machines_ID = m.ID INNER JOIN QualificationsAttributes qa ON q.ID = qa.Qualifications_ID WHERE atq.ID = %s",
             sqlArgs: [430],
             store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         collection: new Collection(),
@@ -136,14 +136,15 @@ function($, Backbone, E, Handlebars, template, Collection){
             }); 
             this.$('#plot').off('jqplotDataClick');
             this.$('#plot').on('jqplotDataClick',             
-                function (ev, seriesIndex, pointIndex, data) {              
-                    that.$('#info1c').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data+ ', pageX: '+ev.pageX+', pageY: '+ev.pageY);            
+                function (ev, seriesIndex, pointIndex, data) {             
+                    that.$('#info1c').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+new Date(data[0]) + ', ' + data[1]+ ', pageX: '+ev.pageX+', pageY: '+ev.pageY);            
                 }        
             );
             this.modelStageTotals.sqlArgs = new Array(this.associateToQualification_ID);
             this.modelStageTotals.fetch()
             var cs = this.collection.getCurrentStage()
-            var cd = this.modelStageTotals.get('LastReviewDate') || "n/a"
+            var cd = new Date(this.modelStageTotals.get('LastReviewDate'))
+            if (!cd) cd = "n/a"
             var cm = (this.collection.getStageMinutes(cd)/440).toFixed(2);
             var ns = this.nextStage(cs);
             if(ns==5)
@@ -153,7 +154,7 @@ function($, Backbone, E, Handlebars, template, Collection){
                 ns = ((ns / 440) - cm).toFixed(2);
             }
             this.$('#cS').html(cs)
-            this.$('#cD').html(cd.slice(0,10))
+            this.$('#cD').html(cd)
             this.$('#cM').html(cm)
             this.$('#nS').html(ns)
             
@@ -195,6 +196,7 @@ function($, Backbone, E, Handlebars, template, Collection){
                 //no data check
                 if (that.collection.length==0){
                     alert('No data found for this Qualification\nPlease contact James Gibson if this seems like an error')
+                    E.hideLoading();
                     return false;
                 }  
                 that.loadData()

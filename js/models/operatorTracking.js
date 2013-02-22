@@ -15,14 +15,14 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             this.map(function(model){
                 var label = model.get('Code');
                 if (labels.indexOf(label + '_Target') > -1){
-                    obj[label + '_Target'].push([model.get('Date'),model.get('Target')*100]);
-                    obj[label + '_Actual'].push([model.get('Date'),model.get('PerformancePercent')*100,model.get('AssignedMinutes'),model.get('LineCount')]);
+                    obj[label + '_Target'].push([new Date(model.get('Date')),model.get('Target')*100]);
+                    obj[label + '_Actual'].push([new Date(model.get('Date')),model.get('PerformancePercent')*100,model.get('AssignedMinutes'),model.get('LineCount')]);
                 }
                 else{
                     labels.push(label + '_Target');
                     labels.push(label + '_Actual');
-                    obj[label + '_Target'] = [[model.get('Date'),model.get('Target')*100]]
-                    obj[label + '_Actual'] = [[model.get('Date'),model.get('PerformancePercent')*100,model.get('AssignedMinutes'),model.get('LineCount')]]
+                    obj[label + '_Target'] = [[new Date(model.get('Date')),model.get('Target')*100]]
+                    obj[label + '_Actual'] = [[new Date(model.get('Date')),model.get('PerformancePercent')*100,model.get('AssignedMinutes'),model.get('LineCount')]]
                 }                           
             });
             $.each( obj, function(array, i) {
