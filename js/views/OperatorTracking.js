@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/OperatorTracking.html', 'models/operatorTracking', 'jqp','jqpall'], 
-function($, Backbone, E, Handlebars, template, Collection){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/OperatorTracking.html', 'models/operatorTracking', 'views/ProcessRecord', 'jqp','jqpall'], 
+function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
 
     var View = Backbone.View.extend({
 
@@ -19,18 +19,14 @@ function($, Backbone, E, Handlebars, template, Collection){
         filters: false,
         plot: null,
         template: template,
-        events: {
-            'blur .pid':'change',
-            'click #btnTest': 'loadData',
-            'click #btnRun': 'runEntry'        
-        },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','loadData');
+            _.bindAll(this, 'render','loadData','renderProcessRecord');
             this.model = new this.model()
             this.modelStageTotals = new this.modelStageTotals();
             this.model.fetch();
-            this.collection.fetch();
+            this.ProcessRecordView = new ProcessRecord()
+            //this.collection.fetch();
         },
         loadData: function(){
            
@@ -107,8 +103,8 @@ function($, Backbone, E, Handlebars, template, Collection){
                     sizeAdjust: 10,
                     tooltipLocation: 'se',
                     tooltipAxes: 'xy',
-                    yvalues: 3,
-                    formatString:'<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr></table>',
+                    yvalues: 4,
+                    formatString:'<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr><tr><td>Record #</td><td>%s</td></tr></table>',
                     useAxesFormatters: true
                },
                cursor: {
@@ -135,11 +131,8 @@ function($, Backbone, E, Handlebars, template, Collection){
                     that.$('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
             }); 
             this.$('#plot').off('jqplotDataClick');
-            this.$('#plot').on('jqplotDataClick',             
-                function (ev, seriesIndex, pointIndex, data) {             
-                    that.$('#info1c').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+new Date(data[0]) + ', ' + data[1]+ ', pageX: '+ev.pageX+', pageY: '+ev.pageY);            
-                }        
-            );
+            this.$('#plot').on('jqplotDataClick',this.renderProcessRecord);             
+                
             this.modelStageTotals.sqlArgs = new Array(this.associateToQualification_ID);
             this.modelStageTotals.fetch()
             var cs = this.collection.getCurrentStage()
@@ -191,7 +184,7 @@ function($, Backbone, E, Handlebars, template, Collection){
             }  
             var qualificationList = this.model.get('operatorQualifications');
             var success = function(atq_id){
-                that.collection.sql = "EXECUTE dbo.spOperatorTracking @AssociateToQualification_ID = " + atq_id;
+                that.collection.sqlArgs = [atq_id], //= "EXECUTE dbo.spOperatorTracking @AssociateToQualification_ID = " + atq_id;
                 that.collection.fetch();
                 //no data check
                 if (that.collection.length==0){
@@ -245,13 +238,21 @@ function($, Backbone, E, Handlebars, template, Collection){
         renderTable: function(){
             //Instead of destroying plot just reload data, lables and then re-plot  
         },
-        change: function(){
-            
-            var newvalue = this.$el.find('.pid').val();
-            this.model.set({pid: newvalue})
+        renderReviews: function(){
+            //Show reviews for current selected operator  
         },
-        runEntry: function(){
-            this.model.set('data',[1,2,3,4,5,6,7,8,9,10])          
+        renderProcessRecord: function(ev, seriesIndex, pointIndex, data){            
+            var that = this;
+            var html; 
+            if(this.collection.labels[seriesIndex].indexOf('Actual')>-1) {
+                var view = this.ProcessRecordView;
+                this.$('#info1c').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+new Date(data[0]) + ', ' + data[1]+ ', pageX: '+ev.pageX+', pageY: '+ev.pageY);
+                html = view.render(data[4]).el
+            }
+            else{
+                html = '<div>This is the target line.</div>'
+            }
+            this.$('#processRecord').html(html)
         },
         nextStage: function(cs){
             if(cs == 1)

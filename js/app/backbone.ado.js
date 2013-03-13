@@ -111,8 +111,12 @@ _.extend(WebSQLStore.prototype,{
 			//console.log(sql + " - error: " + error);
 			if(errorCallback) errorCallback(sql,error);
 		};
+		if (params)
+          SQL = vsprintf(SQL,params);
+        if(this.debug)
+            alert(SQL);
 		this.db.transaction(function(db) {
-			return db.executeSql(SQL, params, success, error);
+			return db.executeSql(SQL, success, error,true);
 		});
 	},
 	_parseUpdateString: function(attrs, attrMap){
@@ -149,6 +153,7 @@ Backbone.sync = function (method, model, options) {
 		alert("Error: No Storage method available", model);
 		return;
 	}
+	store.debug = options.debug;
     var dtime;
     if (options.now) dtime = options.now
 	 debugger;

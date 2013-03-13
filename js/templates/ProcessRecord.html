@@ -1,0 +1,57 @@
+<div class="defaultForm">
+	<div>Machine: <span id="machineCode">{{code}}</span></div>
+	<div>Date: <span id="machineCode">{{code}}</span></div>
+	<div>Associate: <span id="machineCode">{{code}}</span></div>
+	<div>Shift: <span id="machineCode">{{code}}</span></div>
+	<table id="pidList" class="psEntryTable tablesorter">
+	<thead class='row header'><tr>
+		<th class="hcell"><br /></th>
+		<th class="hcell">PID</th>
+		<th class="hcell">OpSeq<br /></th>
+		<th class="hcell">Crew</th>
+		<th class="hcell">Setup</th>
+		<th class="hcell">Run</th>
+		<th class="hcell">End</th>
+		<th class="hcell">Breaks</th>
+		<th class="hcell">Minutes</th>
+		<th class="hcell">Start</th>
+		<th class="hcell">End</th>
+		<th class="hcell">Runtime</th>
+		<th class="hcell">Start</th>
+		<th class="hcell">End</th>
+		<th class="hcell">Total Packed</th>
+		<th class="hcell">Scrap</th>
+		<th class="hcell">Other</th>
+		</tr>
+	</thead>
+	
+	<tbody id="pidlisttbody" class="tablebody">
+	{{#each details}}
+	{{#with this}}
+		<tr>
+		<td class='cell border'>{{LineNum}}</td>
+		<td class='cell border'>{{PID}}</td>
+		<td class='cell border'>op: {{OpSeq}}</td>
+		<td class='cell border'>{{CrewSize}}<br />{{Task}}</td>
+		<td class='cell border'>{{ClockSetup}}</td>
+		<td class='cell border'>{{ClockRun}}</td>
+		<td class='cell border'>{{ClockEnd}}</td>
+		<td class='cell border'>chkBreak1, chkBreak2, chkLunch</td>
+		<td class='cell border' style="text-align:left;">A {{AssignedMinutes}}<br />R {{ReAssgnMinTotal}}</td>
+		<td class='cell border'>{{MeterStart}}</td>
+		<td class='cell border'>{{MeterStop}}</td>
+		<td class='cell border'>R {{runTime}}<br />D {{downTime}}</td>
+		<td class='cell border'>{{CStart}}</td>
+		<td class='cell border'>{{CounterEnd}}</td>
+		<td class='cell border'>{{TotalPacked}}</td>
+		<td class='cell border'>{{Scrap}}</td>
+		<td class='cell border'>Package: {{UnitOfMeasure}}<br />Status: {{status}}<br />{{itemDescription}}</td>
+		</tr>
+	{{/with}}
+	{{/each}}
+	</tbody>
+
+	<!-- Here is where I need to add a list of PID Module views instead of the following-->
+	
+	</table>
+</div>

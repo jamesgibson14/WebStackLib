@@ -35,7 +35,7 @@ function($, Backbone, E, Handlebars, require,user){
     //E.loadCss("js/lib/css/dark-hive/jquery-ui.css")
     E.loadCss("js/lib/jqplot/jquery.jqplot.css")
     //E.loadCss("js/lib/SlickGrid-2.02/slick.grid.css")
-    
+    E.views = {};
     var Router = Backbone.Router.extend({
         mainView: null,
         initialize: function(){        
@@ -59,6 +59,8 @@ function($, Backbone, E, Handlebars, require,user){
                view = E.GET['module'];
             if (this.mainView)
                 this.mainView.close();
+            
+            E.views.currentView = view
             require(['views/'+view], function(View) { 
                 that.mainView = new View();
                 var view = that.mainView.render().el;
@@ -73,6 +75,7 @@ function($, Backbone, E, Handlebars, require,user){
             if(E.GET['module'] != undefined)
                view = E.GET['module'];
             //alert('modelid: ' + modelid)
+            E.views.currentView = view
             require(['views/' + view], function(View) { 
                 
                 var view = new View({modelid:modelid}).render().el;

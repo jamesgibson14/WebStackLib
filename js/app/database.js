@@ -24,10 +24,8 @@ engine.ADODB = function(options){
     if (ActiveXObject)
 	   var conn = new ActiveXObject("ADODB.Connection");
     conn.open(conn_str);
-	this.executeSql = function(SQL,args,success,error){
+	this.executeSql = function(SQL,success,error){
 		var rs = new ActiveXObject("ADODB.Recordset");
-		if (args)
-		  SQL = vsprintf(SQL,args);
 		try{
 		    var now = new Date();
 			rs = conn.Execute(SQL);

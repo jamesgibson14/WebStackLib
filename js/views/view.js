@@ -127,7 +127,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
         	//define(['jquery','backbone'])        	
         },
         restart: function(){
-            window.location = this.location + '';
+            if(E.views.currentView)
+                window.location = this.location + '?module=' + E.views.currentView;
+            else
+                window.location = this.location + '';
         }
 
     });
