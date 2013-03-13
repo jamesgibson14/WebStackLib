@@ -69,21 +69,24 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         
         var transSuccessfull = this.collection.db.transaction(function(db) {
             var err = false
-            err = db.executeSql(sql, null, success, error);
+            err = db.executeSql(sql, success, error);
             //alert('cellnum: ' + cellnum);
             success = function(sql,rs){return;};
             params = [cellnum, opendate.format('mm/dd/yyyy'),suggestion,cell, associateID,'PE',gain,machine,alpha,numeric,estimate,actual];
-            err = db.executeSql(sql2, params, success, error);
+            sql2 = vsprintf(sql2,params);
+            err = db.executeSql(sql2, success, error);
             
             sql2 = 'SELECT CellSuggestionID FROM CellSuggestions WHERE CellSuggestionNum = ' + cellnum;
             params = null;
             success = function(sql,rs){ cellid = rs.fields('CellSuggestionID').value; };
-            err = db.executeSql(sql2, params, success, error);
+            sql2 = vsprintf(sql2,params);
+            err = db.executeSql(sql2, success, error);
             
             success = function(sql,rs){return;};
             sql2 = "INSERT INTO tblStorage (CellSuggestion, Machine, Workcenter, Status_ID) VALUES (%s,'%s','%s',13)";
             params = [cellid,machine,workcenter];
-            err = db.executeSql(sql2, params, success, error);
+            sql2 = vsprintf(sql2,params);
+            err = db.executeSql(sql2, success, error);
             
             //return false everytime for testing
             //err = false;

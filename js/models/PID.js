@@ -59,6 +59,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     
                     if (this.get('Paper_ID')) 
                         sql += 'AND Paper_ID = %s;';
+                    sql = vsprintf(sql,params);
                     this.collection.sqldb.transaction(function(db) {
                         return db.executeSql(sql, params, success, error);
                     });
@@ -66,8 +67,9 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     params.shift();
                     params.shift();
                     params.unshift('true');
+                    sql2 = vsprintf(sql2,params);
                     this.collection.accessdb.transaction(function(db) {
-                        return db.executeSql(sql2, params, success, error);
+                        return db.executeSql(sql2, success, error);
                     });
                 }
             }

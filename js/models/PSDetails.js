@@ -29,11 +29,10 @@ define([
         },
         syncServer: function(){
             var sql = "UPDATE dbo_ProductionDataDetails INNER JOIN tblData2 ON dbo_ProductionDataDetails.RecordID = tblData2.RecordID SET dbo_ProductionDataDetails.PSoft = [tblData2].[PSoft] WHERE (((([dbo_ProductionDataDetails].[PSoft]))<>([tblData2].[PSoft])));",
-            params = [],
             success = function(sql){return;},error = function(sql){alert('error on: ' + sql);};
 
             this.db.transaction(function(db) {
-                return db.executeSql(sql, params, success, error);
+                return db.executeSql(sql, success, error);
             });  
         }    
 
