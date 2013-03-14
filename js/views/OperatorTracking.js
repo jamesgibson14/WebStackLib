@@ -8,7 +8,7 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
         attributes: {style:'border:none;'},
         model: Backbone.Model.extend({
             sql: "Execute spGetLists 'operatorQualifications'",
-            store: new WebSQLStore(E.sqldb,'dbo.spGetDataForPeopleSoftEntry',false), }),
+            store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         modelStageTotals: Backbone.Model.extend({
             sql: "SELECT m.Code, m.Cell_ID, m.WorkCenter_ID, m.Stage5Target, m.Inactive, qa.Stage1Minutes, qa.Stage2Minutes, qa.Stage3Minutes, qa.Stage4Minutes, qa.Stage5Minutes, atq.CurrentStage,(SELECT MAX(ReviewDate) AS MaxOfReviewDate FROM dbo.MachineOperatorReviews mor WHERE (mor.QualID=atq.ID)) AS LastReviewDate FROM AssociatesToQualifications atq INNER JOIN Qualifications AS q ON atq.Qualifications_ID = q.ID INNER JOIN QualificationsToMachines ON q.ID = QualificationsToMachines.Qualifications_ID INNER JOIN Machines AS m ON QualificationsToMachines.Machines_ID = m.ID INNER JOIN QualificationsAttributes qa ON q.ID = qa.Qualifications_ID WHERE atq.ID = %s",
             sqlArgs: [430],

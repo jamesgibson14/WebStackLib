@@ -2,7 +2,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
 
     var Model = Backbone.Model.extend({
             sql: 'Execute dbo.spGetIdeaAppModel',
-            store: new WebSQLStore(new E.ADODB(),'dbo.spGetIdeaAppModel',false),
+            store: new WebSQLStore(E.sqlTest2,'dbo.spGetIdeaAppModel',false),
             defaults: {
 	            content: "You are now using Backbone, Lodash, Require, Modernizr, and jQuery! (Click Me)"
             },

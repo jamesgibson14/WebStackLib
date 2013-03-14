@@ -9,7 +9,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             // Model Constructor
             initialize: function() {
                 this.sql = "Execute spGetUserInfoWeb @username = '" + this.get("username") + "'";
-                this.store =  new WebSQLStore(E.sqldb,'todos',false,false);
+                this.store =  new WebSQLStore(E.sqlTest2,'todos',false,false);
             },
 
             // Any time a model attribute is set, this method is called

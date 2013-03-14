@@ -1,7 +1,7 @@
 define(['jquery', 'backbone','engine'], function($, Backbone,E) {
 
     var Model = Backbone.Model.extend({
-        db: E.sqldb,
+        db: E.sqlTest2,
         defaults: {
             details: {gains: 'It will make us all richer'}
         },

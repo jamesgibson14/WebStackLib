@@ -13,7 +13,7 @@ define([
     sqlqueue: ';',
     // set all of the todo items under the `"todos"` namespace.
     //localStorage: new Store("todos-backbone"),
-    store: new WebSQLStore(E.sqldb,'todos',false,true),
+    store: new WebSQLStore(E.sqlTest2,'todos',false,true),
     
     // Filter down the list of all todo items that are finished.
     done: function() {
