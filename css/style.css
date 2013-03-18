@@ -368,6 +368,10 @@ tr {
 .placeholder{
 	color:#AAAAAA;	
 }
+.minutes {
+	padding: 2px;
+	width 50px;
+}
 textarea {
 	overflow: auto;
 	margin-left: 7px;

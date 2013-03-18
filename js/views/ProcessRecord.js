@@ -17,7 +17,9 @@ function($, Backbone, E, Handlebars, template, Collection){
             if(this.collection.length>0){
                 var ctemp = Handlebars.compile(this.template);
                 var context = {};
-                context.details = this.collection.toJSON();
+                var model = this.collection.at(0)
+                context = $.extend(context,model.toJSON());
+                context.details = this.collection.dataRender();
                 html = ctemp(context);
             }
             else{

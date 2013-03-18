@@ -3,8 +3,8 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
     var View = Backbone.View.extend({
 
         tagName:  "div",
-        className: 'ProdScheduleApp ofh',
-        description: '',
+        className: 'OperatorProductionEntry ofh',
+        description: 'This is the view that will be shown on an operators computer',
         collection: new collection(),
         filteredModels: [],
 

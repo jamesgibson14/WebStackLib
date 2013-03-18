@@ -1,8 +1,10 @@
-<div class="defaultForm">
-	<div>Machine: <span id="machineCode">{{code}}</span></div>
-	<div>Date: <span id="machineCode">{{code}}</span></div>
-	<div>Associate: <span id="machineCode">{{code}}</span></div>
-	<div>Shift: <span id="machineCode">{{code}}</span></div>
+<div class="ProcessRecord">
+	<div class="parent defaultForm">
+		<label>Machine:</label> <span id="machineCode">{{Machine}}</span>
+		<label>Date:</label> <span id="machineCode">{{Date}}</span>
+		<label>Associate:</label> <span id="machineCode">{{AssociateCode}}</span>
+		<label>Shift:</label> <span id="machineCode">{{Shift}}</span>
+	</div>
 	<table id="pidList" class="psEntryTable tablesorter">
 	<thead class='row header'><tr>
 		<th class="hcell"><br /></th>
@@ -12,11 +14,11 @@
 		<th class="hcell">Setup</th>
 		<th class="hcell">Run</th>
 		<th class="hcell">End</th>
-		<th class="hcell">Breaks</th>
-		<th class="hcell">Minutes</th>
+		<th class="hcell">Breaks</th>		
 		<th class="hcell">Start</th>
 		<th class="hcell">End</th>
-		<th class="hcell">Runtime</th>
+		<th class="hcell">Minutes</th>
+		<th class="hcell">ReAssigned</th>
 		<th class="hcell">Start</th>
 		<th class="hcell">End</th>
 		<th class="hcell">Total Packed</th>
@@ -36,11 +38,11 @@
 		<td class='cell border'>{{ClockSetup}}</td>
 		<td class='cell border'>{{ClockRun}}</td>
 		<td class='cell border'>{{ClockEnd}}</td>
-		<td class='cell border'>B<input type="checkbox" />, L<input type="checkbox" />, B<input type="checkbox" /></td>
-		<td class='cell border' style="text-align:left;">A {{AssignedMinutes}}<br />R {{ReAssgnMinTotal}}</td>
+		<td class='cell border'>B<input type="checkbox" {{#if chkBreak1}}checked="checked"{{/if}} /> L<input type="checkbox" {{#if chkLunch}}checked="checked"{{/if}} /> B<input type="checkbox" {{#if chkBreak2}}checked="checked"{{/if}} /></td>
 		<td class='cell border'>{{MeterStart}}</td>
 		<td class='cell border'>{{MeterStop}}</td>
-		<td class='cell border'>R {{runTime}}<br />D {{downTime}}</td>
+		<td class='cell border'><span class="left minutes">A {{AssignedMinutes}}</span> <span class="right minutes">R {{runTime}}</span><div class="clearfloat"></div> <span class="left minutes">S {{SetupMinutes}}</span> <span class="right minutes">D {{downTime}}</span></td>
+		<td class='cell border'><br /> {{ReAssgnMinTotal}}</td>
 		<td class='cell border'>{{CStart}}</td>
 		<td class='cell border'>{{CounterEnd}}</td>
 		<td class='cell border'>{{TotalPacked}}</td>
