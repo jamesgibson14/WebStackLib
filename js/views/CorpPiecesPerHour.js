@@ -14,7 +14,7 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
             sqlArgs: [430],
             store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         collection: new Collection(),
-        associateToQualification_ID: 0,
+        machineCodes: '',
         startDate: '01/01/2013',
         endDate:'3/19/2013',
         plot: null,
@@ -131,27 +131,8 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                     that.$('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
             }); 
             this.$('#plot').off('jqplotDataClick');
-            this.$('#plot').on('jqplotDataClick',this.renderProcessRecord);             
-                
-            this.modelStageTotals.sqlArgs = new Array(this.associateToQualification_ID);
-            this.modelStageTotals.fetch()
-            var cs = this.collection.getCurrentStage()
-            var cd = new Date(this.modelStageTotals.get('LastReviewDate'))
-            if (!cd) cd = "n/a"
-            var cm = (this.collection.getStageMinutes(cd)/440).toFixed(2);
-            var ns = this.nextStage(cs);
-            if(ns==5)
-                ns = 90 - cm;
-            else {
-                ns = this.modelStageTotals.get('Stage' + ns +  'Minutes');
-                ns = ((ns / 440) - cm).toFixed(2);
-            }
-            this.$('#cS').html(cs)
-            this.$('#cD').html(cd)
-            this.$('#cM').html(cm)
-            this.$('#nS').html(ns)
+            this.$('#plot').on('jqplotDataClick',this.renderProcessRecord);   
             
-
         },
         render: function() {
             var that = this;
@@ -171,11 +152,14 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
             this.$('#graphbtn').button().click(function(e){
                 $(this).toggleClass('ui-state-highlight ',500)
                 if(that.$('imachine').html() != 'n/a')
-                    E.loading(that.$el, function() {success(that.associateToQualification_ID );},that)
+                    E.loading(that.$el, function() {success(that.machineCodes );},that)
             });
+            function split( val ) {      return val.split( /,\s*/ );    }    
+            function extractLast( term ) {      return split( term ).pop();    }
+            
             var machines = this.model.get('Machines');
-            var success = function(atq_id){
-                that.collection.sqlArgs = [atq_id,that.startDate,that.endDate];
+            var success = function(){
+                that.collection.sqlArgs = [that.machineCodes,that.startDate,that.endDate];
                 that.collection.fetch();
                 
                 //no data check
@@ -187,26 +171,40 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 that.loadData()
                 E.hideLoading();
             }
-            this.$( "#imachine" ).autocomplete({
-                source: machines,
+            this.$( "#imachine" )
+            // don't navigate away from the field on tab when selecting an item      
+            .bind( "keydown", function( event ) {        
+                if ( event.keyCode === $.ui.keyCode.TAB && $( this ).data( "ui-autocomplete" ).menu.active ) {          
+                    event.preventDefault();        
+                }      
+            })
+            .autocomplete({
+                source: function( request, response ) {          
+                    // delegate back to autocomplete, but extract the last term          
+                    response( $.ui.autocomplete.filter(machines, extractLast( request.term ) ) );        
+                },
                 autoFocus: true,
                 minLength: 0,
                 delay: 0,
-                select: function( event, ui ) {
-                    that.associateToQualification_ID = ui.item.code;                    
-                    that.$('#atq_id').html( ui.item.code );                    
-                    E.loading(that.$el, function() {success(ui.item.code );},that)
-                    $(this).val('')                   
-                    
-                    return false;
-                },
-                change: function(e){
-                    $(this).val('')
-                    if(!E.clearInputForAutocomplete( that.$( "#imachine" ),machines))
-                        that.$( "#imachine" ).autocomplete( "search", "" );
+                focus: function() {          
+                    // prevent value inserted on focus          
+                    return false;        
+                },        
+                select: function( event, ui ) {          
+                    var terms = split( this.value );          
+                    // remove the current input          
+                    terms.pop();          
+                    // add the selected item          
+                    terms.push( ui.item.code );          
+                    // add placeholder to get the comma-and-space at the end          
+                    terms.push( "" );          
+                    this.value = terms.join( ", " );
+                    that.machineCodes = (this.value + '').slice(0,-2);
+                    that.$('#atq_id').html( (this.value + '').slice(0,-2) );
+                    //alert((this.value + '').slice(0,-2))
+                    E.loading(that.$el, function() {success();},that)          
+                    return false;        
                 }
-
-                //add on select: set machine_ID, set cell
             })
             .tooltip({                            
                 position: { 
