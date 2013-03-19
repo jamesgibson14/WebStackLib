@@ -380,6 +380,34 @@
     
 })(engine);
 
+//Clears input box if value is not found within a list
+(function(E) {
+    E.clearInputForAutocomplete = function($el, list) {               
+        var valid = false;
+        var value = $el.val();
+        //alert(value)
+        _.each(list, function(mod) {                      
+            if ( mod.label == value ) {                            
+                valid = true;                            
+                return false;                        
+            }                    
+        });                    
+        if ( !valid ) {                        
+            // remove invalid value, as it didn't match anything                        
+            $el                            
+            .val( "" )                            
+            .attr( "title", value + " didn't match any item" )                            
+            .tooltip( "open" )
+            .focus();                         
+            setTimeout(function() {                            
+                $el.tooltip( "close" ).attr( "title", "" );                        
+            }, 2500 );                                               
+            return false;                    
+        }  
+        return valid              
+    }  
+})(engine);
+
 //to work in require.js
 define(function() {
  return window.engine;

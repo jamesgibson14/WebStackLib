@@ -17,6 +17,7 @@ var WebSQLStore = function (db, tableName, createTable, isJSON, initSuccessCallb
 	this.tableName = tableName;
 	this.isJSON = isJSON || false;
 	this.db = db;
+	this.debug = false
 	if(createTable){
     	success = function (tx,res) {
     		if(initSuccessCallback) initSuccessCallback();

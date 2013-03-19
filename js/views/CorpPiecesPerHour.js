@@ -1,13 +1,13 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/OperatorTracking.html', 'models/operatorTracking', 'views/ProcessRecord', 'jqp','jqpall'], 
+define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/CorpPiecesPerHour.html', 'models/CorpPIDShiftCollection', 'views/ProcessRecord', 'jqp','jqpall'], 
 function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
 
     var View = Backbone.View.extend({
 
         tagName:  "div",
-        className: 'ReportApp ofh',
+        className: 'CorpPiecesPerHour ofh',
         attributes: {style:'border:none;'},
         model: Backbone.Model.extend({
-            sql: "Execute spGetLists 'operatorQualifications'",
+            sql: "SELECT Machines = '[' + STUFF((select ', {\"code\": \"' + MachineCode + '\",\"label\": \"' + MachineCode + '\"}' from PeopleSoftData WHERE MachineCode <> '' GROUP BY MachineCode ORDER BY MachineCode for xml PATH('')),1,2,'') + ']'",
             store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         modelStageTotals: Backbone.Model.extend({
             sql: "SELECT m.Code, m.Cell_ID, m.WorkCenter_ID, m.Stage5Target, m.Inactive, qa.Stage1Minutes, qa.Stage2Minutes, qa.Stage3Minutes, qa.Stage4Minutes, qa.Stage5Minutes, atq.CurrentStage,(SELECT MAX(ReviewDate) AS MaxOfReviewDate FROM dbo.MachineOperatorReviews mor WHERE (mor.QualID=atq.ID)) AS LastReviewDate FROM AssociatesToQualifications atq INNER JOIN Qualifications AS q ON atq.Qualifications_ID = q.ID INNER JOIN QualificationsToMachines ON q.ID = QualificationsToMachines.Qualifications_ID INNER JOIN Machines AS m ON QualificationsToMachines.Machines_ID = m.ID INNER JOIN QualificationsAttributes qa ON q.ID = qa.Qualifications_ID WHERE atq.ID = %s",
@@ -15,8 +15,8 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
             store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         collection: new Collection(),
         associateToQualification_ID: 0,
-        filteredModels: [],
-        filters: false,
+        startDate: '01/01/2013',
+        endDate:'3/19/2013',
         plot: null,
         template: template,
         initialize: function() {
@@ -43,18 +43,18 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
             //var ticks = infos[2];
             
             this.plot = $.jqplot("plot", data, {
-                title: "Machine Performance and Target",
+                title: "Machine Comparison",
                 //animate: true,
                 seriesDefaults:{                    
                     pointLabels: { 
                         show: false 
                     },
                     trendline: {
-                        show: false,
+                        show: true,
                         type: 'linear'
                     },
                     isDragable:false,
-                    showMarker:false             
+                    showMarker:true             
                 },
                 axesDefaults: {
                     labelRenderer: $.jqplot.CanvasAxisLabelRenderer
@@ -75,7 +75,7 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 },
                 axes: {
                     xaxis: {
-                        label: 'Performance Timeline',
+                        label: 'Timeline',
                         renderer:$.jqplot.DateAxisRenderer,          
                         tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                         tickOptions: {
@@ -85,9 +85,9 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                         }
                     },
                     yaxis: {
-                        label: 'Actual & Target Percentage',
+                        label: 'Folders Per Hour',
                         tickOptions: {
-                            suffix: '%'
+                            suffix: ''
                         },
                         padMin: 0
                     }
@@ -103,8 +103,8 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                     sizeAdjust: 10,
                     tooltipLocation: 'se',
                     tooltipAxes: 'xy',
-                    yvalues: 4,
-                    formatString:'<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr><tr><td>Record #</td><td>%s</td></tr></table>',
+                    yvalues: 2,
+                    formatString:'<ul><li>date: %s</li><li>PiecesPerHour: %s</li><tr><td>PiecesPerAssignedHour: %s</li></ul>',
                     useAxesFormatters: true
                },
                cursor: {
@@ -156,36 +156,28 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
         render: function() {
             var that = this;
             
-            var temp = this.template({debug:true});
+            var temp = this.template({debug:true,startDate:this.startDate,endDate:this.endDate});
             
             this.$el.html( temp );
-            
-            function removeIfInvalid(value, list) {               
-                var valid = false;                    
-                _.each(list, function(mod) {                      
-                    if ( mod.label == value ) {                            
-                        valid = true;                            
-                        return false;                        
-                    }                    
-                });                    
-                if ( !valid ) {                        
-                    // remove invalid value, as it didn't match anything                        
-                    $el                            
-                    .val( "" )                            
-                    .attr( "title", value + " didn't match any item" )                            
-                    .tooltip( "open" )
-                    .focus();                         
-                    setTimeout(function() {                            
-                        $el.tooltip( "close" ).attr( "title", "" );                        
-                    }, 2500 );                                               
-                    return false;                    
-                }  
-                return valid              
-            }  
-            var qualificationList = this.model.get('operatorQualifications');
+            this.$('.dPicker').datepicker({numberOfMonths: 3});
+            this.$('#startDate').on('change', function(e){
+                that.startDate = this.value;
+                that.$('#graphbtn').toggleClass('ui-state-highlight ',500)
+            })
+            this.$('#endDate').on('change', function(e){
+                that.endDate = this.value;
+                that.$('#graphbtn').toggleClass('ui-state-highlight ',500)
+            })
+            this.$('#graphbtn').button().click(function(e){
+                $(this).toggleClass('ui-state-highlight ',500)
+                if(that.$('imachine').html() != 'n/a')
+                    E.loading(that.$el, function() {success(that.associateToQualification_ID );},that)
+            });
+            var machines = this.model.get('Machines');
             var success = function(atq_id){
-                that.collection.sqlArgs = [atq_id], //= "EXECUTE dbo.spOperatorTracking @AssociateToQualification_ID = " + atq_id;
+                that.collection.sqlArgs = [atq_id,that.startDate,that.endDate];
                 that.collection.fetch();
+                
                 //no data check
                 if (that.collection.length==0){
                     alert('No data found for this Qualification\nPlease contact James Gibson if this seems like an error')
@@ -195,23 +187,23 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 that.loadData()
                 E.hideLoading();
             }
-            this.$( "#iqualification" ).autocomplete({
-                source: qualificationList,
+            this.$( "#imachine" ).autocomplete({
+                source: machines,
                 autoFocus: true,
                 minLength: 0,
                 delay: 0,
                 select: function( event, ui ) {
-                    that.$( "#iqualification" ).val( ui.item.label );
-                    that.associateToQualification_ID = ui.item.id;                    
-                    that.$('#atq_id').html( ui.item.id );
-                    that.$('#qualName').html( ui.item.qualification );
-                    that.$('#scell').html( ui.item.cell );
-                    that.$('#sAssociate').html( ui.item.label.split('-')[0] );
-                    if(removeIfInvalid( ui.item.label,qualificationList)) {
-                        E.loading(that.$el, function() {success(ui.item.id );},that)
-                    }
-                    $(this).val('').blur();
+                    that.associateToQualification_ID = ui.item.code;                    
+                    that.$('#atq_id').html( ui.item.code );                    
+                    E.loading(that.$el, function() {success(ui.item.code );},that)
+                    $(this).val('')                   
+                    
                     return false;
+                },
+                change: function(e){
+                    $(this).val('')
+                    if(!E.clearInputForAutocomplete( that.$( "#imachine" ),machines))
+                        that.$( "#imachine" ).autocomplete( "search", "" );
                 }
 
                 //add on select: set machine_ID, set cell
@@ -223,9 +215,9 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 },                            
                 tooltipClass: "ui-state-highlight absolute z2k"                        
             });
-            this.$("#iqualification").on('click',function(e){
-                //$(this).val('')
-                that.$( "#iqualification" ).autocomplete( "search", "" );
+            this.$("#imachine").on('click',function(e){
+                $(this).val('')
+                that.$( "#imachine" ).autocomplete( "search", "" );
             })
             
             this.$('#resizable').resizable({delay:20,minHeight: 326,minWidth: 400});

@@ -1,0 +1,56 @@
+<div class="title">
+	<h1>Machine Pieces Per Hour (Runtime + Downtime; no setup time)</h1>
+</div>
+<br />
+<br />
+<div class="clearfloat defaultForm">
+	<div class="searchBox noprint">
+		<label for="Machine">Search Machines:</label>
+	  	<input id="imachine" placeholder="Click here to search..." type="text" />
+	  	
+	  	<br />
+  	</div>
+	<div class="left">
+		<label for="Cell">Machines</label><span id="atq_id" class="spanInput">n/a</span>
+		<label style="margin-left:50px" for="startDate"> From:</label>
+	  	<input id="startDate" class='dPicker' type="text" value="{{startDate}}" size="10"/>
+	  	<label for="endDate"> To:</label>
+	  	<input id="endDate" class='dPicker' type="text" value="{{endDate}}" size="10"/>
+	  	<button id="graphbtn">Update Graph</button>	  	
+  	</div>
+  <div class="clearfloat"></div>  
+</div>
+
+<div id="resizable" class="border relative">
+	<div id="plot" style="min-height: 300px; height: 98%; width:98%;">
+		
+	</div>
+</div>
+
+<div><span>Moused Over: </span><span id="info1b">Nothing</span><span>Moused Over: </span><span id="info1c">Nothing</span></div>
+<div id='processRecord'>
+	
+</div>
+<div class="vspacer noprint"> </div>
+<div class="quicktipsview noprint">
+	QuickTips
+	<ul>
+		<li>Search Machines and add to chart by selecting</li>
+		<li>Click and drag on chart to zoom</li>
+		<li>Double-Click to reset zoom</li>
+		<li>Click on legend names to Add/Remove Data</li>
+		<li>Hover over data point to view additional information</li>
+		<li>Drag edges of chart to resize</li>
+		<li>Click on an point on the chart to display additional data for that day</li>		
+	</ul>
+	Next Steps
+	<ul>
+		<li><input type="checkbox" />Compare Multiple Machines on the same chart</li>
+		<li><input type="checkbox" checked="checked" />Dynamic Date Range</li>
+		<li><input type="checkbox" checked="checked" />On Machine Select -> Load Graph</li>
+		<li><input type="checkbox" checked="checked" />Create initial web module</li>
+			
+		
+	</ul>
+	<span class="noSelect">Browse graph styles <a href="js/lib/jqplot/examples/index.html" target="_blank" >here</a>then submit an idea of the new graph style and data you would like to see.</span>
+</div>
