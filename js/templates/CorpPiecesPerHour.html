@@ -4,25 +4,31 @@
 <br />
 <br />
 <div class="clearfloat defaultForm">
-	testSearch Hanging File: 3700, 1089, 564, 4878, 4186, 4408, 4686, 1067, 3059, 4704, 4879
+
 	<div class="searchBox noprint">
 		<label for="Machine">Search Machines:</label>
-	  	<input id="imachine" placeholder="Click here to search..." type="text" />
+	  	<input id="imachine" placeholder="Click here to search..." type="text" size='50'/>
 	  	
 	  	<br />
   	</div>
 	<div class="left">
+		<label for="Cell">Machine Types</label><select id="machineTypes">
+			<option value="">Select Machine Type...</option>
+			{{#each machineTypes}}
+			<option value="{{this.value}}">{{this.label}}</option>
+			{{/each}}
+		</select>
 		<label for="Cell">Machines</label><span id="atq_id" class="spanInput">n/a</span>
 		<label style="margin-left:50px" for="startDate"> From:</label>
 	  	<input id="startDate" class='dPicker' type="text" value="{{startDate}}" size="10"/>
 	  	<label for="endDate"> To:</label>
 	  	<input id="endDate" class='dPicker' type="text" value="{{endDate}}" size="10"/>
-	  	<button id="graphbtn">Update Graph</button>	  	
+	  	<button type="button" id="graphbtn">Update Graph</button>	  	
   	</div>
   <div class="clearfloat"></div>  
 </div>
 
-<div id="resizable" class="border relative">
+<div id="resizable" class="border relative" style="height:500px; width:60%;">
 	<div id="plot" style="min-height: 300px; height: 98%; width:98%;">
 		
 	</div>
@@ -32,10 +38,9 @@
 <div id='processRecord'>
 	
 </div>
-<div class="vspacer noprint"> </div>
 <div class="quicktipsview noprint">
-	QuickTips
-	<ul>
+	
+	<ul class="left"><h3><span>QuickTips</span></h3>
 		<li>Search Machines and add to chart by selecting</li>
 		<li>Click and drag on chart to zoom</li>
 		<li>Double-Click to reset zoom</li>
@@ -44,14 +49,17 @@
 		<li>Drag edges of chart to resize</li>
 		<li>Click on an point on the chart to display additional data for that day</li>		
 	</ul>
-	Next Steps
-	<ul>
-		<li><input type="checkbox" />Compare Multiple Machines on the same chart</li>
-		<li><input type="checkbox" checked="checked" />Dynamic Date Range</li>
-		<li><input type="checkbox" checked="checked" />On Machine Select -> Load Graph</li>
+	
+	<ul class="left"><h4><span>Next Steps</span></h4>
+		<li><input type="checkbox" />Group by Days or Months (maybe weeks)</li>
+		<li><input type="checkbox" />Turn on/off Trendline</li>
+		<li><input type="checkbox" />Drill down from Corporation level to individual machines</li>
+		<li><input type="checkbox" checked="checked" />Compare Multiple Machines on the same chart -done 3/20/2013</li>
+		<li><input type="checkbox" checked="checked" />Dynamic Date Range -done 3/19/2013</li>
+		<li><input type="checkbox" checked="checked" />On Machine Select -> Load Graph -done 3/19/2013</li>
 		<li><input type="checkbox" checked="checked" />Create initial web module</li>
 			
 		
 	</ul>
-	<span class="noSelect">Browse graph styles <a href="js/lib/jqplot/examples/index.html" target="_blank" >here</a>then submit an idea of the new graph style and data you would like to see.</span>
+	<span class="noSelect clearfloat">Browse graph styles <a href="js/lib/jqplot/examples/index.html" target="_blank" >here</a>then submit an idea of the new graph style and data you would like to see.</span>
 </div>

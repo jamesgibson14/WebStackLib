@@ -3,16 +3,18 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
     var collection = Backbone.Collection.extend({
         model: Backbone.Model,
             
-        sql: "SELECT StartDate, MachineCode, PcsPerHour = ISNULL(SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(DowntimeHrs),0),0), PcsPerAssignedHour = SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs),0) FROM PeopleSoftData  WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY StartDate, MachineCode",
+        sql: "SELECT Unit, MachineCode, StartDate, PcsPerHour = ISNULL(SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(DowntimeHrs),0),0), PcsPerAssignedHour = SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs),0) FROM PeopleSoftData  WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, MachineCode, StartDate",
+        sqlNew: "SELECT Unit, PID, OpSeq, PIDRun, MachineCode, StartDate, Shift, AssociateCode, SetupHrs, RunHrs, DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData  WHERE  StartDate > '%s' AND StartDate <= '%s'",
         sqlArgs: [],
         store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
         dataRenderer: function(url, plot, options){
             var that = this;
             var labels = [];
+            var series = [];
             var obj = {};
             var data = [];
             this.map(function(model){
-                var label = model.get('MachineCode');
+                var label = model.get('Unit') + "_" + model.get('MachineCode');
                 if (labels.indexOf(label) > -1){
                     obj[label].push([new Date(model.get('StartDate')),model.get('PcsPerHour'),model.get('PcsPerAssignedHour')]);
                 }
