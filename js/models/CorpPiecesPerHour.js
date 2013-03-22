@@ -6,7 +6,15 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             defaults: {                
                 startDate: '01/01/2013',
                 endDate:'3/19/2013',
-                machineCodes: '',
+                machineCodes: [],
+                groupBy: 'day',
+                level: '0',
+                sqlPerLevel: {
+                    day0: "SELECT StartDate, Unit, PcsPerHour = ISNULL(SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(DowntimeHrs),0),0), PcsPerAssignedHour = SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs),0) FROM PeopleSoftData WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, StartDate",
+                    day1: "SELECT StartDate, Unit, MachineCode, PcsPerHour = ISNULL(SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(DowntimeHrs),0),0), PcsPerAssignedHour = SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs),0) FROM PeopleSoftData WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, MachineCode, StartDate",
+                    month0: "SELECT StartDate = LEFT(convert(varchar, StartDate, 121),7), Unit, PcsPerHour = ISNULL(SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(DowntimeHrs),0),0), PcsPerAssignedHour = SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs),0) FROM PeopleSoftData WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, LEFT(convert(varchar, StartDate, 121),7)",
+                    month1: "SELECT StartDate = LEFT(convert(varchar, StartDate, 121),7), Unit, MachineCode, PcsPerHour = ISNULL(SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(DowntimeHrs),0),0), PcsPerAssignedHour = SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs),0) FROM PeopleSoftData WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, MachineCode, LEFT(convert(varchar, StartDate, 121),7)"
+                },
                 branches: {
                     CED:{
                        name:'Cedar City',
@@ -32,7 +40,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 machineTypes: [
                     {name:'Hanging File', machines:[564,3700,4878,4186,1089,4408,4686,1064,3059,4704,4879]},
                     {name:'Single Top 3 Up', machines:[3191,3557,4706,2115,4957,4655,4705,207,2133,4956,4930,3193]},
-                    {name:'Pressboard Die Cutter', machines:[5147,2061,4900,5071,4348]}
+                    {name:'Pressboard Die Cutter', machines:[5147,2061,4900,5071,4348]},
+                    {name:'Auto Classification', machines:[4077,9141,4078,3702,5161,4916,4112,4111]}
                 ]
             },
 

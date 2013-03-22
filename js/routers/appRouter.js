@@ -53,19 +53,19 @@ function($, Backbone, E, Handlebars, require,user){
 
         'home': function(){
             var that = this;
-            var view = 'view';
+            var viewName = 'view';
             if(E.GET['module'] != undefined)
-               view = E.GET['module'];
+               viewName = E.GET['module'];
             if (this.mainView)
                 this.mainView.close();
             
-            E.views.currentView = view
-            require(['views/'+view], function(View) { 
-                that.mainView = new View();
-                var view = that.mainView.render().el;
-                $('#bodyview').html(view);
-                if(that.mainView.afterRender)
-                    that.mainView.afterRender();
+            E.views.currentView = viewName
+            require(['views/'+viewName], function(View) { 
+                var view = new View();
+                that.mainView = view;
+                $('#bodyview').html(view.render().el);
+                if(view.postRender)
+                    E.loading($('#bodyview'), view.postRender,view) 
                 
             }); 
             
@@ -77,10 +77,11 @@ function($, Backbone, E, Handlebars, require,user){
             E.views.currentView = view
             require(['views/' + view], function(View) { 
                 
-                var view = new View({modelid:modelid}).render().el;
+                var view = new View({modelid:modelid});
                 
-                $('#mainview').html(view);
-                
+                $('#mainview').html(view.render().el);
+                if(view.postRender)
+                    E.loading($('#mainview'), view.postRender,view) 
             }); 
         },
         'tab': function(view){

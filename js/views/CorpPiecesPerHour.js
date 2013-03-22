@@ -16,11 +16,11 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
         template: template,
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','loadData','renderProcessRecord');
+            _.bindAll(this, 'render','loadData','renderProcessRecord', 'renderPlot');
             this.model = new this.model()
             this.modelStageTotals = new this.modelStageTotals();
-            this.model.fetch();
-            
+            this.model.fetch();            
+            this.model.on('change:machineCodes change:startDate change:endDate', this.renderPlot)
             //this.collection.fetch();
         },
         loadData: function(){
@@ -32,7 +32,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
                 this.plot.destroy();
             
               
-            var coll = this.collection.dataRenderer();
+            var coll = this.collection.dataRenderer(this.model);
             var data = coll.data; //infos[0];
             var labels = coll.labels; //infos[1]; ['3700_Target','2_two','3_three','4_four'] //
             var series = coll.series;
@@ -145,44 +145,25 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
             $.each(this.model.get('machineTypes'),function(i, val){
                obj.machineTypes.push({label:val.name,value:i}) 
             });
+            obj = this.model.toJSON();
             var temp = this.template(obj);
             
             this.$el.html( temp );
             this.$('.dPicker').datepicker({numberOfMonths: 3});
             this.$('#startDate').on('change', function(e){
                 that.model.set('startDate', this.value);
-                that.$('#graphbtn').toggleClass('ui-state-highlight ',500)
             })
             this.$('#endDate').on('change', function(e){
                 that.model.set('endDate' ,this.value);
-                that.$('#graphbtn').toggleClass('ui-state-highlight ',500)
             })
-            this.$('#graphbtn').button().click(function(e){
-                $(this).toggleClass('ui-state-highlight ',500)
-                if(that.$('imachine').html() != 'n/a')
-                    E.loading(that.$el, function() {success(that.model.get('machineCodes') );},that)
-            });
-            this.$('#machineTypes').on('change',function(e){
-                that.model.set('machineCodes',that.model.get('machineTypes')[this.value].machines.join(','));
-                E.loading(that.$el, function() {success(that.model.get('machineCodes') );},that)
+            this.$('#machineGroups').on('change',function(e){
+                that.model.set('machineCodes',that.model.get('machineTypes')[this.value].machines);
             });
             function split( val ) {      return val.split( /,\s*/ );    }    
             function extractLast( term ) {      return split( term ).pop();    }
             
             var machines = this.model.get('Machines');
-            var success = function(){
-                that.collection.sqlArgs = [that.model.get('machineCodes'),that.model.get('startDate'),that.model.get('endDate')];
-                that.collection.fetch();
-                
-                //no data check
-                if (that.collection.length==0){
-                    alert('No data found for this Qualification\nPlease contact James Gibson if this seems like an error')
-                    E.hideLoading();
-                    return false;
-                }  
-                that.loadData()
-                E.hideLoading();
-            }
+
             this.$( "#imachine" )
             // don't navigate away from the field on tab when selecting an item      
             .bind( "keydown", function( event ) {        
@@ -207,11 +188,11 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
                     // remove the current input          
                     terms.pop();          
                     // add the selected item          
-                    terms.push( ui.item.code );          
+                    terms.push( ui.item.code ); 
+                    that.model.set('machineCodes', terms);         
                     // add placeholder to get the comma-and-space at the end          
                     terms.push( "" );          
                     this.value = terms.join( ", " );
-                    that.model.set('machineCodes', (this.value + '').slice(0,-2));
                     that.$('#atq_id').html( (this.value + '').slice(0,-2) );
                     //alert((this.value + '').slice(0,-2))
                     E.loading(that.$el, function() {success();},that)          
@@ -233,8 +214,23 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
             //this.$('input, textarea').placeholder();
             return this;
         },
+        postRender: function(){
+            //this.collection.sqlArgs = [this.model.get('startDate'),this.model.get('endDate')];
+            //this.collection.fetch({noJSON:true})
+            E.hideLoading();
+        },
         renderPlot: function(){
-            //Instead of destroying plot just reload data, lables and then re-plot  
+            //Instead of destroying plot just reload data, lables and then re-plot 
+            //no data check
+            this.collection.sql = this.model.get('sqlPerLevel')[this.model.get('groupBy') + this.model.get('level')]  
+            this.collection.sqlArgs = [this.model.get('machineCodes'), this.model.get('startDate'),this.model.get('endDate')];
+            this.collection.fetch({noJSON:true})
+            
+            //var data = this.collection.data({MachineCode: 3191, MachineCode: 5147})
+            E.loading(this.$el, this.loadData,this)
+            
+            
+            E.hideLoading();
         },
         renderTable: function(){
             //Instead of destroying plot just reload data, lables and then re-plot  

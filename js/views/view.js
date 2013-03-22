@@ -79,7 +79,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
             
             return this;
         },
-        afterRender: function() {
+        postRender: function() {
             //this.$('#sidebarBtns').position({my:'bottom',at:'right bottom',of:'#footer',collision:'none'})
             this.$('#sidebarBtns > input').button({text:false})
             this.$('#sidebarBtns > input').each(function(value){
@@ -120,6 +120,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
             //var height = this.$el.height();
             //alert(height)
             //this.$el.height(height-300);
+            E.hideLoading();
         },
         loadlink: function(e){
         	var id = $(e.currentTarget).attr('id');

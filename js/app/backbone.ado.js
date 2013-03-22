@@ -183,17 +183,25 @@ Backbone.sync = function (method, model, options) {
     		while (!rs.ActiveConnection || !rs.eof){
                 var attr ={}
                 var i = 0;
-                while(i<len){
-                    var val = rs.fields(i).value + '', sl = val.slice(0,1);
-                    if(sl=='[' || sl == '{')
-                        attr[rs.fields(i).name] = JSON.parse( rs.fields(i).value);
-                    else if(rs.fields(i).name.indexOf('time')>-1){
-                           attr[rs.fields(i).name] = Math.round(rs.fields(i).value*100)/100
-                    }                
-                    else{
-                        attr[rs.fields(i).name] = rs.fields(i).value;
+                if(options.noJSON){
+                    while(i<len){
+                        attr[rs.fields(i).name] = rs.fields(i).value;                        
+                        i++;   
+                    }   
+                }                
+                else {
+                    while(i<len){
+                        var val = rs.fields(i).value + '', sl = val.slice(0,1);
+                        if(sl=='[' || sl == '{')
+                            attr[rs.fields(i).name] = JSON.parse( rs.fields(i).value);
+                        else if(rs.fields(i).name.indexOf('time')>-1){
+                               attr[rs.fields(i).name] = Math.round(rs.fields(i).value*100)/100
+                        }                
+                        else{
+                            attr[rs.fields(i).name] = rs.fields(i).value;
+                        }
+                        i++;                          
                     }
-                    i++;   
                 } 
                 //check if model... vs collection
                 if(model.attributes)

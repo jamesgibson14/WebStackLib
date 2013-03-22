@@ -12,18 +12,17 @@
 	  	<br />
   	</div>
 	<div class="left">
-		<label for="Cell">Machine Types</label><select id="machineTypes">
+		<label for="Cell">Machine Types</label><select id="machineGroups">
 			<option value="">Select Machine Type...</option>
 			{{#each machineTypes}}
-			<option value="{{this.value}}">{{this.label}}</option>
+			<option value="{{@index}}">{{this.name}}</option>
 			{{/each}}
 		</select>
 		<label for="Cell">Machines</label><span id="atq_id" class="spanInput">n/a</span>
 		<label style="margin-left:50px" for="startDate"> From:</label>
 	  	<input id="startDate" class='dPicker' type="text" value="{{startDate}}" size="10"/>
 	  	<label for="endDate"> To:</label>
-	  	<input id="endDate" class='dPicker' type="text" value="{{endDate}}" size="10"/>
-	  	<button type="button" id="graphbtn">Update Graph</button>	  	
+	  	<input id="endDate" class='dPicker' type="text" value="{{endDate}}" size="10"/>	  	
   	</div>
   <div class="clearfloat"></div>  
 </div>

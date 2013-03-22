@@ -20,6 +20,7 @@ require.config({
       	database: '../app/database',
       	backboneADO: '../app/backbone.ado',
       	backbone: "backbone-0.9.9",
+      	handlebars:"handlebars-1.0.rc.1.min",
 		ieconfig: 'ieconfig',
 		jqpall: 'jqplotAllPlugins',
 		jq: 'jqplot/',
