@@ -79,7 +79,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             sql2 = 'SELECT CellSuggestionID FROM CellSuggestions WHERE CellSuggestionNum = ' + cellnum;
             params = null;
             success = function(sql,rs){ cellid = rs.fields('CellSuggestionID').value; };
-            sql2 = vsprintf(sql2,params);
+            sql2 = vsprintf(sql2,[]);
             err = db.executeSql(sql2, success, error);
             
             success = function(sql,rs){return;};

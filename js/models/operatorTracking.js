@@ -5,7 +5,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             
         sql: "SELECT crd.Machine_ID, crd.ParentRecord_ID, Date = crd.Date, crd.CurrentStage, Target = crd.NetQtyProducedPercentageTarget, StageTarget = dbo.fnGetNetProducedPercentageTarget(crd.CurrentStage,m.Stage5Target), LineCount = COUNT(*), PerformancePercent = (SUM(crd.NetQtyProduced) * 1.0) / NULLIF(SUM(crd.NetQtyProducedTarget * 1.0),0), AssignedMinutes = SUM(crd.AssignedMinutes), m.Code, crd.Multiprocess FROM CompiledReportingData crd INNER JOIN dbo.Associates INNER JOIN dbo.AssociatesToQualifications ON dbo.Associates.RecordID = dbo.AssociatesToQualifications.Associate_ID INNER JOIN dbo.Qualifications q ON dbo.AssociatesToQualifications.Qualifications_ID = q.ID INNER JOIN dbo.QualificationsToMachines ON q.ID = dbo.QualificationsToMachines.Qualifications_ID INNER JOIN Machines m ON QualificationsToMachines.Machines_ID = m.ID ON crd.Machine_ID = QualificationsToMachines.Machines_ID AND crd.Associate_ID = Associates.RecordID WHERE AssociatesToQualifications.ID = %s GROUP BY crd.Associate_ID, crd.Machine_ID, crd.Date, crd.CurrentStage, crd.NetQtyProducedPercentageTarget, m.Stage5Target, m.Code, crd.Multiprocess, crd.ParentRecord_ID ORDER BY crd.Date",
         sqlArgs: [],
-        store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false),
+        store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
         dataRenderer: function(url, plot, options){
             var that = this;
             var labels = [];

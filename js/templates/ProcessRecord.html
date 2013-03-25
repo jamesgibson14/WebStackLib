@@ -5,7 +5,7 @@
 		<label>Associate:</label> <span  class="spanInput">{{AssociateCode}}</span>
 		<label>Shift:</label> <span  class="spanInput">{{Shift}}</span>
 	</div>
-	<table id="pidList" class="psEntryTable tablesorter">
+	<table class="tablesorter left">
 	<thead class='row header'><tr>
 		<th class="hcell"><br /></th>
 		<th class="hcell">PID</th>
@@ -32,28 +32,36 @@
 	{{#with this}}
 		<tr>
 		<td class='cell border'>{{LineNum}}</td>
-		<td class='cell border'>{{PID}}</td>
+		<td class='cell border'>{{PID}}<br />item: {{txtProduct}}</td>
 		<td class='cell border'>op: {{OpSeq}}</td>
 		<td class='cell border'>{{CrewSize}}<br />{{Task}}</td>
 		<td class='cell border'>{{ClockSetup}}</td>
-		<td class='cell border'>{{ClockRun}}</td>
-		<td class='cell border'>{{ClockEnd}}</td>
+		<td class='cell border'>{{ClockRun}}<br /><span class="right minutes">S: {{SetupMinutes}}</span></td>
+		<td class='cell border'>{{ClockEnd}}<br /><span class="right minutes">R: {{runClock}}</span></td>
 		<td class='cell border'>B<input type="checkbox" {{#if chkBreak1}}checked="checked"{{/if}} /> L<input type="checkbox" {{#if chkLunch}}checked="checked"{{/if}} /> B<input type="checkbox" {{#if chkBreak2}}checked="checked"{{/if}} /></td>
 		<td class='cell border'>{{MeterStart}}</td>
 		<td class='cell border'>{{MeterStop}}</td>
-		<td class='cell border'><span class="left minutes">A {{AssignedMinutes}}</span> <span class="right minutes">R {{runTime}}</span><div class="clearfloat"></div> <span class="left minutes">S {{SetupMinutes}}</span> <span class="right minutes">D {{downTime}}</span></td>
+		<td class='cell border'><span class="left minutes">A {{AssignedMinutes}}</span> <span class="right minutes">R {{runMeter}}</span><div class="clearfloat"></div> <span class="left minutes">S {{SetupMinutes}}</span> <span class="right minutes">D {{downTime}}</span></td>
 		<td class='cell border'><br /> {{ReAssgnMinTotal}}</td>
-		<td class='cell border'>{{CStart}}</td>
-		<td class='cell border'>{{CounterEnd}}</td>
+		<td class='cell border'>{{#if Cstart}}{{CStart}}{{/if}}</td>
+		<td class='cell border'>{{#if CounterEnd}}{{CounterEnd}}<br />mC:&nbsp;{{machineCount}}{{/if}}</td>
 		<td class='cell border'>{{TotalPacked}}</td>
 		<td class='cell border'>{{Scrap}}</td>
-		<td class='cell border'>Package: {{UnitOfMeasure}}<br />Status: {{status}}<br />{{itemDescription}}</td>
+		<td class='cell border'>PkQty:&nbsp;{{UnitOfMeasure}}<br />itemID:&nbsp;{{status}}<br />{{Item_ID}}</td>
 		</tr>
 	{{/with}}
 	{{/each}}
 	</tbody>
-
+	
 	<!-- Here is where I need to add a list of PID Module views instead of the following-->
 	
+	</table>
+	<table class="left tablesorter" style="margin-left: 20px">
+		<tr><th colspan="2">Legend</th></tr>
+		<tr><td>A</td><td>Assigned Minutes</td></tr>
+		<tr><td>S</td><td>Setup Minutes</td></tr>
+		<tr><td>R</td><td>Runtime Minutes</td></tr>
+		<tr><td>D</td><td>Downtime</td></tr>
+		<tr><td>mC</td><td>Machine Count</td></tr>
 	</table>
 </div>
