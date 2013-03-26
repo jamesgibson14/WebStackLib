@@ -4,25 +4,31 @@
 <br />
 <br />
 <div class="clearfloat defaultForm">
-
-	<div class="searchBox noprint">
-		<label for="Machine">Search Machines:</label>
-	  	<input id="imachine" placeholder="Click here to search..." type="text" size='50'/>
-	  	
-	  	<br />
-  	</div>
-	<div class="left">
+	<label for="startDate"> Date Range: From</label>
+  	<input id="startDate" class='dPicker' type="text" value="{{startDate}}" size="10"/>
+  	<label for="endDate"> To</label>
+  	<input id="endDate" class='dPicker' type="text" value="{{endDate}}" size="10"/>	 
+	<div class="">
+		<h2><span>Select Machine Types</span></h2>
 		<label for="Cell">Machine Types</label><select id="machineGroups">
 			<option value="">Select Machine Type...</option>
 			{{#each machineTypes}}
 			<option value="{{@index}}">{{this.name}}</option>
 			{{/each}}
 		</select>
-		<label for="Cell">Machines</label><span id="atq_id" class="spanInput">n/a</span>
-		<label style="margin-left:50px" for="startDate"> From:</label>
-	  	<input id="startDate" class='dPicker' type="text" value="{{startDate}}" size="10"/>
-	  	<label for="endDate"> To:</label>
-	  	<input id="endDate" class='dPicker' type="text" value="{{endDate}}" size="10"/>	  	
+		<label>Options: </label>
+		Month<input type="radio" name="groupBy" value="month" checked="checked" /> 
+		Day<input type="radio" name="groupBy" value="day" /> 
+		Branch<input type="radio" name="level" value="Branch" checked="checked" /> 
+		Machine<input type="radio" name="level" value="Machine" />
+		
+  	</div>
+  	<div class="searchBox noprint">
+  		<h2><span>Or add machines individually</span></h2>
+		<label for="Machine">Search Machines:</label>
+	  	<input id="imachine" placeholder="Click here to search..." type="text" size='50'/>
+	  	<label for="Cell">Machines</label><span id="atq_id" class="spanInput">n/a</span>
+	  	<br />
   	</div>
   <div class="clearfloat"></div>  
 </div>

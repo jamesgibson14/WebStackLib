@@ -20,7 +20,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
             this.model = new this.model()
             this.modelStageTotals = new this.modelStageTotals();
             this.model.fetch();            
-            this.model.on('change:machineCodes change:startDate change:endDate', this.renderPlot)
+            this.model.on('change:machineCodes change:startDate change:endDate change:level change:groupBy', this.renderPlot)
             //this.collection.fetch();
         },
         loadData: function(){
@@ -189,13 +189,13 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
                     terms.pop();          
                     // add the selected item          
                     terms.push( ui.item.code ); 
-                    that.model.set('machineCodes', terms);         
+                            
                     // add placeholder to get the comma-and-space at the end          
-                    terms.push( "" );          
+                    terms.push( "" );
+                    that.model.set('machineCodes', terms.slice(0,-1));          
                     this.value = terms.join( ", " );
-                    that.$('#atq_id').html( (this.value + '').slice(0,-2) );
-                    //alert((this.value + '').slice(0,-2))
-                    E.loading(that.$el, function() {success();},that)          
+                    
+                    //alert((this.value + '').slice(0,-2))        
                     return false;        
                 }
             })
@@ -208,6 +208,9 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
             });
             this.$("#imachine").on('click',function(e){
                 //that.$( "#imachine" ).autocomplete( "search", "" );
+            })
+            this.$('input[type=radio]').click(function(e){                
+                that.model.set($(this).attr("name"), $(this).val())
             })
             this.$('#atq_id').css('color','rgb(96,74,123)')
             this.$('#resizable').resizable({delay:20,minHeight: 326,minWidth: 400});
@@ -228,7 +231,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
             
             //var data = this.collection.data({MachineCode: 3191, MachineCode: 5147})
             E.loading(this.$el, this.loadData,this)
-            
+            this.$('#atq_id').html( this.model.get('machineCodes').join(', ') );
             
             E.hideLoading();
         },
