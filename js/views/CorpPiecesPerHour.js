@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/CorpPiecesPerHour.html', 'models/CorpPIDShiftCollection', 'models/CorpPiecesPerHour', 'jqp','jqpall'], 
-function($, Backbone, E, Handlebars, template, Collection,Model){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/CorpPiecesPerHour.html', 'models/CorpPIDShiftCollection', 'models/CorpPiecesPerHour', 'views/SlickGrid', 'jqp','jqpall'], 
+function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
 
     var View = Backbone.View.extend({
 
@@ -16,11 +16,12 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
         template: template,
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','loadData','renderProcessRecord', 'renderPlot');
+            _.bindAll(this, 'render','loadData','renderProcessRecord', 'renderPlot','renderRawData');
             this.model = new this.model()
             this.modelStageTotals = new this.modelStageTotals();
             this.model.fetch();            
             this.model.on('change:machineCodes change:startDate change:endDate change:level change:groupBy', this.renderPlot)
+            this.SlickGrid = new SlickGrid()
             //this.collection.fetch();
         },
         loadData: function(){
@@ -49,7 +50,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
                         show: false,
                         type: 'linear'
                     },
-                    isDragable:false,
+                    isDragable:true,
                     showMarker:true             
                 },
                 series: series,
@@ -131,7 +132,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
                     that.$('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
             }); 
             this.$('#plot').off('jqplotDataClick');
-            this.$('#plot').on('jqplotDataClick',this.renderProcessRecord);   
+            this.$('#plot').on('jqplotDataClick',this.renderRawData);   
             
         },
         render: function() {
@@ -157,6 +158,8 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
                 that.model.set('endDate' ,this.value);
             })
             this.$('#machineGroups').on('change',function(e){
+                if (!this.value)
+                    return false;
                 that.model.set('machineCodes',that.model.get('machineTypes')[this.value].machines);
             });
             function split( val ) {      return val.split( /,\s*/ );    }    
@@ -235,11 +238,13 @@ function($, Backbone, E, Handlebars, template, Collection,Model){
             
             E.hideLoading();
         },
-        renderTable: function(){
-            //Instead of destroying plot just reload data, lables and then re-plot  
-        },
-        renderReviews: function(){
-            //Show reviews for current selected operator  
+        renderRawData: function(){
+            //Instead of destroying plot just reload data, lables and then re-plot 
+            var that = this;
+            var html;
+            html = this.SlickGrid.render().el
+            
+            this.$('#processRecord').html(html)
         }
          
     });

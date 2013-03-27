@@ -370,7 +370,7 @@ tr {
 }
 .minutes {
 	padding: 2px;
-	width 50px;
+	width: 50px;
 }
 textarea {
 	overflow: auto;
@@ -943,7 +943,7 @@ classes should alter those!
   position: absolute;
   font-size: 0.1px;
   display: block;
-  cursor: col-resize;
+  cursor: w-resize;
   width: 4px;
   right: 0px;
   top: 0;
@@ -1113,7 +1113,7 @@ classes should alter those!
 }
 
 .slick-cell.selected {
-  background-color: beige;
+  background-color;
 }
 
 .slick-cell.active {
