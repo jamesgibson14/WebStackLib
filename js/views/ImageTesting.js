@@ -42,6 +42,7 @@ function($, Backbone, E, Handlebars, template){
               ctx.drawImage(imgB, -100, -75, imgB.width, imgB.height);
               ctx.restore();
             };
+            E.hideLoading()
         },
         toImage: function(e) {
           alert($(e.target).html())
