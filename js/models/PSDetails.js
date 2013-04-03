@@ -11,7 +11,7 @@ define([
         sql: 'Execute dbo.spGetDataForPeopleSoftEntry',
         modelsToSave: [],
         sqlToExecute: null,
-        store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
+        store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false),
         sqldb: E.sqlProd2,
         accessdb: E.accessdb,
         save: function(){
