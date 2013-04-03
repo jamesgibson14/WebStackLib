@@ -3,10 +3,10 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
     var collection = Backbone.Collection.extend({
         model: Backbone.Model,
             
-        sql: "SELECT Unit, MachineCode = cast(MachineCode as int), StartDate, PcsPerHour = ISNULL(SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(DowntimeHrs),0),0), PcsPerAssignedHour = SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs),0) FROM PeopleSoftData  WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, MachineCode, StartDate",
+        sql: "SELECT ID, Code FROM Items",
         sqlAll: "SELECT Unit, PID, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), StartDate, Shift, AssociateCode, SetupHrs, RunHrs, DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData  WHERE  StartDate > '%s' AND StartDate <= '%s'",
         sqlArgs: [],
-        store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
+        store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false),
         data: function(filter){
             //var data = .map(function(m){})
             return this.where(filter);  
@@ -45,7 +45,51 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 labels:labels,
                 data:data
             }
+        },
+        getColumns: function(){
+            if (this.length ==0)
+                return 'no data';
+            var arr = [];
+             $.each(this.at(0).attributes, function(i,val){
+                arr.push( {id: i, name:i, field: i});
+            });
+            return arr;
+        },
+        getLength: function() {    
+            return this.models.length;  
+        },
+        getItem: function(i) {    
+            return this.models[i];  
+        },
+        setModelValue: function(model,value) {    
+            var column = this.column;    
+            var internalValue = unformatValue(value,column);    
+            var newValues = {};    
+            newValues[column.field] = internalValue;    
+            model.set(newValues);  
+        },
+        dataItemColumnValueExtractor: function(model, columnDef) {
+            return model.get(columnDef.field);
+        },
+        requiredFieldValidator: function(value) {
+            if (value == null || value == undefined || !value.length) {
+              return {valid: false, msg: "This is a required field"};
+            } else {
+              return {valid: true, msg: null};
+            }
+        },
+        defaultFormatter: function(row, cell, value, columnDef, dataContext) {
+            if (value == null) {
+                return "";
+            }
+            else if(typeof(value)=='date')
+                return value
+            else {
+                return value.toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+            }
         }
+
+
     });
 
     return collection;

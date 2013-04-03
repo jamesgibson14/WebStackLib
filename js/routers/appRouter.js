@@ -26,10 +26,11 @@ function($, Backbone, E, Handlebars, require,user){
         username = E.getwinuser();
         $.cookie("username", username, { expires: 364})
     }
-    E.user = new user({username: username});
-    E.user.fetch();
     var loc = document.location + ''
     E.appState = loc.indexOf('prodweb')>=0 ? 'Production' : (loc.indexOf('webdev')>=0 ? 'Test' : (loc.indexOf('DevProjects')>=0 ? 'Developer' : 'n/a'))
+    E.user = new user({username: username, appState: E.appState, screen: {aHeight: screen.availHeight, aWidth: screen.availWidth, width: screen.width, height: screen.height}});
+    E.user.fetch();    
+    
     //alert(E.user.get('PicturePath'));
     //E.loadCss("js/lib/css/dark-hive/jquery-ui.css")
     E.loadCss("js/lib/jqplot/jquery.jqplot.css")

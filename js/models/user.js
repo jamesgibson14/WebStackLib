@@ -8,13 +8,12 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
 
             // Model Constructor
             initialize: function() {
-                this.sql = "Execute spGetUserInfoWeb @username = '" + this.get("username") + "'";
+                var dt = new Date().format("isoDateTime");
+                var details = this.toJSON();
+                
+                details = JSON.stringify(details)
+                this.sql = "Execute spGetUserInfoWeb @username = '" + this.get("username") + "', @now = '" + dt + "', @details = '" + details + "'";
                 this.store =  new WebSQLStore(E.sqlProd2,'todos',false,false);
-            },
-
-            // Any time a model attribute is set, this method is called
-            validate: function(attrs) {
-
             },
             sql: '',
             store: null           

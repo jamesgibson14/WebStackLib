@@ -25,9 +25,21 @@ function($, Backbone, E, Handlebars, template){
         },
         postRender: function(){
             var can = document.getElementById("myCanvas");
-            var ctx = can.getContext('2d');
+            var context = can.getContext('2d');
+            var centerX = can.width / 2;
+              var centerY = can.height / 2;
+              var radius = 70;
+        
+              context.beginPath();
+              context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+              context.fillStyle = 'green';
+              context.fill();
+              context.lineWidth = 5;
+              context.strokeStyle = '#003300';
+              context.stroke();
+            /*
             var imgA = new Image();
-            imgA.src = 'assets/images/graph2-128.ico';
+            imgA.src = 'assets/images/barchart2-64px.ico';
     
             imgA.onload = function() {
               ctx.drawImage(imgA, -25, 0, imgA.width, imgA.height);
@@ -42,6 +54,7 @@ function($, Backbone, E, Handlebars, template){
               ctx.drawImage(imgB, -100, -75, imgB.width, imgB.height);
               ctx.restore();
             };
+            */
             E.hideLoading()
         },
         toImage: function(e) {
@@ -60,11 +73,11 @@ function($, Backbone, E, Handlebars, template){
               document.getElementById('graphics').appendChild(imgObj);
               break;
             case 'NewWindow':
-              window.open(dataURL, "Canvas Image");
+              window.open(dataURL, "CanvasImage");
               break;
             case 'Download':
               dataURL = dataURL.replace("image/png", "image/octet-stream");
-              document.location.href = dataURL;
+              window.location.href = dataURL;
               break;
           }
         }

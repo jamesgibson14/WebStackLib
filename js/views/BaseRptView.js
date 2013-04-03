@@ -2,7 +2,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/CorpPieces
 function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
 
     var View = Backbone.View.extend({
-
+        //This is meant to build a common view for things filters and other User interactions that will be common across reports and charts.
         tagName:  "div",
         className: 'CorpPiecesPerHour ofh',
         attributes: {style:'border:none;'},
@@ -18,13 +18,10 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
           this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','loadData','renderProcessRecord', 'renderPlot','renderRawData');
             this.model = new this.model()
-            
             this.modelStageTotals = new this.modelStageTotals();
             this.model.fetch();            
             this.model.on('change:machineCodes change:startDate change:endDate change:level change:groupBy', this.renderPlot)
-            this.model.on('change:plotData', this.test);
             this.SlickGrid = new SlickGrid()
-            this.model.set("plotData",[1,2,3,4]);
             //this.collection.fetch();
         },
         loadData: function(){
@@ -53,7 +50,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                         show: false,
                         type: 'linear'
                     },
-                    isDragable:false,
+                    isDragable:true,
                     showMarker:true             
                 },
                 series: series,
@@ -241,30 +238,13 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             
             E.hideLoading();
         },
-        renderRawData: function(ev, seriesIndex, pointIndex, data){
-            //Instead of destroying plot just reload data, lables and then re-plot
-            var dt = new Date(data[0]).format("mm/dd/yyyy")
-            var wDate ='';
-            if (this.model.get('groupBy')=='month')
-                wDate = "StartDate >'" + dt + "' AND StartDate <= DATEADD(month,1,'" + dt + "')";
-            else
-                wDate = "StartDate = '" + dt + "'";
+        renderRawData: function(){
+            //Instead of destroying plot just reload data, lables and then re-plot 
             var that = this;
             var html;
-            var options = {
-                sql: "SELECT Unit, PID, Item, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), StartDate, Shift, AssociateCode, SetupHrs, RunHrs, DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData WHERE " + wDate + " AND MachineCode = '3191' ORDER By Item"
-            };
-            alert(options.sql)
-            html = this.SlickGrid.render(options).el
-            this.$('#processRecord').html(html)
-            setTimeout(function(){
-                
-                that.SlickGrid.postRender();
-            },1)
+            html = this.SlickGrid.render().el
             
-        },
-        test: function(){
-            alert('testing')
+            this.$('#processRecord').html(html)
         }
          
     });

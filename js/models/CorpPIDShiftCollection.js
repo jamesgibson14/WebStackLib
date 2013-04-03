@@ -3,10 +3,9 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
     var collection = Backbone.Collection.extend({
         model: Backbone.Model,
             
-        sql: "SELECT Unit, MachineCode = cast(MachineCode as int), StartDate, PcsPerHour = ISNULL(SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(DowntimeHrs),0),0), PcsPerAssignedHour = SUM(CompletedQty) / NULLIF(SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs),0) FROM PeopleSoftData  WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, MachineCode, StartDate",
-        sqlAll: "SELECT Unit, PID, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), StartDate, Shift, AssociateCode, SetupHrs, RunHrs, DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData  WHERE  StartDate > '%s' AND StartDate <= '%s'",
+        sql: "",
         sqlArgs: [],
-        store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
+        store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false),
         data: function(filter){
             //var data = .map(function(m){})
             return this.where(filter);  
