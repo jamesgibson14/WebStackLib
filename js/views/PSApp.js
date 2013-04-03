@@ -23,13 +23,16 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','enterPeopleSoftScript','tester','filter');
+            _.bindAll(this, 'render','change','tester','filter');
             this.collection.bind('reset',     this.filter);
             
         },
         loadData: function(){
             var that = this;
-            E.loading(this.$el,that.collection.fetch,this.collection);
+            var fetch = function(){
+                that.collection.fetch({reset:true})
+            }
+            E.loading(this.$el,fetch,this.collection);
             //this.collection.fetch();
         },
         scanPID: function(e){
@@ -228,8 +231,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             node.show()
             
             this.job = this.tester('step1');
-            this.job.run();
-            //that.enterPeopleSoftScript('step1');         
+            this.job.run();        
           
         },
         tester: function(step){
