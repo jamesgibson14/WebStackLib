@@ -5,12 +5,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
 
         tagName:  "div",
         className: 'CorpPiecesPerHour ofh',
-        attributes: {style:'border:none;'},
         model: Model,
-        modelStageTotals: Backbone.Model.extend({
-            sql: "SELECT m.Code, m.Cell_ID, m.WorkCenter_ID, m.Stage5Target, m.Inactive, qa.Stage1Minutes, qa.Stage2Minutes, qa.Stage3Minutes, qa.Stage4Minutes, qa.Stage5Minutes, atq.CurrentStage,(SELECT MAX(ReviewDate) AS MaxOfReviewDate FROM dbo.MachineOperatorReviews mor WHERE (mor.QualID=atq.ID)) AS LastReviewDate FROM AssociatesToQualifications atq INNER JOIN Qualifications AS q ON atq.Qualifications_ID = q.ID INNER JOIN QualificationsToMachines ON q.ID = QualificationsToMachines.Qualifications_ID INNER JOIN Machines AS m ON QualificationsToMachines.Machines_ID = m.ID INNER JOIN QualificationsAttributes qa ON q.ID = qa.Qualifications_ID WHERE atq.ID = %s",
-            sqlArgs: [430],
-            store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         collection: new Collection(),
         plot: null,
         template: template,
@@ -19,7 +14,6 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             _.bindAll(this, 'render','loadData','renderProcessRecord', 'renderRawData');
             this.model = new this.model()
             this.model.fetch();
-            this.modelStageTotals = new this.modelStageTotals();
             this.model.on('change:plotData', this.loadData);
             this.SlickGrid = new SlickGrid()
             
