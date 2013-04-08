@@ -18,14 +18,13 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             var data = [];
             var model = mod;
             var getLabel = function(m){
-                if(model.get('level')=='0')
+                if(model.get('level')=='Branch')
                     return m.get('Unit');
                 else
                     return m.get('Unit') + "_" + m.get('MachineCode');
             }
             this.map(function(model){
                 var label = getLabel(model);
-                
                 if (labels.indexOf(label) > -1){
                     obj[label].push([new Date(model.get('StartDate')),model.get('PcsPerHour')]);
                 }
@@ -34,12 +33,23 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     obj[label] = [[new Date(model.get('StartDate')),model.get('PcsPerHour')]]
                 }                           
             });
-            $.each( obj, function(array, i) {
-                //alert(typeof(array) + ' ' + array + ' _ i:' + i)
-                data.push(i);
-                //alert(array + ' ' + array.length);
+            var group = {};
+            var c = 0;
+            $.each( obj, function(i, array) {
+                data.push(array);
+                var gKey = i.slice(0,3);
+                
+                if(!group[gKey]) 
+                    group[gKey]=0;
+
+                series.push({color: model.get('branches')[gKey].colors[group[gKey]]})
+                //alert(series[c].color)
+                group[gKey] += 1;
+                c++;
             })
-            this.labels= labels;
+            model.set('labels', labels);
+            model.set('series', series);
+            model.set('plotData', data);
             return {
                 labels:labels,
                 data:data

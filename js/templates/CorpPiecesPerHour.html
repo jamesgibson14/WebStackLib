@@ -19,8 +19,8 @@
 		<label>Options: </label>
 		Month<input type="radio" name="groupBy" value="month" checked="checked" /> 
 		Day<input type="radio" name="groupBy" value="day" /> 
-		Branch<input type="radio" name="level" value="Branch" checked="checked" /> 
-		Machine<input type="radio" name="level" value="Machine" />
+		Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" /> 
+		Machine<input type="radio" name="level" id="rmachine" value="Machine" />
 		
   	</div>
   	<div class="searchBox noprint">
@@ -38,9 +38,9 @@
 		
 	</div>
 </div>
-
-<div><span>Moused Over: </span><span id="info1b">Nothing</span><span>Moused Over: </span><span id="info1c">Nothing</span></div>
-<div id='processRecord'>
+<br />
+<br />
+<div id='processRecord' class="border" style="min-height: 300px; width:98%;">
 	
 </div>
 <div class="quicktipsview noprint">
@@ -68,5 +68,5 @@
 			
 		
 	</ul>
-	<span class="noSelect clearfloat">Browse graph styles <a href="js/lib/jqplot/examples/index.html" target="_blank" >here</a>then submit an idea of the new graph style and data you would like to see.</span>
+	<div class="noSelect clearfloat">Browse graph styles <a href="js/lib/jqplot/examples/index.html" target="_blank" >here</a>then submit an idea of the new graph style and data you would like to see.</div>
 </div>

@@ -179,30 +179,41 @@ Backbone.sync = function (method, model, options) {
 		else if (rs.fields(0).name == 'jsonmodels') {
 		    result = JSON.parse(rs.fields(0).value);
 		}
+		else if(options.noJSON){
+		    
+		    while (!rs.ActiveConnection || !rs.eof){
+		        var attr ={}
+		        var i = 0;
+    		    while(i<len){
+                    attr[rs.fields(i).name] = rs.fields(i).value;                        
+                    i++;   
+                }
+                if(model.attributes)
+                    result = attr
+                else
+                    result.push(attr);
+                rs.movenext;
+                count++; 
+            }
+		}
 		else {
     		while (!rs.ActiveConnection || !rs.eof){
                 var attr ={}
-                var i = 0;
-                if(options.noJSON){
-                    while(i<len){
-                        attr[rs.fields(i).name] = rs.fields(i).value;                        
-                        i++;   
-                    }   
-                }                
-                else {
-                    while(i<len){
-                        var val = rs.fields(i).value + '', sl = val.slice(0,1);
-                        if(sl=='[' || sl == '{')
-                            attr[rs.fields(i).name] = JSON.parse( rs.fields(i).value);
-                        else if(rs.fields(i).name.indexOf('time')>-1){
-                               attr[rs.fields(i).name] = Math.round(rs.fields(i).value*100)/100
-                        }                
-                        else{
-                            attr[rs.fields(i).name] = rs.fields(i).value;
-                        }
-                        i++;                          
+                var i = 0; 
+                if(options.add_id)
+                    attr.id = count;
+                while(i<len){
+                    var val = rs.fields(i).value + '', sl = val.slice(0,1);
+                    if(sl=='[' || sl == '{')
+                        attr[rs.fields(i).name] = JSON.parse( rs.fields(i).value);
+                    else if(rs.fields(i).name.indexOf('time')>-1){
+                           attr[rs.fields(i).name] = Math.round(rs.fields(i).value*100)/100
+                    }                
+                    else{
+                        attr[rs.fields(i).name] = rs.fields(i).value;
                     }
-                } 
+                    i++;                          
+                }
                 //check if model... vs collection
                 if(model.attributes)
                     result = attr
