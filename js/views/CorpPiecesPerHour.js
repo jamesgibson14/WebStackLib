@@ -98,7 +98,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                     tooltipLocation: 'se',
                     tooltipAxes: 'xy',
                     yvalues: 1,
-                    formatString:'<p>date: %s</p><p>PiecesPerHour: %s</p>',
+                    formatString:'<div class="boxpad border z2k"><p>date: %s</p><p>PiecesPerHour: %s</p><div>',
                     useAxesFormatters: true
                },
                cursor: {
@@ -237,23 +237,26 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             var html;
             var dt = new Date(data[0]).format("mm/dd/yyyy")
             var wDate ='';
-            if (this.model.get('groupBy')=='month')
+            var model = this.model.toJSON();
+            if (model.groupBy =='month')
                 wDate = "StartDate >'" + dt + "' AND StartDate <= DATEADD(month,1,'" + dt + "')";
             else
                 wDate = "StartDate = '" + dt + "'";
                 
             
-            var labels = this.model.get('labels')
+            var labels = model.labels
+            
             var wLevel = '';
-            if (this.model.get('level')=='Branch')
-                wLevel = "Unit = '" + labels[seriesIndex] + "'"
+            if (this.model.get('level')=='Branch'){
+                var selected = $('#machineGroups').find(":selected").val();
+                wLevel = "Unit = '" + labels[seriesIndex] + "' AND MachineCode IN (" + model.machineTypes[selected].machines.join(", ") + ") "                   
+            }
             else
-                wLevel = "MachineCode = '" + labels[seriesIndex].slice(labels[seriesIndex].indexOf('_')+1) + "' ";
-                
+                wLevel = "MachineCode = '" + labels[seriesIndex].slice(labels[seriesIndex].indexOf('_')+1) + "' ";                
   
             
             var options = {
-                sql: "SELECT PiecesPerHr = ROUND(CompletedQty / NULLIF(RunHrs + DowntimeHrs,0),0), Unit, PID, Item, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), StartDate, Shift, AssociateCode, SetupHrs = ROUND(SetupHrs,2), RunHrs = ROUND(RunHrs,2), DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData WHERE " + wDate + " AND " + wLevel + " ORDER By Item"
+                sql: "SELECT PiecesPerHr = ROUND(CompletedQty / NULLIF(RunHrs + DowntimeHrs,0),0), Unit, PID, Item, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), DateClosed = StartDate, Shift, AssociateCode, SetupHrs = ROUND(SetupHrs,2), RunHrs = ROUND(RunHrs,2), DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData WHERE " + wDate + " AND " + wLevel + " ORDER By Item"
             };
             html = this.SlickGrid.render(options).el
             this.$('#processRecord').html(html)
