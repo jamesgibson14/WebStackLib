@@ -1,15 +1,15 @@
 <div class="title">
 	<h1>Machine Pieces Per Hour (Runtime + Downtime; no setup time)</h1>
 </div>
-<br />
-<br />
+<br class="noprint" />
+<br class="noprint" />
 <div class="clearfloat defaultForm">
 	<label for="startDate"> Date Range: From</label>
   	<input id="startDate" class='dPicker' type="text" value="{{startDate}}" size="10"/>
   	<label for="endDate"> To</label>
   	<input id="endDate" class='dPicker' type="text" value="{{endDate}}" size="10"/>	 
 	<div class="">
-		<h2><span>Select Machine Types</span></h2>
+		<h2 class="noprint"><span>Select Machine Types</span></h2>
 		<label for="Cell">Machine Types</label><select id="machineGroups">
 			<option value="">Select Machine Type...</option>
 			{{#each machineTypes}}
@@ -19,17 +19,16 @@
 		<label>Options: </label>
 		Month<input type="radio" name="groupBy" value="month" checked="checked" /> 
 		Day<input type="radio" name="groupBy" value="day" /> 
-		Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" /> 
-		Machine<input type="radio" name="level" id="rmachine" value="Machine" />
-		
+		Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" />
+		Machine<input type="radio" name="level" id="rmachine" value="Machine" />		
   	</div>
+  	<br />
   	<div class="searchBox noprint">
   		<h2><span>Or add machines individually</span></h2>
 		<label for="Machine">Search Machines:</label>
-	  	<input id="imachine" placeholder="Click here to search..." type="text" size='50'/>
-	  	<label for="Cell">Machines</label><span id="atq_id" class="spanInput">n/a</span>
-	  	<br />
+	  	<input id="imachine" placeholder="Click here to search..." type="text" size='50'/>	  	
   	</div>
+  	<br><label for="Cell">Machines</label><span id="atq_id" class="spanInput">n/a</span>
   <div class="clearfloat"></div>  
 </div>
 
@@ -40,7 +39,7 @@
 </div>
 <br />
 <br />
-<div id='processRecord' class="border" style="min-height: 300px; width:98%;">
+<div id='processRecord' class="border noprint`" style="min-height: 300px; width:98%;">
 	
 </div>
 <div class="quicktipsview noprint">
