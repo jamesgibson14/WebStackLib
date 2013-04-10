@@ -191,7 +191,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                     that.$('#rmachine, #rbranch').prop('disabled', true);
                     that.model.set('machineCodes', terms.slice(0,-1));          
                     this.value = terms.join( ", " );
-                    
+                    that.$('#machineGroups').val('')
                           
                     return false;        
                 }
