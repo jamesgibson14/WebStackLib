@@ -1,0 +1,15 @@
+<h1>Item Verification Charts </h1>
+<p>
+	Error Counts 
+<input type="text" value="{{errorCount}}" />
+</p>
+<div>
+	Pick Error Type
+	<select>
+		
+		{{#each errorTypes}}
+			<option value="{{@index}}">{{this}}</option>
+		{{/each}}
+	</select>
+</div>
+	
