@@ -3,7 +3,9 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
     var Model = Backbone.Model.extend({
 
             defaults: {
-	            content: "You are now using Backbone, Lodash, Require, Modernizr, and jQuery! (Click Me)"
+	            component: "",
+	            item: "",
+	            pid: "PID1610999"
             },
 
             // Model Constructor

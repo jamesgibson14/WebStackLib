@@ -1,6 +1,8 @@
 	<h1 class="tabletitle">Inventory/Counting</h1>
-	<div id="create-model">
-		PID<input type="text" id="iPID" size="9" /> OpSeq<input type="text" id="iopseq" size="2" /><button class='loadtable'>Load PID</button>
+	<div class="defaultForm">Search By:<br />
+		Component<input type="text" id="iPID" size="9" /> <br />
+		Item<input type="text" id="iPID" size="9" /> <br />
+		PID<input type="text" id="iPID" size="9" value="{{pid}}" /> <br /><button class='loadtable'>Load PID</button>
 	</div>
 	
 	<ul id="pidList" class="tbody">
@@ -22,6 +24,5 @@
 	
 	</ul>
 	<div id="collection-stats"> </div>
-	<button class="btnRun">Run Process</button><br />
-	<iframe id='autoentry' src="" >Error! An Iframe in not showing.</iframe>
+	<div id="slickGrid"></div>
 	

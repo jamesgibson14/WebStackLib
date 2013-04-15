@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/InventoryApp.html', 'models/PIDs','views/PIDDetail'], 
-function($, Backbone, E, Handlebars, Model, template, Collection, subView){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/InventoryApp', 'text!templates/InventoryApp.html', 'models/PIDs','views/PIDDetail', 'views/SlickGrid'], 
+function($, Backbone, E, Handlebars, Model, template, Collection, subView,SlickGrid){
 
     var View = Backbone.View.extend({
 
@@ -7,18 +7,19 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         className: 'PSApp',
         collection: new Collection(),
         filteredModels: [],
+        model: new Model(),
         filters: false,
         template: template,
         events: {
             'blur .pid':'change',
             'change #iPID':'loadPID',
             'click .loadtable': 'loadPID',
-            'click .btnRun': 'runEntry',
             'click .filter': 'filter'        
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','change','enterPeopleSoftScript','tester','filter');
+            this.SlickGrid = new SlickGrid()
             this.collection.bind('reset',     this.filter);
             //alert(this.collection.sql);
         },
@@ -28,13 +29,21 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             //alert(pid);
             this.collection.sql = "Execute dbo.spDataIntegrity @pid = '" + pid + "', @inventory = 1";
             E.loading(this.$el,that.collection.fetch,this.collection);
-            //this.collection.fetch();
+            var options = {
+                sql: "SELECT Top 10 * FROM Items"
+            };
+            html = this.SlickGrid.render(options).el
+            this.$('#slickGrid').html(html)
+            setTimeout(function(){
+                
+                that.SlickGrid.postRender();
+            },1)
         },
         // Re-render the contents of the todo item.
         render: function() {
-            //var temp = this.model.toJSON();
+            var temp = this.model.toJSON();
             
-            var temp = this.template({});
+            var temp = this.template(temp);
             
             this.$el.html( temp );
 
@@ -48,10 +57,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             this.model.set({pid: newvalue})
         },
         filter: function(){
-            //alert('filter and sort');
-            debugger;
-            //this.collection.sort({silent:true});
-            //alert('filters: ' + this.filters);
+
             if(this.filters)
                 this.filteredModels = this.collection.filter(function(model){
                     _.each(this.filters,function(filter){
@@ -81,19 +87,6 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             this.$("#pidList").replaceWith($el);//.replaceWith($el);
             this.$('#collection-stats').html('Total rows: ' + this.filteredModels.length);
             E.hideLoading();             
-        },
-        runEntry: function(){
-            var url = 'http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login';
-            var node =this.$el.find('#autoentry')
-            var that = this;
-            //alert(node.attr('src'));
-            
-            node.show()
-            
-            this.job = this.tester('step1');
-            this.job.run();
-            //that.enterPeopleSoftScript('step1');         
-          
         }
     });
 	
