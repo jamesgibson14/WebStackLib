@@ -5,42 +5,34 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
 
         tagName:  "div",
         className: 'CorpPiecesPerHour ofh',
-        attributes: {style:'border:none;'},
         model: Model,
-        modelStageTotals: Backbone.Model.extend({
-            sql: "SELECT m.Code, m.Cell_ID, m.WorkCenter_ID, m.Stage5Target, m.Inactive, qa.Stage1Minutes, qa.Stage2Minutes, qa.Stage3Minutes, qa.Stage4Minutes, qa.Stage5Minutes, atq.CurrentStage,(SELECT MAX(ReviewDate) AS MaxOfReviewDate FROM dbo.MachineOperatorReviews mor WHERE (mor.QualID=atq.ID)) AS LastReviewDate FROM AssociatesToQualifications atq INNER JOIN Qualifications AS q ON atq.Qualifications_ID = q.ID INNER JOIN QualificationsToMachines ON q.ID = QualificationsToMachines.Qualifications_ID INNER JOIN Machines AS m ON QualificationsToMachines.Machines_ID = m.ID INNER JOIN QualificationsAttributes qa ON q.ID = qa.Qualifications_ID WHERE atq.ID = %s",
-            sqlArgs: [430],
-            store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         collection: new Collection(),
         plot: null,
         template: template,
         initialize: function() {
           this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','loadData', 'renderPlot','renderRawData');
+
             this.model = new this.model()
-            
-            this.modelStageTotals = new this.modelStageTotals();
-            this.model.fetch();            
-            this.model.on('change:machineCodes change:startDate change:endDate change:level change:groupBy', this.renderPlot)
-            this.model.on('change:plotData', this.test);
+            this.model.fetch();
+            this.model.on('change:plotData', this.loadData);
             this.SlickGrid = new SlickGrid()
-            this.model.set("plotData",[1,2,3,4]);
+            
             //this.collection.fetch();
         },
         loadData: function(){
            var that = this;
             //E.loading(this.$el,that.collection.fetch,this.collection);
             $.jqplot.config.enablePlugins = true;
-            var attrs = this.model.toJSON()
+            
             if (this.plot)
                 this.plot.destroy();
-            
-              
-            var coll = this.collection.dataRenderer(this.model);
-            var data = coll.data; //infos[0];
-            var labels = coll.labels; //infos[1]; ['3700_Target','2_two','3_three','4_four'] //
-            var series = coll.series;
-            //var ticks = infos[2];
+            this.SlickGrid.$el.html('<h2><span>No Data Selected</span><h2>')
+            this.$('#atq_id').html( this.model.get('machineCodes').join(', ') );  
+
+            var data = this.model.get('plotData'); 
+            var labels = this.model.get('labels'); 
+            var series = this.model.get('series');
             
             this.plot = $.jqplot("plot", data, {
                 title: "Machine Comparison",
@@ -97,7 +89,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                     drawBorder: false,
                     shadow: false,
                     // background: 'rgba(0,0,0,0)'  works to make transparent.
-                    background: "white"
+                    background: "#dddddd"
                 },
                 highlighter: {
                     show: true,
@@ -107,7 +99,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                     tooltipLocation: 'se',
                     tooltipAxes: 'xy',
                     yvalues: 1,
-                    formatString:'<p>date: %s</p><p>PiecesPerHour: %s</p>',
+                    formatString:'<div class="boxpad border z2k"><p>date: %s</p><p>PiecesPerHour: %s</p><div>',
                     useAxesFormatters: true
                },
                cursor: {
@@ -140,16 +132,8 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
         },
         render: function() {
             var that = this;
-            var obj = {
-                debug:true,
-                startDate:this.model.get('startDate'),
-                endDate:this.model.get('endDate')
-            };
-            obj.machineTypes = [];
-            $.each(this.model.get('machineTypes'),function(i, val){
-               obj.machineTypes.push({label:val.name,value:i}) 
-            });
-            obj = this.model.toJSON();
+            var obj = this.model.toJSON();
+            
             var temp = this.template(obj);
             
             this.$el.html( temp );
@@ -163,6 +147,12 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             this.$('#machineGroups').on('change',function(e){
                 if (!this.value)
                     return false;
+                if(that.$('#imachine').val()!=''){
+                    that.$('#imachine').val('')
+                    that.model.attributes.level = 'Branch';
+                }
+                that.$('#rbranch').prop('disabled', false);
+                that.$('#rmachine').prop('disabled', false);
                 that.model.set('machineCodes',that.model.get('machineTypes')[this.value].machines);
             });
             function split( val ) {      return val.split( /,\s*/ );    }    
@@ -198,10 +188,12 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                             
                     // add placeholder to get the comma-and-space at the end          
                     terms.push( "" );
+                    that.model.attributes.level = 'Machine';
+                    that.$('#rmachine, #rbranch').prop('disabled', true);
                     that.model.set('machineCodes', terms.slice(0,-1));          
                     this.value = terms.join( ", " );
-                    
-                    //alert((this.value + '').slice(0,-2))        
+                    that.$('#machineGroups').val('')
+                          
                     return false;        
                 }
             })
@@ -215,10 +207,9 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             this.$("#imachine").on('click',function(e){
                 //that.$( "#imachine" ).autocomplete( "search", "" );
             })
-            this.$('input[type=radio]').click(function(e){                
+            this.$('input[type=radio]').click(function(e){   
                 that.model.set($(this).attr("name"), $(this).val())
             })
-            this.$('#atq_id').css('color','rgb(96,74,123)')
             this.$('#resizable').resizable({delay:20,minHeight: 326,minWidth: 400});
             //this.$('input, textarea').placeholder();
             return this;
@@ -243,18 +234,31 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
         },
         renderRawData: function(ev, seriesIndex, pointIndex, data){
             //Instead of destroying plot just reload data, lables and then re-plot
+            var that = this;
+            var html;
             var dt = new Date(data[0]).format("mm/dd/yyyy")
             var wDate ='';
-            if (this.model.get('groupBy')=='month')
+            var model = this.model.toJSON();
+            if (model.groupBy =='month')
                 wDate = "StartDate >'" + dt + "' AND StartDate <= DATEADD(month,1,'" + dt + "')";
             else
                 wDate = "StartDate = '" + dt + "'";
-            var that = this;
-            var html;
+                
+            
+            var labels = model.labels
+            
+            var wLevel = '';
+            if (this.model.get('level')=='Branch'){
+                var selected = $('#machineGroups').find(":selected").val();
+                wLevel = "Unit = '" + labels[seriesIndex] + "' AND MachineCode IN (" + model.machineTypes[selected].machines.join(", ") + ") "                   
+            }
+            else
+                wLevel = "MachineCode = '" + labels[seriesIndex].slice(labels[seriesIndex].indexOf('_')+1) + "' ";                
+  
+            
             var options = {
-                sql: "SELECT Unit, PID, Item, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), StartDate, Shift, AssociateCode, SetupHrs, RunHrs, DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData WHERE " + wDate + " AND MachineCode = '3191' ORDER By Item"
+                sql: "SELECT PiecesPerHr = ROUND(CompletedQty / NULLIF(RunHrs + DowntimeHrs,0),0), Unit, PID, Item, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), DateClosed = StartDate, Shift, AssociateCode, SetupHrs = ROUND(SetupHrs,2), RunHrs = ROUND(RunHrs,2), DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData WHERE " + wDate + " AND " + wLevel + " ORDER By Item"
             };
-            alert(options.sql)
             html = this.SlickGrid.render(options).el
             this.$('#processRecord').html(html)
             setTimeout(function(){
