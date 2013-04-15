@@ -19,6 +19,9 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
                 options = {};
             var sql = options.sql || '';
             var html;
+            var sortdir;
+            var sortcol;
+            var that = this;
             html = Handlebars.compile(this.template)            
             //html = "<div>No data found</div>"   
             var columns;
@@ -26,6 +29,7 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             options.grid = {
                 editable: true,
                 autoEdit: false,
+                sortable:true,
                 enableCellNavigation: true,
                 enableColumnReorder: false,
                 dataItemColumnValueExtractor: this.collection.dataItemColumnValueExtractor,
@@ -34,31 +38,54 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             };
         
             
-            var data = [];
-            for (var i = 0; i < 500; i++) {
-                data[i] = {
-                    title: "Task " + i,
-                    duration: "5 days",
-                    percentComplete: Math.round(Math.random() * 100),
-                    start: "01/01/2009",
-                    finish: "01/05/2009",
-                    effortDriven: (i % 5 == 0)
-                };
-            }
+            var data;
+            
             this.collection.sql = options.sql;
-            this.collection.fetch();
+            this.collection.fetch({add_id: true});
             data = this.collection;
+            var customColumns = {
+                SetupHrs: {
+                    editor: Slick.Editors.Text
+                },
+                StartDate: {
+                    editor: Slick.Editors.Date
+                }
+            }
             if (!columns)
-                columns = this.collection.getColumns();
+                columns = this.collection.getColumns(customColumns);
             if (options.columns)
                 $.extend(columns,options.columns);
-                
-            this.myGrid = $("<div id='myGrid' style='width:600px;height:500px;'></div>");
-            this.grid = new Slick.Grid(this.myGrid, data, columns, options.grid);        
+            this.dataView = new Slick.Data.DataView();   
+            this.myGrid = $("<div id='myGrid' style='width:98%;height:500px;'></div>");
+            this.grid = new Slick.Grid(this.myGrid, this.dataView, columns, options.grid);        
             this.grid.onCellChange.subscribe(function(e){
                 alert('cell change')
             })
+            
+            var comparer = function(a, b) {
+                var x = a[sortcol], y = b[sortcol];
+                return (x == y ? 0 : (x > y ? 1 : -1));
+            }
+
+            this.grid.onSort.subscribe(function (e, args) {
+                debugger;
+                sortdir = args.sortAsc ? 1 : -1;
+                sortcol = args.sortCol.field;
+                that.dataView.sort(comparer, args.sortAsc);
                 
+            });
+            this.dataView.onRowCountChanged.subscribe(function (e, args) {
+                that.grid.updateRowCount();
+                that.grid.render();
+            });
+        
+            this.dataView.onRowsChanged.subscribe(function (e, args) {
+                that.grid.invalidateRows(args.rows);
+                that.grid.render();
+            });
+            
+            this.dataView.setItems(this.collection.toDataView());
+
             this.$el.html( html );
 
             return this;

@@ -7,51 +7,22 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         sqlAll: "SELECT Unit, PID, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), StartDate, Shift, AssociateCode, SetupHrs, RunHrs, DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData  WHERE  StartDate > '%s' AND StartDate <= '%s'",
         sqlArgs: [],
         store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false),
-        data: function(filter){
-            //var data = .map(function(m){})
-            return this.where(filter);  
-        },
-        dataRenderer: function(mod, options){
-            var that = this;
-            var labels = [];
-            var series = [];
-            var obj = {};
-            var data = [];
-            var model = mod;
-            var getLabel = function(m){
-                if(model.get('level')=='0')
-                    return m.get('Unit');
-                else
-                    return m.get('Unit') + "_" + m.get('MachineCode');
-            }
-            this.map(function(model){
-                var label = getLabel(model);
-                
-                if (labels.indexOf(label) > -1){
-                    obj[label].push([new Date(model.get('StartDate')),model.get('PcsPerHour')]);
-                }
-                else{
-                    labels.push(label);
-                    obj[label] = [[new Date(model.get('StartDate')),model.get('PcsPerHour')]]
-                }                           
-            });
-            $.each( obj, function(array, i) {
-                //alert(typeof(array) + ' ' + array + ' _ i:' + i)
-                data.push(i);
-                //alert(array + ' ' + array.length);
+        toDataView: function(headers){            
+            return this.map(function(model){                
+                return model.toJSON();           
             })
-            this.labels= labels;
-            return {
-                labels:labels,
-                data:data
-            }
         },
-        getColumns: function(){
+        getColumns: function(customColumns){
             if (this.length ==0)
                 return 'no data';
             var arr = [];
-             $.each(this.at(0).attributes, function(i,val){
-                arr.push( {id: i, name:i, field: i});
+            var defaultColumns = {sortable:true};            
+            $.each(this.at(0).attributes, function(i,val){
+                // only display id column if specifically asked for.
+                if (i == 'id' && !customColumns["id"])
+                    return;
+                var obj = $.extend({id: i, name:i, field: i},defaultColumns, customColumns[i]);                
+                arr.push(obj);
             });
             return arr;
         },
@@ -69,7 +40,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             model.set(newValues);  
         },
         dataItemColumnValueExtractor: function(model, columnDef) {
-            return model.get(columnDef.field);
+            return model[columnDef.field];
         },
         requiredFieldValidator: function(value) {
             if (value == null || value == undefined || !value.length) {

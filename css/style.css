@@ -755,6 +755,9 @@ textarea {
 	text-align:center;
 	font-weight:600;
 }
+.cell span.extra {
+	display: none;
+}
 .mcell { 
 	padding:4px;
 	text-align:center;
@@ -765,7 +768,6 @@ textarea {
 	display:table-row;
 	width: 100%;
 }
-
 .tbody {
 	width: 100%;
 }
@@ -1113,7 +1115,7 @@ classes should alter those!
 }
 
 .slick-cell.selected {
-  background-color;
+  background-color:#0099CC;
 }
 
 .slick-cell.active {

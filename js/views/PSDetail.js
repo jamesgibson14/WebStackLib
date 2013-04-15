@@ -16,7 +16,8 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
           //"click label.todo-content"  : "showOrder",
           "dblclick label.todo-content" : "edit",
           "click span.todo-destroy"   : "clear",
-          "keypress .edit": "updateOnEnter"
+          "keypress .edit": "updateOnEnter",
+          "click .displayExtra": "displayExtra"
         },
     
         // The TodoView listens for changes to its model, re-rendering. Since there's
@@ -24,7 +25,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
         // app, we set a direct reference on the model for convenience.
         initialize: function() {
             this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render', 'close', 'remove','toggleFlag');
+            _.bindAll(this, 'render', 'close', 'remove','toggleFlag','displayExtra');
             this.model.bind('change', this.render);
             this.model.bind('destroy', this.remove,this);
         },
@@ -100,7 +101,17 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
               this.close(e.currentTarget);              
           }
         },
-    
+        displayExtra: function(e){
+            var $el = $(e.target)
+            if($el.hasClass('ui-icon-plusthick')){
+                $el.removeClass('ui-icon-plusthick').addClass("ui-icon-minusthick")
+                this.$('span.extra').show(1000);
+            }
+            else{
+                $el.removeClass("ui-icon-minusthick").addClass('ui-icon-plusthick')
+                this.$('span.extra').hide(1000);
+            }
+        },
         // Remove the item, destroy the model.
         clear: function() {
           this.model.destroy();

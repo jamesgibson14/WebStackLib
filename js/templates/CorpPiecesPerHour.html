@@ -1,15 +1,15 @@
 <div class="title">
 	<h1>Machine Pieces Per Hour (Runtime + Downtime; no setup time)</h1>
 </div>
-<br />
-<br />
+<br class="noprint" />
+<br class="noprint" />
 <div class="clearfloat defaultForm">
 	<label for="startDate"> Date Range: From</label>
   	<input id="startDate" class='dPicker' type="text" value="{{startDate}}" size="10"/>
   	<label for="endDate"> To</label>
   	<input id="endDate" class='dPicker' type="text" value="{{endDate}}" size="10"/>	 
 	<div class="">
-		<h2><span>Select Machine Types</span></h2>
+		<h2 class="noprint"><span>Select Machine Types</span></h2>
 		<label for="Cell">Machine Types</label><select id="machineGroups">
 			<option value="">Select Machine Type...</option>
 			{{#each machineTypes}}
@@ -19,17 +19,16 @@
 		<label>Options: </label>
 		Month<input type="radio" name="groupBy" value="month" checked="checked" /> 
 		Day<input type="radio" name="groupBy" value="day" /> 
-		Branch<input type="radio" name="level" value="Branch" checked="checked" /> 
-		Machine<input type="radio" name="level" value="Machine" />
-		
+		Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" />
+		Machine<input type="radio" name="level" id="rmachine" value="Machine" />		
   	</div>
+  	<br />
   	<div class="searchBox noprint">
   		<h2><span>Or add machines individually</span></h2>
 		<label for="Machine">Search Machines:</label>
-	  	<input id="imachine" placeholder="Click here to search..." type="text" size='50'/>
-	  	<label for="Cell">Machines</label><span id="atq_id" class="spanInput">n/a</span>
-	  	<br />
+	  	<input id="imachine" placeholder="Click here to search..." type="text" size='50'/>	  	
   	</div>
+  	<br><label for="Cell">Machines</label><span id="atq_id" class="spanInput">n/a</span>
   <div class="clearfloat"></div>  
 </div>
 
@@ -38,9 +37,9 @@
 		
 	</div>
 </div>
-
-<div><span>Moused Over: </span><span id="info1b">Nothing</span><span>Moused Over: </span><span id="info1c">Nothing</span></div>
-<div id='processRecord'>
+<br />
+<br />
+<div id='processRecord' class="border noprint`" style="min-height: 300px; width:98%;">
 	
 </div>
 <div class="quicktipsview noprint">
@@ -57,8 +56,14 @@
 	
 	<ul class="left"><h4><span>Next Steps</span></h4>
 		<li><input type="checkbox" />Add static colors per branch</li>
-		<li><input type="checkbox" />Click to view raw data per point</li>
-		<li><input type="checkbox" />Turn on/off Trendline</li>
+		<li><input type="checkbox" />Turn off/on trend lines (Dave)</li>
+		<li><input type="checkbox" />Add machine descriptions (Mary Richter)</li>
+		<li><input type="checkbox" />Turn off/on labels (Mary Richter)</li>
+		<li><input type="checkbox" checked="checked" />Not filtering machines correctly at Month level  -done 4/8/2013</li>
+		<li><input type="checkbox" checked="checked" />Review with some in Hastings to test functionality -done 4/8/2013</li>
+		<li><input type="checkbox" checked="checked" />Numbers are duplicating (Travis) -done 4/8/2013</li>
+		<li><input type="checkbox" checked="checked" />Click to view raw data per point -done 4/8/2013</li>
+		<li><input type="checkbox" checked="checked" />Add static colors per branch -done 4/8/2013</li>
 		<li><input type="checkbox" checked="checked" />Drill down from Corporation level to individual machines  -done 3/21/2013</li>
 		<li><input type="checkbox" checked="checked" />Group by Days or Months (maybe weeks) -done 3/21/2013</li>
 		<li><input type="checkbox" checked="checked" />Compare Multiple Machines on the same chart -done 3/20/2013</li>
@@ -68,5 +73,5 @@
 			
 		
 	</ul>
-	<span class="noSelect clearfloat">Browse graph styles <a href="js/lib/jqplot/examples/index.html" target="_blank" >here</a>then submit an idea of the new graph style and data you would like to see.</span>
+	<div class="noSelect clearfloat">Browse graph styles <a href="js/lib/jqplot/examples/index.html" target="_blank" >here</a>then submit an idea of the new graph style and data you would like to see.</div>
 </div>
