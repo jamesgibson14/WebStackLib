@@ -35,12 +35,13 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
                 dataItemColumnValueExtractor: this.collection.dataItemColumnValueExtractor,
                 defaultFormatter: this.collection.defaultFormatter,
                 explicitInitialization: true
-            };
-        
+            };        
             
             var data;
             
             this.collection.sql = options.sql;
+            if (options.store)
+                this.collection.store = options.store;
             this.collection.fetch({add_id: true});
             data = this.collection;
             var customColumns = {
@@ -68,7 +69,6 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             }
 
             this.grid.onSort.subscribe(function (e, args) {
-                debugger;
                 sortdir = args.sortAsc ? 1 : -1;
                 sortcol = args.sortCol.field;
                 that.dataView.sort(comparer, args.sortAsc);
@@ -85,7 +85,11 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             });
             
             this.dataView.setItems(this.collection.toDataView());
-
+            if (this.grouping){
+                _.bind(this.grouping,this);
+                this.grouping();
+                
+            }
             this.$el.html( html );
 
             return this;
