@@ -11,7 +11,8 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
         template: template,
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','loadData','renderProcessRecord', 'renderRawData');
+            _.bindAll(this, 'render','loadData', 'renderPlot','renderRawData');
+
             this.model = new this.model()
             this.model.fetch();
             this.model.on('change:plotData', this.loadData);

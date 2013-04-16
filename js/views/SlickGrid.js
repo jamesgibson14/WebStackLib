@@ -11,7 +11,7 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             'click .test': 'temp'
         },
         initialize: function() {
-            _.bindAll(this, 'render','afterRender','temp');
+            _.bindAll(this, 'render','postRender','temp');
                
         },
         render: function(options) {

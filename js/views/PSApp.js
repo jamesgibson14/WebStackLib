@@ -23,13 +23,16 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','enterPeopleSoftScript','tester','filter');
+            _.bindAll(this, 'render','change','tester','filter');
             this.collection.bind('reset',     this.filter);
             
         },
         loadData: function(){
             var that = this;
-            E.loading(this.$el,that.collection.fetch,this.collection);
+            var fetch = function(){
+                that.collection.fetch({reset:true})
+            }
+            E.loading(this.$el,fetch,this.collection);
             //this.collection.fetch();
         },
         scanPID: function(e){
@@ -228,8 +231,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             node.show()
             
             this.job = this.tester('step1');
-            this.job.run();
-            //that.enterPeopleSoftScript('step1');         
+            this.job.run();        
           
         },
         tester: function(step){
@@ -245,7 +247,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var map = {
                 step1: function(){
                     //alert('step1: wait for login screen then login.');
-                    var contents = context.contents();
+                    //var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     if (context.attr('src') != 'http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login'){
                         _step = 'step10';
@@ -254,13 +256,13 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         nextStep();
                         return;
                     }
-                    if (contents.find('#userid').length  == 0){
+                    if (fr.getElementById('userid').length  == 0){
                         //if not loaded yet... run agian
                         nextStep();
                     }
                     else{
-                        var user = contents.find('#userid').val('GIBSONJ');
-                        var pwd = contents.find('#pwd').val('GIBSONJ');                 
+                        var user = fr.getElementById('userid').value = 'GIBSONJ';
+                        var pwd = fr.getElementById('pwd').value = 'GIBSONJ';                 
                         fr.login.submit();
                          _step = 'step2';
                         context.one('load', function(){
@@ -272,7 +274,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 step2: function(){
                     //alert('step2: Check for logged in, then go to report screen')
                   
-                    var contents = context.contents();                   
+                    //var contents = context.contents();                   
                     _model = _collection[_currentModel].toJSON();                                      
                     if(_model.flag || _model.entered){
                          _errors = true;
@@ -291,13 +293,18 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step3: function(){  
                     //alert('step3: Test PID validity (open/closed)');
+                    //alert("step 3.1")
+                    //var contents = context.contents();
+                    //alert("step 3.2")
+                    var fr = document.getElementById("autoentry").contentWindow.document;
+                    var pid = fr.getElementById('SM_SF_PID_WRK_PRODUCTION_ID').value = _model.pid;
+                    var op = fr.getElementById('SM_SF_PID_WRK_OP_SEQUENCE').value = _model.opseq;
+                    //var btn = fr.getElementById('#SM_SF_PID_WRK_REFRESH_BTN')
+                    //alert("step 3.3")
                     
-                    var contents = context.contents();
-                    
-                    var pid = contents.find('#SM_SF_PID_WRK_PRODUCTION_ID').val(_model.pid);
-                    var op = contents.find('#SM_SF_PID_WRK_OP_SEQUENCE').val(_model.opseq);
-                    var btn = contents.find('#SM_SF_PID_WRK_REFRESH_BTN')
-                    btn.click();
+                    var btn2 = fr.getElementById('SM_SF_PID_WRK_REFRESH_BTN')
+                    btn2.click();
+                    //alert("step 3.4")
                     document.getElementById("autoentry").onreadystatechange = function(){   
                         //alert('change ' + this.readyState);
                         if (this.readyState == 'interactive'){
@@ -320,11 +327,13 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step4: function(){
                     //alert('step4: if no PID error then enter Data');
-                    var contents = context.contents();
+                    //alert("step 4.1")
+                    //var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
-                    var pid = contents.find('#SM_SF_PID_WRK_PRODUCTION_ID').attr("class");
+                    var pid = fr.getElementById('SM_SF_PID_WRK_PRODUCTION_ID').getAttribute("class");
+                    
                     if (pid =="PSERROR"){
-                        //alert("Error with PID go to next record");
+                        alert("Error with PID go to next record");
                         var temp = {}
                         temp.flag = _errors = true;
                         temp.flagreason = 'AutoEntry: PID closed or other error';
@@ -333,14 +342,15 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         nextStep();
                         return;
                     };
-                    var chkOpDone = contents.find('#SM_SF_PID_WRK_SM_OP_COMPL_FLAG')
-                    _model.prevscrap = parseFloat(contents.find('#SM_SF_SHIFT_RPT_SCRAP_QTY\\$0').val())+0;
+                    var chkOpDone = fr.getElementById('SM_SF_PID_WRK_SM_OP_COMPL_FLAG')
+                    _model.prevscrap = parseFloat(fr.getElementById('SM_SF_SHIFT_RPT_SCRAP_QTY$0').value)+0;
                     
-                    
-                    if(chkOpDone.prop('checked')) {                    
+                    //alert("step 4.2")
+                    alert(chkOpDone.checked);
+                    if(chkOpDone.checked) {                    
                         //---ajust scrap that needs to be entered-----
                         //_model.scrap -= _model.prevscrap;
-                        //alert('scrap - prevscrap: ' + (_model.scrap ));
+                        alert('scrap - prevscrap: ' + (_model.scrap ));
                         //---------------------------------------------
                         
                         // uncheck and overwrite the data with the new data
@@ -363,18 +373,19 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         _model.operator = '';
                     
                     var shift = (_model.shift == "F") ? 1 : 2;
-                    var txtMachine = contents.find('#SM_SF_SHIFT_RPT_MACHINE_CODE\\$0').val(_model.machine);
-                    var txtDate = contents.find('#SM_SF_SHIFT_RPT_OP_START_DT\\$0').val(_model.date);
-                    var txtOperator = contents.find('#SM_SF_SHIFT_RPT_EMPLID\\$0').val(_model.operator);
+                    var txtMachine = fr.getElementById('SM_SF_SHIFT_RPT_MACHINE_CODE$0').value = _model.machine;
+                    var txtDate = fr.getElementById('SM_SF_SHIFT_RPT_OP_START_DT$0').value = _model.date;
+                    var txtOperator = fr.getElementById('SM_SF_SHIFT_RPT_EMPLID$0').value = _model.operator;
                     //var txtShift= contents.find('#SM_SF_SHIFT_RPT_MG_SHIFT\\$0').val(shift);
-                    var txtSetupTime = contents.find('#SM_SF_SHIFT_RPT_SM_CLK_SETUP_HOURS\\$0').val(_model.setuptime);
-                    var txtRunTime = contents.find('#SM_SF_SHIFT_RPT_SM_CLK_RUN_HOURS\\$0').val(_model.runtime);
-                    var txtDownTime = contents.find('#SM_SF_SHIFT_RPT_SM_CLK_DT_HOURS\\$0').val(_model.downtime);
-                    var txtQtyCompleted = contents.find('#SM_SF_SHIFT_RPT_COMPLETED_QTY\\$0').val(_model.qtycompleted);
-                    var txtScrapQty = contents.find('#SM_SF_SHIFT_RPT_SCRAP_QTY\\$0').val(_model.scrap);
-                    chkOpDone.prop('checked',true);
-                    
-                    chkOpDone.click();              
+                    var txtSetupTime = fr.getElementById('SM_SF_SHIFT_RPT_SM_CLK_SETUP_HOURS$0').value = _model.setuptime;
+                    var txtRunTime = fr.getElementById('SM_SF_SHIFT_RPT_SM_CLK_RUN_HOURS$0').value = _model.runtime;
+                    var txtDownTime = fr.getElementById('SM_SF_SHIFT_RPT_SM_CLK_DT_HOURS$0').value = _model.downtime;
+                    var txtQtyCompleted = fr.getElementById('SM_SF_SHIFT_RPT_COMPLETED_QTY$0').value = _model.qtycompleted;
+                    var txtScrapQty = fr.getElementById('SM_SF_SHIFT_RPT_SCRAP_QTY$0').value = _model.scrap;
+                    //chkOpDone.checked = true;
+                    //alert("step 4.3")
+                    chkOpDone.click();
+                    //alert("step 4.4")              
                      _step = 'step5';
                     context.one('load', function(){
                         nextStep();       
@@ -412,9 +423,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 step7: function(){
                     //alert('step7: enter in PID then submit form to go to scrap entry screen');
                     
-                    var contents = context.contents();
+                    //var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
-                    var pid = contents.find('#SF_PRDN_PRM_WRK_PRODUCTION_ID\\$11\\$').val(_model.pid);
+                    var pid = fr.getElementById('SF_PRDN_PRM_WRK_PRODUCTION_ID$11$').value = _model.pid;
                     var frm = fr.forms[1];
                    
                     if(_model.scrap<0) 
@@ -430,15 +441,15 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step8: function(){
                     //alert('step8: Add scrap, recurse, add machine number, if endscrap, go to step9, else go to next pid');
-                    var contents = context.contents();
+                    //var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
-                    var txtMachine = contents.find('#SM_SFRPTLINK_WK_MACHINE_CODE\\$0')
-                    var op = contents.find('#SF_COMPL_WRK_COMPL_OP_SEQ\\$0');  
-                    var txtScrapQty = contents.find('#SF_COMPL_WRK_SCRAPPED_QTY\\$0')
+                    var txtMachine = fr.getElementById('SM_SFRPTLINK_WK_MACHINE_CODE$0')
+                    var op = fr.getElementById('SF_COMPL_WRK_COMPL_OP_SEQ$0');  
+                    var txtScrapQty = fr.getElementById('SF_COMPL_WRK_SCRAPPED_QTY$0')
                     //alert(_model.scrap);
-                    if (parseInt(op.val()) != _model.opseq){
+                    if (parseInt(op.value) != _model.opseq){
                         //Enter Process Scrap
-                        txtScrapQty.val(_model.scrap); 
+                        txtScrapQty.value = _model.scrap; 
                         var frm = fr.forms[1];
                         frm.ICAction.value = "SF_COMPL_WRK_COMPL_OP_SEQ$prompt$0";
                         frm.submit();
@@ -448,8 +459,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         }); 
                     }
                     else {
-                        txtScrapQty.val(_model.scrap);  
-                        txtMachine.val(_model.machine);
+                        txtScrapQty.value = _model.scrap;  
+                        txtMachine.value = _model.machine;
                         //alert('doublecheck values');         
                         
                         _step = 'stepSaveScrap';                        

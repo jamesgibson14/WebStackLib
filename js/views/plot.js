@@ -18,7 +18,7 @@ function($, Backbone, E, Handlebars, Model, template, opTrack){
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','enterPeopleSoftScript','tester','filter');
+            _.bindAll(this, 'render','change');
             
         },
         loadData: function(){
