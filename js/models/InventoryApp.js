@@ -22,7 +22,10 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 {
                   getter: "PIDText",
                   formatter: function (g) {
-                    return "Duration:  " + g.value + "  <span style='color:green'>(" + g.count + " items)</span>";
+                    return "PID:  " + g.value + "  <span style='color:green'>(" + g.count + " runs)</span>";
+                  },
+                  comparer: function (a, b) {
+                      return a.count - b.count;
                   },
                   aggregators: [
                     new Slick.Data.Aggregators.Sum("Scrap"),
@@ -31,26 +34,26 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                   aggregateCollapsed: true
                 },
                 {
-                  getter: "effortDriven",
+                  getter: "opseq",
                   formatter: function (g) {
-                    return "Effort-Driven:  " + (g.value ? "True" : "False") + "  <span style='color:green'>(" + g.count + " items)</span>";
+                    return "Opseq:  " + g.value  + "  <span style='color:green'>(" + g.count + " runs)</span>";
                   },
                   aggregators :[
-                    new Slick.Data.Aggregators.Sum("duration"),
-                    new Slick.Data.Aggregators.Sum("cost")
+                    new Slick.Data.Aggregators.Sum("Scrap"),
+                    new Slick.Data.Aggregators.Sum("NetQtyProduced")
                   ],
                   aggregateCollapsed: true
                 },
                 {
-                  getter: "percentComplete",
+                  getter: "Date",
                   formatter: function (g) {
-                    return "% Complete:  " + g.value + "  <span style='color:green'>(" + g.count + " items)</span>";
+                    return "Date:  " + g.value + "  <span style='color:green'>(" + g.count + " runs)</span>";
                   },
                   aggregators: [
-                    new Slick.Data.Aggregators.Avg("percentComplete")
+                    new Slick.Data.Aggregators.Avg("Scrap")
                   ],
                   aggregateCollapsed: true,
-                  collapsed: true
+                  collapsed: false
                 }
               ]);
             }

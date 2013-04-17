@@ -7,11 +7,12 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
         className: 'SlickGrid',
         collection: new Collection(),
         template: template,
+        groupingOn: true,
         events: {
-            'click .test': 'temp'
+            'click .test': 'groupOnOff'
         },
         initialize: function() {
-            _.bindAll(this, 'render','postRender','temp');
+            _.bindAll(this, 'render','postRender','groupOnOff');
                
         },
         render: function(options) {
@@ -22,6 +23,7 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             var sortdir;
             var sortcol;
             var that = this;
+            
             html = Handlebars.compile(this.template)            
             //html = "<div>No data found</div>"   
             var columns;
@@ -38,7 +40,7 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             };        
             
             var data;
-            
+            var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
             this.collection.sql = options.sql;
             if (options.store)
                 this.collection.store = options.store;
@@ -53,10 +55,10 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
                 }
             }
             if (!columns)
-                columns = this.collection.getColumns(customColumns);
+                columns = this.collection.getColumns($.extend(customColumns,options.customColumns));
             if (options.columns)
                 $.extend(columns,options.columns);
-            this.dataView = new Slick.Data.DataView();   
+            this.dataView = new Slick.Data.DataView({groupItemMetadataProvider: groupItemMetadataProvider});   
             this.myGrid = $("<div id='myGrid' style='width:98%;height:500px;'></div>");
             this.grid = new Slick.Grid(this.myGrid, this.dataView, columns, options.grid);        
             this.grid.onCellChange.subscribe(function(e){
@@ -74,6 +76,7 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
                 that.dataView.sort(comparer, args.sortAsc);
                 
             });
+            this.grid.registerPlugin(groupItemMetadataProvider);
             this.dataView.onRowCountChanged.subscribe(function (e, args) {
                 that.grid.updateRowCount();
                 that.grid.render();
@@ -87,8 +90,7 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             this.dataView.setItems(this.collection.toDataView());
             if (this.grouping){
                 _.bind(this.grouping,this);
-                this.grouping();
-                
+                this.grouping();                
             }
             this.$el.html( html );
 
@@ -169,6 +171,27 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             };
         
             this.init();
+        },
+        avgTotalsFormatter: function(totals, columnDef) {
+            var val = totals.avg && totals.avg[columnDef.field];
+            if (val != null) {
+                return "avg: " + Math.round(val);
+            }
+            return "";
+        },        
+        sumTotalsFormatter: function(totals, columnDef) {
+            var val = totals.sum && totals.sum[columnDef.field];
+            if (val != null) {
+                return "total: " + ((Math.round(parseFloat(val)*100)/100));
+            }
+            return "";
+        },
+        groupOnOff: function(){
+            this.groupingOn = !this.groupingOn
+            if(this.groupingOn && this.grouping)
+                this.grouping();
+            else
+                this.dataView.setGrouping([])
         }
     });
     

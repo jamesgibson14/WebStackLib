@@ -1,7 +1,7 @@
 define(['jquery', 'backbone','engine',
     'sg/slick.core',
-    'jquery.event.drag-2.0.min',
-    'jquery.event.drop-2.0.min',
+    'jquery.event.drag-2.2',
+    'jquery.event.drop-2.2',
     'sg/slick.grid',
     'sg/slick.groupitemmetadataprovider',
     'sg/slick.dataview',
@@ -14,5 +14,5 @@ define(['jquery', 'backbone','engine',
     
     ], 
 function($, Backbone,E, core) {
-
+    return core;
 });

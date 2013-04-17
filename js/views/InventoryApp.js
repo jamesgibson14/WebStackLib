@@ -10,7 +10,7 @@ function($, Backbone, E, Handlebars, Model, template, SlickGrid){
         events: {
             'blur .pid':'change',
             'change #iPID':'loadPID',
-            'click .loadtable': 'loadPID'       
+            'click .loadtable': 'loadPID'      
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
@@ -21,8 +21,12 @@ function($, Backbone, E, Handlebars, Model, template, SlickGrid){
             var that = this;
             var pid = this.$('#iPID').val();
             var options = {
-                sql: "SELECT PIDText, p.Status, i.Code, i.Description, r.TaskCode,r.WorkCenter_ID, r.Scrap, crd.NetQtyProduced, crd.Scrap FROM ProductionDemandGroups p LEFT JOIN ProductionDemandGroupsRouting r ON PIDText=r.PID LEFT JOIN CompiledReportingData crd ON PIDText= crd.PID LEFT JOIN Items i ON p.Item_ID=i.ID WHERE PIDText = 'PID1609348' ORDER By crd.OpSeq, crd.Date, crd.Shift",
-                store: this.model.store
+                sql: "SELECT TOP 500 PIDText, p.Status, i.Code, i.Description, r.TaskCode,r.WorkCenter_ID, r.Scrap, crd.opseq, crd.Date, crd.Shift, crd.NetQtyProduced, crd.Scrap FROM ProductionDemandGroups p LEFT JOIN ProductionDemandGroupsRouting r ON PIDText=r.PID INNER JOIN CompiledReportingData crd ON PIDText= crd.PID AND r.Opseq=crd.Opseq LEFT JOIN Items i ON p.Item_ID=i.ID WHERE PIDText<>'DCP' AND Status > 0 AND Status < 70 ORDER By crd.OpSeq, crd.Date, crd.Shift",
+                store: this.model.store,
+                customColumns: {
+                    Scrap: {groupTotalsFormatter: this.SlickGrid.avgTotalsFormatter},
+                    NetQtyProduced: {groupTotalsFormatter: this.SlickGrid.sumTotalsFormatter}                    
+                }
             };
             this.SlickGrid.grouping = this.model.groupByPIDOpseqDate
             html = this.SlickGrid.render(options).el
