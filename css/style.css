@@ -346,7 +346,9 @@ tr {
 	margin: 2px;
 	margin-left:5px;
 }
-
+.defaultForm .ui-state-error{
+	font-size: 14pt;
+}
 .editable .hidden {
 	display:none;
 }
@@ -733,7 +735,7 @@ textarea {
 	padding-right:10px;
 	text-align:center;
 	color: #4D926F;
-	font-size:16px;
+	font-size:50px;
 	
 }
 .hicell { 
@@ -752,7 +754,7 @@ textarea {
 .cell { 
 	display:table-cell;
 	padding:5px;
-	text-align:center;
+	text-align:right;
 	font-weight:600;
 }
 .cell span.extra {
@@ -825,7 +827,7 @@ table.tablesorter {
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
 	background-color: #e6EEEE;
 	border: 1px solid #FFF;
-	font-size: 8pt;
+	font-size: 10pt;
 	padding: 4px;
 }
 table.tablesorter thead tr .header {

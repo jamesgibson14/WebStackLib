@@ -19,7 +19,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             'keypress .colfilter': 'filterList',
             'click #filterclear': 'filter',
             'keypress #pidSearch': 'scanPID',
-            'keypress #opSearch': 'scanPID',      
+            'keypress #opSearch': 'scanPID',
+            'click .playsound': 'playSound'      
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
@@ -27,13 +28,15 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             this.collection.bind('reset',     this.filter);
             
         },
+        playSound: function(){
+            $('.soundIAmMad')[0].play();
+        },
         loadData: function(){
             var that = this;
             var fetch = function(){
                 that.collection.fetch({reset:true})
             }
             E.loading(this.$el,fetch,this.collection);
-            //this.collection.fetch();
         },
         scanPID: function(e){
             var $el = $(e.currentTarget);
@@ -58,15 +61,18 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 var op = model.get('opseq') + ''
                 if (pid == fPID && op == fOp){
                     model.set({flag:false});
-                    //find row and move to top 
-                    //or re-order by Ready
-                    //or nothing
+                    //TODO: find row and move to top 
+                    //TODO:or re-order by Ready
+                    //TODO:or nothing
                     i++;
                 }
                 
             })
             if(i<1) {
-                alert('not found')
+                var sounds = this.$('.soundError')
+                var pick = Math.floor(Math.random()*4)
+                sounds.get(pick).play();
+                this.$('#scanError').append('<br /><span class="scanError">Could not find PID: ' + fPID + " Opseq: " + fOp + '</span>')
                 //error checking why isnt PID&OP found
             }
         },
@@ -145,13 +151,19 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 
                 _.each(this.filteredModels,function(model, index){
                     //alert(filter)
-                    
-                    if (type == 'checkbox'){
-                        if(filter === model.get(attr)) 
-                            tempmods.push(model)
-                    }
-                    else if (model.get(attr) + ''.indexOf(filter)>=0){
-                        tempmods.push(model);
+                    switch(type){
+                        case "checkbox":
+                            if(filter === model.get(attr)) 
+                                tempmods.push(model)
+                        break;
+                        case "number":
+                            if(parseFloat(filter) === model.get(attr)) 
+                                tempmods.push(model)
+                        break;
+                        case "text":
+                            if (model.get(attr) + ''.indexOf(filter)>=0)
+                                tempmods.push(model);
+                        break;
                     }
                 })
                 
@@ -276,7 +288,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                   
                     //var contents = context.contents();                   
                     _model = _collection[_currentModel].toJSON();                                      
-                    if(_model.flag || _model.entered){
+                    if(_model.flag || _model.entered || !_model.isReady){
                          _errors = true;
                          _step = 'step10';
                         nextStep();
@@ -534,7 +546,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //alert('stepSaveScrap: Save scrap entry');
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     //alert('endscrap: ' +_model.endscrap )
-                    if (_model.endscrap <= 0){
+                    if (_model.endscrap <= 0 || !_model.enterendscrap){
                         //save page here
                         if (_model.scrap == 0){
                             _step = 'step10';
@@ -572,11 +584,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                                 //unbind the function
                                 document.getElementById("autoentry").onreadystatechange = null;
                                 //block alert popups
-                                //document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
-                                //document.getElementById("autoentry").contentWindow.alert = function(){};
+                                document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
+                                document.getElementById("autoentry").contentWindow.alert = function(){};
                                 
-                                //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
-                                //document.getElementById("autoentry").contentWindow.alert("Alert");
+                                document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
+                                document.getElementById("autoentry").contentWindow.alert("Alert");
                             }
                         }
                         

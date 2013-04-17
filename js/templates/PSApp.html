@@ -1,8 +1,12 @@
 	<h1 class="ui-widget-header title"><span class="">PeopleSoft Entry</span></h1>
-	<div class="noprint"><button type="button" class='loadtable'>Load PIDs</button><button type="button" class='printPIDs'>Print</button></div><br />	
+	<div class="noprint">
+		<button type="button" class='loadtable'>Load PIDs</button>
+		<button type="button" class='printPIDs'>Print</button>
+		<button type="button" class='playsound'>I don't like all the errors</button></div><br />	
 	<div id="pidfilters" class="noprint" style="width:250px">
 		<h1 class="ui-widget-header title"><span class="">Filters</span></h1>
 		PID: <input class="colfilter" filteron="pid" type="text" size="10" style="margin-right:10px" /><br />
+		Status: <input class="colfilter" filteron="status" type="number" size="10" style="margin-right:10px" /><br />
 		Machine: <input class="colfilter" filteron="machine" type="text" size="10" style="margin-right:10px" /><br />
 		Cell:<input class="colfilter" filteron="cell" type="text" size="10" style="margin-right:10px" /><br />
 		Day:<input class="filter" filteron="shift" type="radio" name="rShift" value="F" style="margin-right:10px" /> 
@@ -10,14 +14,38 @@
 		999 flaged:<input class="filter" filteron="flag" type="checkbox" name="rFlag" style="margin-right:10px" /><br />
 		<button type="button" id="filterclear">Clear Filters</button>
 	</div>
+	<audio class="soundIAmMad" >
+	  	<source src="assets/sounds/luke_piece_o_junk.mp3" type="audio/mpeg">
+		Your browser does not support the audio element.
+	</audio>
+	<audio class="soundError" >
+	  	<source src="assets/sounds/c3po_alerted.mp3" type="audio/mpeg">
+		Your browser does not support the audio element.
+	</audio>
+	<audio class="soundError" >
+	  	<source src="assets/sounds/Error.mp3" type="audio/mpeg">
+		Your browser does not support the audio element.
+	</audio>
+	<audio class="soundError" >
+	  	<source src="assets/sounds/RADAR.mp3" type="audio/mpeg">
+		Your browser does not support the audio element.
+	</audio>
+	<audio class="soundError" >
+	  	<source src="assets/sounds/han_bad_feeling.mp3" type="audio/mpeg">
+		Your browser does not support the audio element.
+	</audio>
+
 	<div class="defaultForm noprint" style="width: 100%; padding-left: 30%">
-		<label>PID</label> <input type="text" id="pidSearch" /> <label>OP</label> <input type="text" id="opSearch" /> 
+		<label>PID</label> <input type="text" id="pidSearch" /> 
+		<label>OP</label> <input type="text" id="opSearch" />
+		<span id="scanError" class="ui-state-error" style="margin-left: 20px">This is where any erros will go.</span> 
 	</div>	
 	<table id="pidList" class="psEntryTable tablesorter" style="max-width: 80%">
 	<thead class='row header'><tr>
-		<th class="hcell">PID<br /></th>
+		<th class="hcell">Ready</th>
+		<th class="hcell">PID</th>
 		<th class="hcell">OpSeq</th>
-		<th class="hcell">Machine<br /></th>
+		<th class="hcell">Machine</th>
 		<th class="hcell">Shift</th>
 		<th class="hcell">Qty Completed</th>
 		<th class="hcell">Scrap</th>

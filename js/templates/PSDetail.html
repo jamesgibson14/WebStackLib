@@ -1,22 +1,24 @@
-<td class='cell border'>{{pid}}<br />{{item}}<span class="displayExtra ui-icon ui-icon-plusthick">Show Hidden</span></td>
-<td class='cell border'>op: {{opseq}}</td>
+<td class='cell border'><input type="checkbox" class="checkIsReady" {{#if isReady}}checked="checked"{{/if}}  /></td>
+<td class='cell border'>{{pid}}<br />{{ItemCode}}<br /><span class="displayExtra ui-icon ui-icon-plusthick"></span></td>
+<td class='cell border'>op:&nbsp;{{opseq}}</td>
 <td class='cell border'>
 	{{machine}}<br />cell: {{cell}}
-	<span class="extra">Package: {{UnitOfMeasure}}<br />Status: {{status}}<br />Rec: {{recordID}}<br />Emp#: {{operator}}</span>
+	<span class="extra" style="text-align: right"><br />pkqty:&nbsp;{{UnitOfMeasure}}<br />Status:&nbsp;{{status}}<br />Rec:&nbsp;{{recordID}}<br />Emp#:&nbsp;{{operator}}</span>
 </td>
 <td class='cell border'>{{shift}}</td>
-<td class='cell border'>actual: {{qtycompleted}}
-	<br />target: {{expectedqty}}
-	<br />ADC: {{ADCcompleted}}
+<td class='cell border' style="text-align: right">
+	CEDProd:&nbsp;{{qtycompleted}}
+	<br />target:&nbsp;{{expectedqty}}
+	<br />ADC:&nbsp;{{ADCcompleted}}
 </td>
-<td class='cell border'>Sc: {{scrap}}
-	<br />{{scrappercent}} %
-	<br />PS: {{processscrap}}
+<td class='cell border'>scrap:&nbsp;{{scrap}}
+	<br />{{scrappercent}}&nbsp;%
+	<span class="extra"><br />ADC:&nbsp;{{processscrap}}</span>
 </td>
-<td class='cell border'>ES: {{endscrap}} <input type="checkbox" class="chkendscrap" {{#if enterendscrap}}checked="checked"{{/if}} /></td>
-<td class='cell border'>ST: {{setuptime}}</td>
-<td class='cell border'>RT: {{runtime}}</td>
-<td class='cell border'>DT: {{downtime}}</td>
+<td class='cell border'>ES:&nbsp;{{endscrap}} <input type="checkbox" class="chkendscrap" {{#if enterendscrap}}checked="checked"{{/if}} /></td>
+<td class='cell border'>ST:&nbsp;{{setuptime}}</td>
+<td class='cell border'>RT:&nbsp;{{runtime}}</td>
+<td class='cell border'>DT:&nbsp;{{downtime}}</td>
 <td class='cell border'>{{date}}</td>
 <td class='cell border'>
 {{#each componentcode}}
