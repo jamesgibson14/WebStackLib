@@ -20,13 +20,32 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             'click #filterclear': 'filter',
             'keypress #pidSearch': 'scanPID',
             'keypress #opSearch': 'scanPID',
-            'click .playsound': 'playSound'      
+            'click .playsound': 'playSound',
+            'click .btnTest': 'fnTest',      
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','tester','filter');
+            _.bindAll(this, 'render','change','tester','filter','fnTest');
             this.collection.bind('reset',     this.filter);
             
+        },
+        fnTest: function(){
+            var fr = document.getElementById("autoentry").contentWindow.document;
+                    
+            var myObjs = fr.querySelectorAll('tr td:first-child'); // get element by tag name
+            alert(myObjs.length); // show number of items
+            
+            for (var i=0;i<myObjs.length; i++){
+                var html = myObjs[i].innerHTML+ '';
+                
+                if(html.indexOf('#ICRow')>=0 && html.indexOf(10)>=0 ){
+                    alert(myObjs[i].innerHTML)
+                    var index = html.indexOf('#ICRow');
+                    var row = html.slice(index,index +7);
+                    alert(row)
+                }
+                    
+            }
         },
         playSound: function(){
             $('.soundIAmMad')[0].play();
@@ -60,7 +79,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 var pid = model.get('pid') + ''
                 var op = model.get('opseq') + ''
                 if (pid == fPID && op == fOp){
-                    model.set({flag:false});
+                    model.set({isReady:true});
                     //TODO: find row and move to top 
                     //TODO:or re-order by Ready
                     //TODO:or nothing
@@ -70,7 +89,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             })
             if(i<1) {
                 var sounds = this.$('.soundError')
-                var pick = Math.floor(Math.random()*4)
+                var pick = Math.floor(Math.random()*2)
                 sounds.get(pick).play();
                 this.$('#scanError').append('<br /><span class="scanError">Could not find PID: ' + fPID + " Opseq: " + fOp + '</span>')
                 //error checking why isnt PID&OP found
@@ -358,12 +377,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     _model.prevscrap = parseFloat(fr.getElementById('SM_SF_SHIFT_RPT_SCRAP_QTY$0').value)+0;
                     
                     //alert("step 4.2")
-                    alert(chkOpDone.checked);
+                    
                     if(chkOpDone.checked) {                    
                         //---ajust scrap that needs to be entered-----
-                        //_model.scrap -= _model.prevscrap;
-                        alert('scrap - prevscrap: ' + (_model.scrap ));
-                        //---------------------------------------------
+                        
                         
                         // uncheck and overwrite the data with the new data
                         //this will combine multiple shifts worth of data on the same PID-opseq combination
@@ -453,7 +470,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step8: function(){
                     //alert('step8: Add scrap, recurse, add machine number, if endscrap, go to step9, else go to next pid');
-                    //var contents = context.contents();
+
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var txtMachine = fr.getElementById('SM_SFRPTLINK_WK_MACHINE_CODE$0')
                     var op = fr.getElementById('SF_COMPL_WRK_COMPL_OP_SEQ$0');  
@@ -481,20 +498,35 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     }
                 },
                 step8_1: function(){
-                    var contents = context.contents();
+                    //alert("step8_1")
                     var fr = document.getElementById("autoentry").contentWindow.document;
-                    var table = contents.find('tr td:first-child :contains(' + _model.opseq + ')')
-                    //alert(table.parent().html());
-                    var index = (table.attr('href')+'').indexOf('#');
-                    //alert(index);
-                    var row = (table.attr('href')+'').slice(index,index +7);
-                    var scrap = table.parent().next().next().next().next().next().next().children().first();
-                    
-                    scrap = parseInt(scrap.html());
+                    var scrap;
+                    var myObjs = fr.querySelectorAll('tr td:first-child'); // get element by tag name 
+                    var index;
+                    var row;
+                    // Search DOM for table row of current opseq
+                    for (var i=0;i<myObjs.length; i++){
+                        var html = myObjs[i].innerHTML+ '';                        
+                        if(html.indexOf('#ICRow')>=0 && html.indexOf(_model.opseq)>=0 ){
+                            index = html.indexOf('#ICRow');
+                            row = html.slice(index,index +7);
+                           
+                        }
+                            
+                    }
+                    // Find the scrap value by it's column
+                    var myObjs = fr.querySelectorAll('tr td:nth-of-type(7) a'); // get element by tag name 
+                    for (var i=0;i<myObjs.length; i++){
+                        var html = myObjs[i]+ '';
+                        if(html.indexOf(row)>=0){
+                            scrap = parseInt(myObjs[i].innerHTML);                            
+                        }
+                            
+                    }
                     if (scrap > 0)
                         _model.endscrap = 0;
-                    
-                    _model.scrap -= scrap;
+
+                    _model.scrap =1 //-= scrap;
                     if (_model.scrap<0){
                         _model.scrap = 0;
                     }                         
@@ -508,7 +540,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     }); 
                 },
                 step9: function(){
-                    //alert('step9: Find Paper component and add on endscrap length, Save and go to next PID')
+                    alert('step9: Find Paper component and add on endscrap length, Save and go to next PID')
                     var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var temp = {}
@@ -553,30 +585,15 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             nextStep();
                             return;
                         }
-                        /*
-                        if(!confirm('save scrap entries ')){
-                            var temp = {}
-                            temp.flag = _errors = true;
-                            temp.flagreason = 'AutoEntry: ProcessScrap/EndScrap not entered';
-                            _collection[_currentModel].set(temp);
-                            _step = 'step10';
-                            nextStep(); 
-                        }
-                        else {
-                            var frm = fr.forms[1];
-                            frm.ICAction.value = "#ICSave";
-                            frm.submit();
-                            _step = 'step10';
-                            context.one('load', function(){
-                                nextStep();       
-                            });
-                        }
-                        */
-                        var frm = fr.forms[1];
-                        frm.ICAction.value = "#ICSave";
-                        frm.submit();
-                        _step = 'step10';
                         
+                        //var frm = fr.forms[1];
+                        //frm.ICAction.value = "#ICSave";
+                        //frm.submit();
+                        var btnS = fr.getElementsByName('#ICSave')
+                        alert(btnS[0]);
+                        btnS[0].click();
+                        _step = 'step10';
+                        /*
                         document.getElementById("autoentry").onreadystatechange = function(){   
                             //alert('change ' + this.readyState);
                             if (this.readyState == 'interactive'){
@@ -587,11 +604,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                                 document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
                                 document.getElementById("autoentry").contentWindow.alert = function(){};
                                 
-                                document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
-                                document.getElementById("autoentry").contentWindow.alert("Alert");
+                                //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
+                                //document.getElementById("autoentry").contentWindow.alert("Alert");
                             }
                         }
-                        
+                        */
                         context.one('load', function(){
                             nextStep();       
                         });                        
@@ -609,9 +626,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     }
                 },
                 step10: function(){
-                    //alert('Step10: check for errors with save.. if none go to next record');
+                    alert('Step10: check for errors with save.. if none go to next record');
                     if(!_errors)
-                        _collection[_currentModel].set({entered:true});
+                        _collection[_currentModel].set({entered:false});
                     else{
                         //alert('errors... not marking entered');    
                     } 

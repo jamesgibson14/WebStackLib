@@ -75,8 +75,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
             this.model.set(temp);
         },
         toggleIsReady: function() {
-            alert('caught')
-            //this.model.set({isReady: !this.model.get('enterendscrap'});
+            this.model.set({isReady: !this.model.get('isReady')});
         },
         // Alert the Order of this todo.
         showOrder: function(e) {

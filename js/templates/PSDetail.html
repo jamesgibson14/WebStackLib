@@ -22,9 +22,14 @@
 <td class='cell border'>{{date}}</td>
 <td class='cell border'>
 {{#each componentcode}}
+  {{this.pc}}<br />
+{{/each}}
+<span class="extra">
+{{#each componentcode}}
   {{this.cc}}<br />
 {{/each}}
-{{#if PaperConverting}}<span class="extra">F: {{feedup}}</span>{{/if}}
+</span>
+{{#if PaperConverting}}<span class="extra">F:&nbsp;{{feedup}}</span>{{/if}}
 </td>
 <td class='cell border'><input type="checkbox" class="check" {{#if flag}}checked="checked"{{/if}}  /><br />{{{flagreason}}}</td>
 <td class='cell border'><input type="checkbox" class="chkentered" {{#if entered}}checked="checked"{{/if}}  /><br />{{dateentered}}</td>

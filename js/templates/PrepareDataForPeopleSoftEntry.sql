@@ -172,7 +172,7 @@ FROM
 			AND	ProductionDataDetails.PID <>'DCP' 
 			And ProductionDataDetails.PID <> 'extra'  
 			AND ProductionData.Machine <> '52102'
-			AND	ProductionDataDetails.PID IN ('PID1612205', 'PID1612236')
+			AND	ProductionDataDetails.PID IN ('PID1609340', 'PID1612236')
 			AND ProductionData.chkCompleted = 1 
 			AND ProductionData.Date > '8/1/2012'
 		) AS dt1
@@ -246,7 +246,7 @@ FROM
 		setuptime = ROUND(SUM(setuptime)/60.0,2), 
 		counter = SUM(counter), 
 		AssignedMinutes = SUM(AssignedMinutes),
-		flag =  MIN(CAST(flag as INT)),
+		flag =  flag,
 		Item_ID, EachesPerDrop, UnitOfMeasure, PaperScrap,Feedup,Paper_ID,Cell_ID,ItemCode
 
 	FROM (
@@ -287,7 +287,7 @@ FROM
 			AND ProductionDataMultiprocess.chkCompleted = 1
 			AND ProductionDataMultiprocess.dtDate > '8/1/2012'
 		) AS dt1
-	GROUP BY pid, opseq, Item_ID, EachesPerDrop, UnitOfMeasure,PaperScrap, Feedup,Paper_ID,Cell_ID,ItemCode
+	GROUP BY pid, opseq, Item_ID, EachesPerDrop, UnitOfMeasure,PaperScrap, Feedup,Paper_ID,Cell_ID,ItemCode,flag
 	HAVING MIN(CAST(chkPSoft as INT))=0 AND MIN(CAST(chkConverted as INT))=1 AND MIN(CAST(chkCompleted as INT))=1
 	) as dt2
 INNER JOIN dbo.ProductionDataMultiProcess
@@ -296,6 +296,3 @@ INNER JOIN dbo.ProductionDataMultiProcess
 	dbo.ProductionDemandGroups ON ProductionDemandGroups.PIDText=dt2.pid Left JOIN
 	dbo.ProductionDemandGroupsRouting pdgr ON dt2.pid = pdgr.PID AND dt2.opseq =  pdgr.opseq LEFT JOIN
 	dbo.PeopleSoftData ps ON ProductionDemandGroups.PIDText=ps.PID AND dt2.opseq = ps.opseq
-ORDER BY 
-	date desc, 
-	pid desc
