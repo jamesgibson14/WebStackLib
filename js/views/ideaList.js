@@ -15,10 +15,6 @@ function($, Backbone, E, Handlebars, template, itemTemp){
         events: {
           
         },
-    
-        // At initialization we bind to the relevant events on the `Todos`
-        // collection, when items are added or changed. Kick things off by
-        // loading any preexisting todos that might be saved in *localStorage*.
         initialize: function() {
             _.bindAll(this, 'render', 'addOne','updateStats');
 
