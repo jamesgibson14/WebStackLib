@@ -3,3 +3,4 @@
 *.pyo
 assets/
 *.project
+.settings/
