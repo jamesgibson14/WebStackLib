@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/IdeaApp', 'text!templates/IdeaApp.html', 'models/cellsuggestions','views/ideaList','models/cellsuggestion'], 
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/IdeaApp', 'text!templates/IdeaApp.html', 'models/cellsuggestions','views/ideaList','views/cellsuggestion'], 
 function($, Backbone, E, Handlebars, Model, template, Collection, ideaList, CellSuggestion){
 
     var View = Backbone.View.extend({
@@ -15,7 +15,6 @@ function($, Backbone, E, Handlebars, Model, template, Collection, ideaList, Cell
         attributes: {style:'overflow:hidden;'},
         events: {
             'blur .pid':'change',
-            'click .loadtable': 'loadData',
             'click #btnCreate': 'timeDelay',
             'click #addTask': 'addTask'        
         },
@@ -29,21 +28,19 @@ function($, Backbone, E, Handlebars, Model, template, Collection, ideaList, Cell
         addTask: function(e){
             $(e.target).prev().append('<li class="ui-state-disabled"><input placeholder="type task:" /><input type="checkbox" /></li>').find('input').placeholder()
         },
-        loadData: function(){
-            this.collection.fetch();
-        },
-        // Re-render the contents of the todo item.
         render: function() {
             var that = this;
-            
+            var view;
             var temp = this.template({});
-
+            
             
             this.$el.html( temp );
-
-            var view = new ideaList({collection: this.collection});
-
-            this.$("#tabs-1").append(view.render().el);            
+            view = new ideaList({collection: this.collection});
+            this.$("#tabs-1").prepend(view.render().el); 
+            
+            view = this.cellSuggestion 
+            this.$("#tabs-1  .content").append(view.render().el); 
+                       
             this.$inputs.iassociateID = this.$('#iassociateID');
             this.$inputs.iassociate = this.$('#iassociate');
             this.$inputs.idate = this.$('#idate');

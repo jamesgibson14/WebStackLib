@@ -18,7 +18,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'views/BaseView', 'text!te
             this.$el.find('input, textarea').placeholder();
         },
         updateModel: function(e){
-            alert($(this).attr('id'));
+            alert($(e.target).attr('id'));
         }
         
     
