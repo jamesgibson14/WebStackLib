@@ -172,7 +172,7 @@ FROM
 			AND	ProductionDataDetails.PID <>'DCP' 
 			And ProductionDataDetails.PID <> 'extra'  
 			AND ProductionData.Machine <> '52102'
-			AND	ProductionDataDetails.PID IN ('PID1609340', 'PID1612236')
+			--AND	ProductionDataDetails.PID IN ('PID1609340', 'PID1612236')
 			AND ProductionData.chkCompleted = 1 
 			AND ProductionData.Date > '8/1/2012'
 		) AS dt1
@@ -283,7 +283,7 @@ FROM
 			dbo.Items ON dbo.ProductionDataMultiprocessDetails.Item_ID = dbo.Items.ID
 		WHERE     
 			ProductionDataMultiprocessDetails.txtPID is not null 
-			AND ProductionDataMultiprocessDetails.txtPID in ('PID1559095')
+			--AND ProductionDataMultiprocessDetails.txtPID in ('PID1559095')
 			AND ProductionDataMultiprocess.chkCompleted = 1
 			AND ProductionDataMultiprocess.dtDate > '8/1/2012'
 		) AS dt1

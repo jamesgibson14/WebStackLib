@@ -28,7 +28,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             if (this.plot)
                 this.plot.destroy();
             this.SlickGrid.$el.html('<h2><span>No Data Selected</span><h2>')
-            this.$('#atq_id').html( this.model.get('machineCodes').join(', ') );  
+            this.renderMachines();  
 
             var data = this.model.get('plotData'); 
             var labels = this.model.get('labels'); 
@@ -99,8 +99,12 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                     tooltipLocation: 'se',
                     tooltipAxes: 'xy',
                     yvalues: 1,
-                    formatString:'<div class="boxpad border z2k"><p>date: %s</p><p>PiecesPerHour: %s</p><div>',
-                    useAxesFormatters: true
+                    formatString:'<div class="boxpad border"><p>date: %s</p><p>PiecesPerHour: %s</p><div>',
+                    useAxesFormatters: true,
+                    tooltipContentEditor: function(str, seriesIndex, pointIndex, plot){
+                        
+                        return str;
+                    }
                },
                cursor: {
                  show: true,
@@ -155,6 +159,8 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                 that.$('#rmachine').prop('disabled', false);
                 that.model.set('machineCodes',that.model.get('machineTypes')[this.value].machines);
             });
+            this.$('#printLandscape').button({text: false, icons:{primary: 'ui-icon-print'}})
+            this.$( "#selectable" ).selectable();
             function split( val ) {      return val.split( /,\s*/ );    }    
             function extractLast( term ) {      return split( term ).pop();    }
             
@@ -228,9 +234,12 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             
             //var data = this.collection.data({MachineCode: 3191, MachineCode: 5147})
             E.loading(this.$el, this.loadData,this)
-            this.$('#atq_id').html( this.model.get('machineCodes').join(', ') );
+            
             
             E.hideLoading();
+        },
+        renderMachines: function(){
+            this.$('#atq_id').html( this.model.get('machineCodes').join(', ') );
         },
         renderRawData: function(ev, seriesIndex, pointIndex, data){
             //Instead of destroying plot just reload data, lables and then re-plot

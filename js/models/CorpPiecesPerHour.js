@@ -5,16 +5,16 @@ define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], functio
         store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false),
         collection: new collection(),
         defaults: {                
-            startDate: '01/01/2013',
+            startDate: '03/01/2012',
             endDate: new Date().format('mm/dd/yyyy'),
             machineCodes: [],
             groupBy: 'month',
             level: 'Branch',
             sqlPerLevel: {
-                dayBranch: "SELECT StartDate, Unit, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, StartDate, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, StartDate, PID, OpSeq) AS dt1 GROUP BY StartDate, Unit",
-                dayMachine: "SELECT StartDate, Unit, MachineCode, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, StartDate, MachineCode, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, StartDate, MachineCode, PID, OpSeq) AS dt1 GROUP BY Unit, MachineCode, StartDate ORDER BY Unit",
-                monthBranch: "SELECT StartDate = LEFT(convert(varchar, StartDate, 121),7), Unit, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, StartDate, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, StartDate, PID, OpSeq) AS dt1 GROUP BY Unit, LEFT(convert(varchar, StartDate, 121),7) ORDER BY Unit",
-                monthMachine: "SELECT StartDate = LEFT(convert(varchar, StartDate, 121),7), Unit, MachineCode, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, StartDate, MachineCode, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND StartDate > '%s' AND StartDate <= '%s' GROUP BY Unit, StartDate, MachineCode, PID, OpSeq) AS dt1 GROUP BY Unit, MachineCode, LEFT(convert(varchar, StartDate, 121),7) ORDER BY Unit"
+                dayBranch: "SELECT DateCompleted, Unit, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, PID, OpSeq) AS dt1 GROUP BY DateCompleted, Unit",
+                dayMachine: "SELECT DateCompleted, Unit, MachineCode, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, MachineCode, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, MachineCode, PID, OpSeq) AS dt1 GROUP BY Unit, MachineCode, DateCompleted ORDER BY Unit",
+                monthBranch: "SELECT DateCompleted = LEFT(convert(varchar, DateCompleted, 121),7), Unit, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, PID, OpSeq) AS dt1 GROUP BY Unit, LEFT(convert(varchar, DateCompleted, 121),7) ORDER BY Unit",
+                monthMachine: "SELECT DateCompleted = LEFT(convert(varchar, DateCompleted, 121),7), Unit, MachineCode, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, MachineCode, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, MachineCode, PID, OpSeq) AS dt1 GROUP BY Unit, MachineCode, LEFT(convert(varchar, DateCompleted, 121),7) ORDER BY Unit"
             },
             branches: {
                 CED:{
@@ -40,6 +40,10 @@ define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], functio
                 MCG: {
                     name: "McGregor",
                     colors:['black']
+                },
+                MLN: {
+                    name: "MLN",
+                    colors:['black']
                 }
             },
             machineTypes: [
@@ -52,7 +56,15 @@ define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], functio
                 {name:'Single Top Single Lane', machines:[519,3555,3521,95,3993,4847,3823,4621,3724]},
                 {name:'Colly Collator', machines:[5992,4834,5993,4835,6293]},
                 {name:'Flat Jacket', machines:[4677,3007,3620]},
-                {name:'Reinforced Side Tab', machines:[3729,631,698,3816,67,1028,3196,3815,3817]}
+                {name:'Reinforced Side Tab', machines:[3729,631,698,3816,67,1028,3196,3815,3817]},
+                {name:'Auto K Fastener', machines: [4270,4271,4283,4552,4562,4577,3144,1040,4553,4391,4459,2071,3000,3143,1094,4350,4392,4497,4601]},
+                {name:'Expanding Jacket', machines: [4291,4006,8175,3708]},
+                {name:'Laminator', machines: [1077,4909]},
+                {name:'Simeone Taping', machines: [9343,8704,1085,6032,1061,9342]},
+                {name:'Pressboard Auto/Manual B/K Fasteners', machines: [49,3757,2105,2106,4240,4618,521,3806,4129,4637,9312,90,719,4141,4240,3810,171,214]},
+                {name:'Reinforced Top Tap', machines: [443,3818,3819,474,639,515,3820,2102,3821,3822]},
+                {name:'Plastic Tab', machines: [3456,2045,4033,4963,5019,4137,4065,4099,4614,4711,4780,5028,424,4009,4770,5008]},
+                {name:'3 Up RTT/ST', machines: [4226,4398,4264,3506,4344]}
             ],
             plotData: [],
             series: []

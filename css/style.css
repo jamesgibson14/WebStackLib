@@ -12,7 +12,7 @@ body {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 14px;
 	line-height: 1.4em;
-	background: #333333;
+	margin:0px;
 }
 iframe {
 	width:100%;
@@ -40,24 +40,27 @@ h1.ui-widget-header, h2.ui-widget-header {
 	padding-left:25%;
 }
 #bodyview {
-	margin-left:2%;
-	margin-right:2%;
-	width:95%;
-	background-color: #FFFFFF;
-	padding: 5px;
-	border-radius: 15px;
+	margin-left:0%;
+	margin-right:0%;
+	background-color:#ff9428  /*#ff9428 rgb(178, 255, 38)*/;
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff9428', endColorstr='#fbec39');/*For IE7-8-9*/ 
+	padding-top:15px;
+	padding-left: 30px;
+	padding-right: 20px;
 	margin-bottom:50px;
 	height:97%;
-	z-index: 0;
 }
 #header{
 	margin-bottom: 6px;
 }
 #mainview{
-	
+	background-color: #F3F3F3f;
 }
-#SmeadApp {
-
+.SmeadApp {
+	background-color: #F3F3F3;
+	border-radius: 15px;
+	box-shadow:0px 0px 5px 1px rgba(1,1,1,0.7);
+	padding: 5px;
 }
 #footer {
 	position:fixed;
@@ -88,7 +91,11 @@ h1.ui-widget-header, h2.ui-widget-header {
 }
 
 @media print {
-	body	{ color:#000; font:12px arial, helvetica, sans-serif; padding:0; }
+	body	{ 
+		color:#FFFFFF; font:12px arial, helvetica, sans-serif; padding:0;
+		/*-ms-transform: rotate(90deg);  
+		-ms-transform-origin:right top; /* IE 9 */
+	}
 	html {
 		background: #FFFFFF;
 	}
@@ -168,7 +175,7 @@ tr {
 	display:block;
 }
 .inline {
-	display:inline;
+	display:inline-block;
 }
 .noSelect {
 	-webkit-user-select: none;  
@@ -1415,4 +1422,11 @@ input.editor-checkbox {
   padding: 2px;
   text-decoration: underline;
   cursor: pointer;
+}
+.jqplot-highlighter-tooltip, .jqplot-canvasOverlay-tooltip {
+	z-index: 1000;
+	background: rgb(208,208,208);
+}
+.ui-front {
+	z-index: 5000;
 }
