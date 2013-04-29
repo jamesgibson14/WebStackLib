@@ -1,15 +1,18 @@
 <h1>Item Verification Charts </h1>
-<p>
-	Error Counts 
-<input type="text" value="{{errorCount}}" />
-</p>
-<div>
-	Pick Error Type
-	<select>
+<p class="defaultForm">
+	Date Range 
+	
+<input class="dPicker" type="text" value="{{StartDate}}" />
+<input class="dPicker" type="text" value="{{EndDate}}" />
+<select>
 		
 		{{#each errorTypes}}
 			<option value="{{@index}}">{{this}}</option>
 		{{/each}}
 	</select>
+</p>
+<div>
+	Pick Error Type
+	
 </div>
 	
