@@ -1,3 +1,4 @@
+{{#if header}}
 <div id="header" class="relative"> 
 	<button type="button" id="restart" class="restart">Restart App</button>
 	<div id='tabsmenu'>
@@ -22,7 +23,7 @@
 		{{/each}}
 	</div>
 </div>
-
+{{/if}}
 <div id="mainview" class="relative" style="z-index:1;width:100%">
 	<div id='testbuttons'>
 		<div>Button1</div>
@@ -124,11 +125,11 @@
 	<input type="radio" id="sbtn2" name="radio" data-view="settings" data-icon="ui-icon-gear" /><label for="sbtn2">Settings</label>    
 	<input type="radio" id="sbtn1" name="radio" data-view="debug" data-icon="ui-icon-lock" /><label for="sbtn1">Debug</label>
 </div>
-
+{{#if footer}}
 <div id="footer">
 	<div class="left " style="z-index:1;">Logged in as: {{username}}</div>
 	<div class="quote left">"Nothing is particularly hard if you <br />divide it into small jobs." - Hennry Ford</div>
 	<div id='poweredBy' class="" style="z-index:1;">SmeadAnalytics<br />{{appState}} Mode</div> 
 </div>
-
+{{/if}}
 <div id="loading" class="loading-invisible">  <span>Database Interaction... <img src="assets/images/ajax-loader2.gif" /></span></div>

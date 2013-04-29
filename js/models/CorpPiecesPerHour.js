@@ -19,23 +19,38 @@ define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], functio
             branches: {
                 CED:{
                    name:'Cedar City',
-                   colors:['#0467d5', '#0000ff', '#10a7ef', '#06e0f9', '#1be4d0', '#88ccff'], 
+                   colors:['#0467d5', '#0000ff', '#10a7ef', '#06e0f9', '#1be4d0', '#88ccff'],
+                   markerOptions: {
+                       style: 'filledDiamond'
+                   } 
                 },
                 HAS: {
                     name: 'Hastings',
-                    colors:['#ff2233','#bd322b', '#ff0000', '#ff7171', '#f54784']
+                    colors:['#ff2233','#bd322b', '#ff0000', '#ff7171', '#f54784'],
+                   markerOptions: {
+                       style: 'filledSquare'
+                   } 
                 },
                 LOG: {
                     name: 'Logan',
-                    colors:['rgb(96,74,123)', '#8000ff', '#b871ff', '#e48bd2']
+                    colors:['rgb(96,74,123)', '#8000ff', '#b871ff', '#e48bd2'],
+                   markerOptions: {
+                       style: 'x'
+                   } 
                 },
                 LOC: {
                     name: 'Locust Grove',
-                    colors:['rgb(119,147,60)','#004000', '#008000', '#00ff00', '#80ff00']
+                    colors:['rgb(119,147,60)','#004000', '#008000', '#00ff00', '#80ff00'],
+                   markerOptions: {
+                       style: 'plus'
+                   } 
                 },
                 REY: {
                     name: 'Reynosa',
-                    colors:['yellow','#fbc404', '#ffff00', '#e9ee11', '#ffff80']
+                    colors:['yellow','#fbc404', '#ffff00', '#e9ee11', '#ffff80'],
+                   markerOptions: {
+                       style: 'filledCircle'
+                   } 
                 },
                 MCG: {
                     name: "McGregor",

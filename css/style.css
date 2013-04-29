@@ -43,18 +43,18 @@ h1.ui-widget-header, h2.ui-widget-header {
 	margin-left:0%;
 	margin-right:0%;
 	background-color:#ff9428  /*#ff9428 rgb(178, 255, 38)*/;
-	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff9428', endColorstr='#fbec39');/*For IE7-8-9*/ 
+	/*filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff9428', endColorstr='#fbec39');/*For IE7-8-9*/ 
 	padding-top:15px;
 	padding-left: 30px;
 	padding-right: 20px;
-	margin-bottom:50px;
+	padding-bottom:50px;
 	height:97%;
 }
 #header{
 	margin-bottom: 6px;
 }
 #mainview{
-	background-color: #F3F3F3f;
+	
 }
 .SmeadApp {
 	background-color: #F3F3F3;

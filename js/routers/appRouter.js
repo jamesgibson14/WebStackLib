@@ -49,27 +49,46 @@ function($, Backbone, E, Handlebars, require,user){
             '': 'home',
             'main/:view': 'main',
             'main/:view/:modelid': 'main',
-            'tab/:view': 'tab'
+            'tab/:view': 'tab',
+            'popup/:view': 'popup'
         },
 
         'home': function(){
             var that = this;
             var viewName = 'view';
-            if(E.GET['module'] != undefined)
-               viewName = E.GET['module'];
+            var defaults = {
+                header: true,
+                footer: true,
+            };
+            
+            
             if (this.mainView)
                 this.mainView.close();
-            
+            if(E.GET['module'] != undefined){
+               viewName = E.GET['module'];
+               defaults.header = false;
+               defaults.footer = false;               
+            }
             E.views.currentView = viewName
-            require(['views/'+viewName], function(View) { 
-                var view = new View();
+            
+            require(['views/view'], function(View) { 
+                var view = new View(defaults);
                 that.mainView = view;
                 $('#bodyview').html(view.render().el);
                 if(view.postRender)
                     E.loading($('#bodyview'), view.postRender,view) 
                 
-            }); 
+            });
             
+            if (viewName != "view"){                
+                require(['views/'+viewName], function(View) { 
+                    var view = new View(defaults);
+                    $('#mainview').html(view.render().el);
+                    if(view.postRender)
+                        E.loading($('#bodyview'), view.postRender,view) 
+                    
+                });
+            }
         },
         'main': function(view,modelid){
             if(E.GET['module'] != undefined)
@@ -89,6 +108,9 @@ function($, Backbone, E, Handlebars, require,user){
             //if not loaded... load
             //add to tabs
             //switch to new tab
+        },
+        'popup': function(view){
+            //add view as pop-up window.
         }
     });
 

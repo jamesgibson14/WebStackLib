@@ -17,8 +17,6 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             this.model.fetch();
             this.model.on('change:plotData', this.loadData);
             this.SlickGrid = new SlickGrid()
-            
-            //this.collection.fetch();
         },
         loadData: function(){
            var that = this;
@@ -46,11 +44,15 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                         type: 'linear'
                     },
                     isDragable:false,
-                    showMarker:true             
+                    showMarker:true,
+                    markerOptions: {
+                        style:'diamond'
+                    }             
                 },
                 series: series,
                 axesDefaults: {
-                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                    pad: 1.2
                 },
                 legend: {
                     show: true,

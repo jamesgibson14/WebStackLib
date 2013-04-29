@@ -42,7 +42,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 if(!group[gKey]) 
                     group[gKey]=0;
 
-                series.push({color: model.get('branches')[gKey].colors[group[gKey]]})
+                series.push({color: model.get('branches')[gKey].colors[group[gKey]],markerOptions: model.get('branches')[gKey].markerOptions})
                 //alert(series[c].color)
                 group[gKey] += 1;
                 c++;

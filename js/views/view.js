@@ -1,7 +1,7 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/model', 'text!templates/main.html', 'models/collection','views/plot','views/idea','app/engine.outlook'], 
-function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'views/BaseView', 'models/model', 'text!templates/main.html', 'models/collection','views/plot','views/idea','app/engine.outlook'], 
+function($, Backbone, E, Handlebars, BaseView, Model, template, Collection,plotV,ideaV){
 
-    var View = Backbone.View.extend({
+    var View = BaseView.extend({
         // Represents the actual DOM element that corresponds to your View (There is a one to one relationship between View Objects and DOM elements)
         tagName:  "div",
         className: 'SmeadApp relative',
@@ -12,21 +12,17 @@ function($, Backbone, E, Handlebars, Model, template, Collection,plotV,ideaV){
         // View constructor
         initialize: function() {
             // Setting the view's model property to the passed in model
-            this.model = new Model();
-            _.bindAll(this,'render');
-            // Setting the view's template property
-            this.template = Handlebars.compile(this.template);			
+            this.model = new Model($.extend(this.options,E.user.toJSON()));
+            		
+        },
+        serializeData: function(){
+            return this.model.toJSON();
         },
         events: {
             'click #todoview': 'loadlink',
             'click #restart':'restart'
 	    },
-        render: function() {
-            var temp = this.model.toJSON();
-            var that = this;
-            _.extend(temp,E.user.toJSON());
-            temp.appState = E.appState;
-            this.$el.append(this.template(temp));
+        onRender: function() {
             
             this.$('#testbuttons > div').button();
             this.$('#tabsmenu').buttonset()
