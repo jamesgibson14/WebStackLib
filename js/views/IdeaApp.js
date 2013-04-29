@@ -20,7 +20,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, ideaList, Cell
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','filter', 'newCellSuggestion', 'timeDelay');
+            _.bindAll(this, 'render', 'newCellSuggestion', 'timeDelay');
             //if (this.options.modelid)
                 //open to specific 
             this.model.fetch({wait:true});
