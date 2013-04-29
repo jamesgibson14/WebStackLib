@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8>
+<title>JS Bin</title>
+<style>
+  a {
+    position: relative;
+    text-decoration: none;
+  }
+  a:after {
+    content: attr(title);
+    position: absolute;
+    bottom: 130%;
+    left: 20%;
+    background: #ffcb66;
+    padding: 5px 15px;
+    color: black;
+    border-radius: 10px;
+    white-space: nowrap;
+    opacity: 0;
+     /* At time of this creation, only Fx4 doing pseduo transitions */
+    -webkit-transition: all 0.4s ease;
+    -moz-transition   : all 0.4s ease;
+  }
+  a:before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 20px solid #ffcb66;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    opacity: 0;
+    left: 30%;
+    bottom: 90%;
+  }
+  a:hover:after {
+    bottom: 100%;
+  }
+  a:hover:before {
+    bottom: 70%;
+  }
+  a:hover:after, a:hover:before {
+    opacity: 1;
+  }
+  
+#content {
+	width:100px;
+	height:20px;
+	padding: 8px;
+	background-color: #ff9428;
+	float:left;
+	position: relative;
+	border-top:2px #444444 solid;
+	border-bottom:2px #444444 solid;
+	border-right:2px #444444 solid;
+	border-top-right-radius:10px;
+	border-bottom-right-radius:10px;
+	top:-5px;
+	left:-5px;
+}
+#diamond {
+	width: 0;
+	height: 0;
+	border-bottom: 30px solid #ff9428;
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+	position: relative;
+	float:left;
+	-ms-transform: rotate(-90deg);
+}
+
+#star-five {
+   margin: 50px 0;
+   position: relative;
+   display: block;
+   color: red;
+   width: 0px;
+   height: 0px;
+   border-right:  100px solid transparent;
+   border-bottom: 70px  solid red;
+   border-left:   100px solid transparent;
+   -moz-transform:    rotate(35deg);
+   -webkit-transform: rotate(35deg);
+   -ms-transform:     rotate(35deg);
+   -o-transform:      rotate(35deg);
+}
+#star-five:before {
+   border-bottom: 80px solid red;
+   border-left: 30px solid transparent;
+   border-right: 30px solid transparent;
+   position: absolute;
+   height: 0;
+   width: 0;
+   top: -45px;
+   left: -65px;
+   display: block;
+   content: '';
+   -webkit-transform: rotate(-35deg);
+   -moz-transform:    rotate(-35deg);
+   -ms-transform:     rotate(-35deg);
+   -o-transform:      rotate(-35deg);
+
+}
+#star-five:after {
+   position: absolute;
+   display: block;
+   color: red;
+   top: 3px;
+   left: -105px;
+   width: 0px;
+   height: 0px;
+   border-right: 100px solid transparent;
+   border-bottom: 70px solid red;
+   border-left: 100px solid transparent;
+   -webkit-transform: rotate(-70deg);
+   -moz-transform:    rotate(-70deg);
+   -ms-transform:     rotate(-70deg);
+   -o-transform:      rotate(-70deg);
+   content: '';
+}
+
+</style>
+</head>
+<body>
+	<div><div id="diamond"></div><div id="content">hello world</div></div>
+  <p style="clear: both">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
+  	Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. 
+  	Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. 
+  	<a href="#" data-tooltip="This is a badass tooltip." title="Wow this is cool!">Vestibulum</a> erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. 
+  	Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. 
+  	Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. 
+  	Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
+  <div id="star-five"></div>
+</body>
+</html>
