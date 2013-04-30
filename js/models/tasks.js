@@ -8,7 +8,6 @@ define([
   var collection = Backbone.Collection.extend({
 // Reference to this collection's model.
     model: Model,
-    urlRoot: '/todos',
     url: function(){ return this.urlRoot;},
     sql: 'Execute dbo.spTasks',
     sqlqueue: ';',
