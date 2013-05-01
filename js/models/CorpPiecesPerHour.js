@@ -63,7 +63,7 @@ define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], functio
             },
             machineTypes: [
                 {name:'Hanging File', machines:[564,3700,4878,4186,1089,4408,4686,1064,3059,4704,4879]},
-                {name:'Single Top 3 Up', machines:[3191,3557,4706,2115,4957,4655,4705,207,2133,4956,4930,3193]},
+                {name:'Single Top 3 Up', machines:[3191,3570,3557,4706,2115,4957,4655,4705,207,2133,4956,4930,3193]},
                 {name:'Pressboard Die Cutter', machines:[5147,2061,4900,5071,4348]},
                 {name:'Auto Classification', machines:[4077,9141,4078,3702,5161,4916,4112,4111]},
                 {name:'Auto B Fastener', machines:[698,631,8643,8649,4243,4619,8143,4242,8637,8655]},

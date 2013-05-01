@@ -330,7 +330,7 @@
         if ($.isFunction(opts.tooltipContentEditor)) {
             // args str, seriesIndex, pointIndex are essential so the hook can look up
             // extra data for the point.
-            str = opts.tooltipContentEditor(str, neighbor.seriesIndex, neighbor.pointIndex, plot);
+            str = opts.tooltipContentEditor(str, neighbor.seriesIndex, neighbor.pointIndex, plot, neighbor.data);
         }
         elem.html(str);
         var gridpos = {x:neighbor.gridData[0], y:neighbor.gridData[1]};
