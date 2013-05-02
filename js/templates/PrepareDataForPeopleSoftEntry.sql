@@ -136,7 +136,6 @@ FROM
 				)
 			),
 			componentcode = Components.Code,
-			flag = dbo.ProductionData.Flagged,
 			counter = ([end]-[CStart]),
 			AssignedMinutes = (
 				dbo.fnAssignedMinutes(
@@ -172,7 +171,7 @@ FROM
 			AND	ProductionDataDetails.PID <>'DCP' 
 			And ProductionDataDetails.PID <> 'extra'  
 			AND ProductionData.Machine <> '52102'
-			AND	ProductionDataDetails.PID IN ('PID1609340', 'PID1612236')
+			AND	ProductionDataDetails.PID IN ('PID1615424', 'PID1612236')
 			AND ProductionData.chkCompleted = 1 
 			AND ProductionData.Date > '8/1/2012'
 		) AS dt1
@@ -199,7 +198,7 @@ SELECT
 				WHEN ProductionDataMultiProcess.txtWorkCenter='52203b' THEN '2105'
 				WHEN ProductionDataMultiProcess.txtWorkCenter='52203k' THEN '3757'
 				ELSE 'ERROR' END, 
-	qtycompleted = ProductionQty,
+	qtycompleted = qtycompleted,
 	ADCcompleted = pdgr.Completed,
 	PScompleted = ps.CompletedQty,
 	expectedqty = ProductionQty, 
@@ -218,7 +217,7 @@ SELECT
 	setuptime, 
 	componentcode = ' ', 
 	counter,  
-	flag,
+	flag = ProductionDataMultiprocess.chk999,
 	flagreason = ProductionDataMultiprocess.txtFlagReason + CASE WHEN runtime<=0 THEN ', No Runtime' ELSE '' END,
 	AssignedMinutes, 
 	dt2.Item_ID, EachesPerDrop, UnitOfMeasure, Machine_ID,PaperScrap, 
@@ -246,7 +245,6 @@ FROM
 		setuptime = ROUND(SUM(setuptime)/60.0,2), 
 		counter = SUM(counter), 
 		AssignedMinutes = SUM(AssignedMinutes),
-		flag =  flag,
 		Item_ID, EachesPerDrop, UnitOfMeasure, PaperScrap,Feedup,Paper_ID,Cell_ID,ItemCode
 
 	FROM (
@@ -262,7 +260,6 @@ FROM
 			runtime = dbo.ProductionDataMultiprocessDetails.intRunTime,
 			downtime = (intAssignedTime - lngActualSetup - intRunTime),
 			setuptime =  dbo.ProductionDataMultiprocessDetails.lngActualSetup,
-			flag = dbo.ProductionDataMultiprocess.chk999,
 			counter = (lngTotalPacked / ItemsOnMachineCount.EachesPerDrop),
 			AssignedMinutes = intAssignedTime,  
 			dbo.ProductionDataMultiprocessDetails.Item_ID,
@@ -283,11 +280,11 @@ FROM
 			dbo.Items ON dbo.ProductionDataMultiprocessDetails.Item_ID = dbo.Items.ID
 		WHERE     
 			ProductionDataMultiprocessDetails.txtPID is not null 
-			AND ProductionDataMultiprocessDetails.txtPID in ('PID1559095')
+			AND ProductionDataMultiprocessDetails.txtPID in ('PID1602312')
 			AND ProductionDataMultiprocess.chkCompleted = 1
 			AND ProductionDataMultiprocess.dtDate > '8/1/2012'
 		) AS dt1
-	GROUP BY pid, opseq, Item_ID, EachesPerDrop, UnitOfMeasure,PaperScrap, Feedup,Paper_ID,Cell_ID,ItemCode,flag
+	GROUP BY pid, opseq, Item_ID, EachesPerDrop, UnitOfMeasure,PaperScrap, Feedup,Paper_ID,Cell_ID,ItemCode
 	HAVING MIN(CAST(chkPSoft as INT))=0 AND MIN(CAST(chkConverted as INT))=1 AND MIN(CAST(chkCompleted as INT))=1
 	) as dt2
 INNER JOIN dbo.ProductionDataMultiProcess
