@@ -21,7 +21,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             'keypress #pidSearch': 'scanPID',
             'keypress #opSearch': 'scanPID',
             'click .playsound': 'playSound',
-            'click .btnTest': 'fnTest',      
+            'click .btnTest': 'fnTest',
+            'click legend.ui-widget-header': 'toggleFilter'      
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
@@ -50,11 +51,15 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         playSound: function(){
             $('.soundIAmMad')[0].play();
         },
+        toggleFilter: function(e){
+            $(e.target).next().toggle('blind',500)
+        },
         loadData: function(){
             var that = this;
             var fetch = function(){
                 that.collection.fetch({reset:true})
             }
+            this.$('#scanError').html(' ')
             E.loading(this.$el,fetch,this.collection);
         },
         scanPID: function(e){
@@ -74,12 +79,16 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         searchAndMarkPID: function(fPID, fOp){
             var i=0;
             fPID = fPID.toUpperCase()
+            var flagged = false;
             _.each(this.filteredModels,function(model, index){
                 //alert(filter)
                 var pid = model.get('pid') + ''
                 var op = model.get('opseq') + ''
                 if (pid == fPID && op == fOp){
-                    model.set({isReady:true});
+                    if(model.get('flag'))
+                        flagged = true;
+                    else
+                        model.set({isReady:true});
                     //TODO: find row and move to top 
                     //TODO:or re-order by Ready
                     //TODO:or nothing
@@ -87,12 +96,17 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 }
                 
             })
-            if(i<1) {
+            if(i<1 || flagged) {
+                var errMessage = '';
                 var sounds = this.$('.soundError')
-                var pick = Math.floor(Math.random()*2)
-                sounds.get(pick).play();
-                this.$('#scanError').append('<br /><span class="scanError">Could not find PID: ' + fPID + " Opseq: " + fOp + '</span>')
-                //error checking why isnt PID&OP found
+                sounds.get(0).play();
+                if (flagged)
+                    errMessage = '<br /><span class="scanError">PID: ' + fPID + " Opseq: " + fOp + ' has been flagged 999</span>' 
+                else
+                    errMessage = '<br /><span class="scanError">Could not find PID: ' + fPID + " Opseq: " + fOp + '</span>'
+                
+                this.$('#scanError').append(errMessage)
+                //TODO: error checking why isnt PID&OP found
             }
         },
         printPIDs: function(){
@@ -132,11 +146,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             }
             PageSetup_Default();
             
-            this.filter(false,'checkbox','flag');
+            this.filter(true,'checkbox','isReady');
             
             setTimeout(function(){
                 window.print();
-            },500);
+            },100);
         },
         // Re-render the contents of the todo item.
         render: function() {
@@ -154,6 +168,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             });   
             if((document.location + '').indexOf('.hta','.hta')>-1) 
                 this.$('#autoentry').attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
+            
+            this.$('#pidfilters .content').hide();    
+            
             return this;
         },
         change: function(){
@@ -463,6 +480,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     
                     frm.ICAction.value="SF_PB_WRK_RFR_PRDN_COMPL_PB";
                     frm.submit();
+                    //opScrap is for step 8 and 8_1
+                    _model.opScrap = false;
                     _step = 'step8';
                     context.one('load', function(){
                         nextStep();       
@@ -470,15 +489,15 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step8: function(){
                     //alert('step8: Add scrap, recurse, add machine number, if endscrap, go to step9, else go to next pid');
-
+                    
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var txtMachine = fr.getElementById('SM_SFRPTLINK_WK_MACHINE_CODE$0')
                     var op = fr.getElementById('SF_COMPL_WRK_COMPL_OP_SEQ$0');  
                     var txtScrapQty = fr.getElementById('SF_COMPL_WRK_SCRAPPED_QTY$0')
                     //alert(_model.scrap);
-                    if (parseInt(op.value) != _model.opseq){
-                        //Enter Process Scrap
-                        txtScrapQty.value = _model.scrap; 
+                    //alert(parseInt(txtScrapQty.value) == _model.scrap)
+                    if (!_model.step8_1){                      
+                        
                         var frm = fr.forms[1];
                         frm.ICAction.value = "SF_COMPL_WRK_COMPL_OP_SEQ$prompt$0";
                         frm.submit();
@@ -487,13 +506,30 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             nextStep();       
                         }); 
                     }
-                    else {
-                        txtScrapQty.value = _model.scrap;  
+                    else if (txtMachine && parseInt(txtScrapQty.value) == _model.scrap){
                         txtMachine.value = _model.machine;
-                        //alert('doublecheck values');         
+                        _step = 'stepSaveScrap'; 
+                        nextStep();                         
+                    }
+                    else if(parseInt(txtScrapQty.value) == _model.scrap) {
                         
-                        _step = 'stepSaveScrap';                        
-                        nextStep();       
+                        op.value = _model.opseq;
+                        op.onchange();
+                        _step = 'step8';                        
+                        context.one('load', function(){
+                            nextStep();       
+                        }); 
+                    }
+                    
+                    else {
+                        txtScrapQty.focus()
+                        txtScrapQty.value = _model.scrap;
+                        txtScrapQty.onchange()          
+                        
+                        _step = 'step8';                        
+                        context.one('load', function(){
+                            nextStep();       
+                        });      
                          
                     }
                 },
@@ -526,7 +562,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     if (scrap > 0)
                         _model.endscrap = 0;
 
-                    _model.scrap =1 //-= scrap;
+                    _model.scrap -= scrap;
                     if (_model.scrap<0){
                         _model.scrap = 0;
                     }                         
@@ -534,13 +570,17 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     _model.step8_1=true;
                     frm.ICAction.value=row;
                     frm.submit();
-                    _step = 'step8';
+                    _model.opScrap = true
+                    if(_model.scrap == 0)
+                        _step = 'stepSaveScrap'
+                    else
+                        _step = 'step8';
                     context.one('load', function(){
                         nextStep();       
                     }); 
                 },
                 step9: function(){
-                    alert('step9: Find Paper component and add on endscrap length, Save and go to next PID')
+                    //alert('step9: Find Paper component and add on endscrap length, Save and go to next PID')
                     var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var temp = {}
@@ -585,12 +625,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             nextStep();
                             return;
                         }
-                        
-                        //var frm = fr.forms[1];
-                        //frm.ICAction.value = "#ICSave";
-                        //frm.submit();
+
                         var btnS = fr.getElementsByName('#ICSave')
-                        alert(btnS[0]);
+                        //alert(btnS[0]);
                         btnS[0].click();
                         _step = 'step10';
                         /*
@@ -626,9 +663,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     }
                 },
                 step10: function(){
-                    alert('Step10: check for errors with save.. if none go to next record');
+                    //alert('Step10: check for errors with save.. if none go to next record');
                     if(!_errors)
-                        _collection[_currentModel].set({entered:false});
+                        _collection[_currentModel].set({entered:true});
                     else{
                         //alert('errors... not marking entered');    
                     } 
