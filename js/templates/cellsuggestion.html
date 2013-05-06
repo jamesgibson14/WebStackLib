@@ -1,4 +1,4 @@
-<div class="defaultForm border ofh left" style="width:650px;">
+<div class="defaultForm border ofh left" style="width:1050px;">
   	<input id="iassociateID" type="hidden" />
 	<label for="Name">Name</label><input id="iassociate" placeholder="Associate:" type="text" />	  
 	<label for="Date">Date</label><input id="idate" placeholder="Date:" type="text" size="8" />
@@ -12,10 +12,10 @@
 	</div>
 	
 	  
-	<div class="border clearfloat right" >
+	<div id="tasksList" class="border clearfloat right" style="width: 500px">
 	  	<ul >
 	  		Action Steps:
-	  		<li><input value="Approval-" /><input type="checkbox" /></li>
+	  		<li><button class="right" id="addTask"><span class="ui-icon ui-icon-minusthick"> </span></button><input value="Approval-" /><input type="checkbox" /></li>
 	  		<li class="ui-state-disabled"><input value="Design-" /><input type="checkbox" /></li>
 	  		<li class="ui-state-disabled"><input value="Planning-" /><input type="checkbox" /></li>
 	  		<li class="ui-state-disabled"><input value="Fabrication-" /><input type="checkbox" /></li>
@@ -23,7 +23,7 @@
 	  		<li class="ui-state-disabled"><input value="Before Pic-" /><input type="checkbox" /></li>
 	  	</ul>
 	  	<button class="right" id="addTask"><span class="ui-icon ui-icon-plusthick"> </span></button>
-	  </div>
+	</div>
 	
   	<div class="left">
   		<label for="Suggestion">Suggestion</label><br />

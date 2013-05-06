@@ -26,7 +26,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         initialize: function() {
             debugger;
             if (this.isNew())
-                this.sql = "INSERT INTO Ideas (Idea, Associate_ID, DateCreated) VALUES ('THis is just a test', 3, '" + new Date().format('mm/dd/yyyy') + "');Select id= SCOPE_IDENTITY();"
+                this.sql = "INSERT INTO Ideas (Idea, Associate_ID, DateCreated) VALUES ('THis is just a test', 3, '" + new Date().format('isoDateTime') + "');"
             this.save()
         },
         toggle: function() {

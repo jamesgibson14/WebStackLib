@@ -23,59 +23,55 @@ function($, Backbone, E, Handlebars, BaseView, Model, template, Collection,plotV
             'click #restart':'restart'
 	    },
         onRender: function() {
-            
-            this.$('#testbuttons > div').button();
-            this.$('#tabsmenu').buttonset()
-            this.$('#links').menu({role: "null"});
-            this.$('#ialpha').combobox();
-            var dialog = this.$( "#dialog-form" ).dialog({
-                autoOpen:false,
-                buttons: {
-                    "Ok":function(){
-                        $(this).find('.content').append("<input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' />")
+            if (!this.options.module){
+                $('#mainview').html('<span>Database Interaction... <img src="assets/images/ajax-loader2.gif" /></span>')
+                this.$('#testbuttons > div').button();
+                this.$('#tabsmenu').buttonset()
+                this.$('#links').menu({role: "null"});
+                this.$('#ialpha').combobox();
+                var dialog = this.$( "#dialog-form" ).dialog({
+                    autoOpen:false,
+                    buttons: {
+                        "Ok":function(){
+                            $(this).find('.content').append("<input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' /><br /><input type='text' />")
+                        }
+                    },
+                    close:function(){
+                        $('.ui-state-active').click();
                     }
-                },
-                close:function(){
-                    $('.ui-state-active').click();
-                }
-            });
-            $( ".resizable" ).resizable({handles: "se"});
-            this.$('#sidebarBtns').on('click','label', function(e){
-                var curView = $(this).prev().attr('data-view');
-                
-                if(that.sidebuttons.active == curView){
-                    $(this).removeClass('ui-state-active');
-                    dialog.dialog('close')
-                    that.sidebuttons.active = null
-                }
-                else{
-                    debugger;
-                    var view = new ideaV();
-                    var html = view.render().el;
-                
-                    that.sidebuttons.active = curView;
+                });
+                $( ".resizable" ).resizable({handles: "se"});
+                this.$('#sidebarBtns').on('click','label', function(e){
+                    var curView = $(this).prev().attr('data-view');
                     
-                    $('#dialog-form .content').html(html);
-                    dialog.dialog('option','buttons',{});
-                    dialog.dialog('open')
+                    if(that.sidebuttons.active == curView){
+                        $(this).removeClass('ui-state-active');
+                        dialog.dialog('close')
+                        that.sidebuttons.active = null
+                    }
+                    else{
+                        debugger;
+                        var view = new ideaV();
+                        var html = view.render().el;
                     
-                }
-                e.preventDefault()
-            })
-            var graph = new plotV();
-            this.$('#mainview').prepend(graph.render().el)         
-            //var wshshell=new ActiveXObject("wscript.shell");
-            //var objShell = new ActiveXObject("shell.application");
-            //wshshell.run("powershell ./test.ps1")
-            //objShell.ShellExecute('powershell.exe','./test.ps1','c:\temp',null,0);
-            //E.outlook.sendMail('test','testing email','gibsonj')
-            //E.outlook.getTasks()
-
-            
-            
-            return this;
-        },
-        postRender: function() {
+                        that.sidebuttons.active = curView;
+                        
+                        $('#dialog-form .content').html(html);
+                        dialog.dialog('option','buttons',{});
+                        dialog.dialog('open')
+                        
+                    }
+                    e.preventDefault()
+                })
+                var graph = new plotV();
+                this.$('#mainview').prepend(graph.render().el)         
+                //var wshshell=new ActiveXObject("wscript.shell");
+                //var objShell = new ActiveXObject("shell.application");
+                //wshshell.run("powershell ./test.ps1")
+                //objShell.ShellExecute('powershell.exe','./test.ps1','c:\temp',null,0);
+                //E.outlook.sendMail('test','testing email','gibsonj')
+                //E.outlook.getTasks()
+            }
             //this.$('#sidebarBtns').position({my:'bottom',at:'right bottom',of:'#footer',collision:'none'})
             this.$('#sidebarBtns > input').button({text:false})
             this.$('#sidebarBtns > input').each(function(value){
@@ -116,7 +112,8 @@ function($, Backbone, E, Handlebars, BaseView, Model, template, Collection,plotV
             //var height = this.$el.height();
             //alert(height)
             //this.$el.height(height-300);
-            E.hideLoading();
+            
+            return this;
         },
         loadlink: function(e){
         	var id = $(e.currentTarget).attr('id');

@@ -59,6 +59,8 @@ function($, Backbone, E, Handlebars, require,user){
             var defaults = {
                 header: true,
                 footer: true,
+                sidebar: true,
+                module: false 
             };
             
             
@@ -67,7 +69,9 @@ function($, Backbone, E, Handlebars, require,user){
             if(E.GET['module'] != undefined){
                viewName = E.GET['module'];
                defaults.header = false;
-               defaults.footer = false;               
+               defaults.footer = false;
+               defaults.sidebar = false;
+               defaults.module = true;               
             }
             E.views.currentView = viewName
             
@@ -75,20 +79,20 @@ function($, Backbone, E, Handlebars, require,user){
                 var view = new View(defaults);
                 that.mainView = view;
                 $('#bodyview').html(view.render().el);
-                if(view.postRender)
-                    E.loading($('#bodyview'), view.postRender,view) 
+                
+                if (viewName != "view"){                                
+                    require(['views/'+viewName], function(View) { 
+                        var view = new View();
+                        $(that.mainView.el).html(view.render().el);
+                        if(view.postRender)
+                            E.loading(that.mainView, view.postRender,view) 
+                        
+                    });
+                } 
                 
             });
             
-            if (viewName != "view"){                
-                require(['views/'+viewName], function(View) { 
-                    var view = new View(defaults);
-                    $('#mainview').html(view.render().el);
-                    if(view.postRender)
-                        E.loading($('#bodyview'), view.postRender,view) 
-                    
-                });
-            }
+            
         },
         'main': function(view,modelid){
             if(E.GET['module'] != undefined)

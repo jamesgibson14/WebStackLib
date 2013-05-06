@@ -25,6 +25,7 @@
 </div>
 {{/if}}
 <div id="mainview" class="relative" style="z-index:1;width:100%">
+	{{#unless module}}
 	<div id='testbuttons'>
 		<div>Button1</div>
 		<div>Button3</div>
@@ -117,6 +118,8 @@
 		Other Tags <input type="text" name="tags" /><label for="">QuickTip </label><br />
 	</div>
 </div>
+{{/unless}}
+{{#if sidebar}}
 <div id="sidebarBtns" class="fixed" style="bottom:56px;left:-5px;z-index:1002;">      
 	<input type="radio" id="sbtn5" name="radio" data-view="newIdea" data-icon="ui-icon-info" /><label for="sbtn5">Updates</label>       
 	<input type="radio" id="sbtn6" name="radio" data-view="helpasdfaf asd fasdf adf adfasdf a dfasd fadfadfadfadfadfasdf<br />" data-icon="ui-icon-help" /><label for="sbtn6">Help</label>       
@@ -125,6 +128,7 @@
 	<input type="radio" id="sbtn2" name="radio" data-view="settings" data-icon="ui-icon-gear" /><label for="sbtn2">Settings</label>    
 	<input type="radio" id="sbtn1" name="radio" data-view="debug" data-icon="ui-icon-lock" /><label for="sbtn1">Debug</label>
 </div>
+{{/if}}
 {{#if footer}}
 <div id="footer">
 	<div class="left " style="z-index:1;">Logged in as: {{username}}</div>
