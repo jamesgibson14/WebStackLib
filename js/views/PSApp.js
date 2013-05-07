@@ -497,7 +497,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //alert(_model.scrap);
                     //alert(parseInt(txtScrapQty.value) == _model.scrap)
                     if (!_model.step8_1){                      
-                        
+                        //alert('1')
                         var frm = fr.forms[1];
                         frm.ICAction.value = "SF_COMPL_WRK_COMPL_OP_SEQ$prompt$0";
                         frm.submit();
@@ -507,12 +507,13 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         }); 
                     }
                     else if (txtMachine && parseInt(txtScrapQty.value) == _model.scrap){
+                        //alert('2')
                         txtMachine.value = _model.machine;
                         _step = 'stepSaveScrap'; 
                         nextStep();                         
                     }
                     else if(parseInt(txtScrapQty.value) == _model.scrap) {
-                        
+                        //alert('3')
                         op.value = _model.opseq;
                         op.onchange();
                         _step = 'step8';                        
@@ -522,6 +523,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     }
                     
                     else {
+                        //alert('4')
                         txtScrapQty.focus()
                         txtScrapQty.value = _model.scrap;
                         txtScrapQty.onchange()          
