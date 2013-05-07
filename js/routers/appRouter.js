@@ -1,45 +1,46 @@
-define(['jquery','backbone','engine', 'handlebars', 'require','models/user', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min','jquery.ui.widgets','jquery.cookie','jquery.tablesorter.min'], 
+define(['jquery','backbone','engine', 'handlebars', 'require','models/user', 'database','backboneADO','helpers','jqueryUI','jquery.placeholder.min','jquery.ui.widgets','jquery.cookie'], 
 function($, Backbone, E, Handlebars, require,user){
-    Backbone.View.prototype.close = function () {    
-        if (this.beforeClose) {        
-            this.beforeClose();    
-        }    
-        this.remove();
-        if(this.unbindAll)
-            this.unbindAll();    
-        this.unbind();
-    };
-    try{
-        E.sqlTest2 = new E.ADODB({type: 'sqlserver',sqlsource: 'SQLTEST2'});
-        E.sqlProd2 = new E.ADODB({type: 'sqlserver',sqlsource: 'SQLPROD2'});
-    }
-    catch(e){};
-    try{
-        E.accessdb = new E.ADODB({type: 'access'});
-    }
-    catch(e){};
-    var username;    
-    if ($.cookie("username")){
-        username = $.cookie("username");
-    }
-    else {
-        username = E.getwinuser();
-        $.cookie("username", username, { expires: 364})
-    }
-    var loc = document.location + ''
-    E.appState = loc.indexOf('prodweb')>=0 ? 'Production' : (loc.indexOf('webdev')>=0 ? 'Test' : (loc.indexOf('DevProjects')>=0 ? 'Developer' : 'n/a'))
-    E.user = new user({username: username, appState: E.appState, screen: {aHeight: screen.availHeight, aWidth: screen.availWidth, width: screen.width, height: screen.height}});
-    E.user.fetch();    
     
-    //alert(E.user.get('PicturePath'));
-    //E.loadCss("js/lib/css/dark-hive/jquery-ui.css")
-    E.loadCss("js/lib/jqplot/jquery.jqplot.css")
-    //E.loadCss("js/lib/SlickGrid-2.02/slick.grid.css")
-    E.views = {};
     var Router = Backbone.Router.extend({
         mainView: null,
         initialize: function(){        
             // Tells Backbone to start watching for hashchange events
+            Backbone.View.prototype.close = function () {    
+                if (this.beforeClose) {        
+                    this.beforeClose();    
+                }    
+                this.remove();
+                if(this.unbindAll)
+                    this.unbindAll();    
+                this.unbind();
+            };
+            try{
+                E.sqlTest2 = new E.ADODB({type: 'sqlserver',sqlsource: 'SQLTEST2'});
+                E.sqlProd2 = new E.ADODB({type: 'sqlserver',sqlsource: 'SQLPROD2'});
+            }
+            catch(e){};
+            try{
+                E.accessdb = new E.ADODB({type: 'access'});
+            }
+            catch(e){};
+            var username;    
+            if ($.cookie("username")){
+                username = $.cookie("username");
+            }
+            else {
+                username = E.getwinuser();
+                $.cookie("username", username, { expires: 364})
+            }
+            var loc = document.location + ''
+            E.appState = loc.indexOf('prodweb')>=0 ? 'Production' : (loc.indexOf('webdev')>=0 ? 'Test' : (loc.indexOf('DevProjects')>=0 ? 'Developer' : 'n/a'))
+            E.user = new user({username: username, appState: E.appState, screen: {aHeight: screen.availHeight, aWidth: screen.availWidth, width: screen.width, height: screen.height}});
+            E.user.fetch();    
+            
+            //alert(E.user.get('PicturePath'));
+            //E.loadCss("js/lib/css/dark-hive/jquery-ui.css")
+            E.loadCss("js/lib/jqplot/jquery.jqplot.css")
+            //E.loadCss("js/lib/SlickGrid-2.02/slick.grid.css")
+            E.views = {};
             Backbone.history.start();
         },
 

@@ -44,17 +44,23 @@ require.config({
         'jqueryUI': ['jquery'],
         'database': ['engine'],
         'backboneADO': ['backbone'],
-        'jquery.ui.widgets': ['jqueryUI']
+        'jquery.ui.widgets': ['jqueryUI'],
+        'jquery.placeholder.min': ['jquery'],
+        'jquery.cookie': ['jquery']
     }
 
 });
 
+var router = 'appRouter';
+if(document.location.host == 'localhost')
+    router = 'mobileRouter';
+
 // Start the main app logic.
-require(['routers/appRouter'],
+require(['routers/' + router],
 function   (App) {
     //main app title
     document.title = 'SmeadAnalytics'
-
+    
   	// Instantiates a new Router
     this.router = new App();
 });

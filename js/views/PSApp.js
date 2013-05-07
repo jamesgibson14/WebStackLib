@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSApp.html', 'models/PSDetails','views/PSDetail'], 
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSApp.html', 'models/PSDetails','views/PSDetail','jquery.tablesorter.min'], 
 function($, Backbone, E, Handlebars, Model, template, Collection, subView){
 
     var View = Backbone.View.extend({
