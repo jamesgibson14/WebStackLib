@@ -3,7 +3,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
     var collection = Backbone.Collection.extend({
         model: Backbone.Model,
             
-        sql: "SELECT pd.ParentRecordID, pd.Date, pd.Machine, pd.Shift, AssociateCode = pd.[Employee #], pd.MultiMachine, pd.CreatedOn, pd.CreatedBy, pd.Flagged, pd.chkCompleted, pd.chkConverted, pd.chkEdited, pd.txtFlagReason, pd.intFlagCode, pd.Machine_ID, pd.OperatorStage, pd.Stage5Target, pdd.RecordID, pdd.LineNum, pdd.Task, pdd.CrewSize, pdd.CStart, CounterEnd = pdd.[End], Scrap = pdd.Reject, AssignedMinutes = pdd.[Assigned Minutes], MeterStart = pdd.[Meter Start], MeterStop = pdd.[Meter Stop], pdd.ReAssgnMinTotal, pdd.ClockSetup, pdd.ClockRun, pdd.ClockEnd, pdd.TotalPacked, pdd.chkBreak1, pdd.chkBreak2, pdd.chkLunch, pdd.PID, pdd.OpSeq, pdd.PSoft, pdd.Setup, pdd.UserStamp, pdd.UserStampDate, pdd.lngLinkRecord, pdd.chkAsstd, pdd.txtAsstdColor, pdd.lngMachine2Start, pdd.lngMachine2End, pdd.txtProduct, pdd.lngCalculatedSetup, pdd.Item_ID, pdd.LastItem_ID, pdd.Paper_ID, pdd.LastPaper_ID, pdd.EachesPerDrop, pdd.UnitOfMeasure, pdd.CompiledReportingData_ID, pdd.ProductionDemandGroup_ID, pdd.SetupMinutes FROM ProductionData AS pd INNER JOIN    ProductionDataDetails AS pdd ON pd.ParentRecordID = pdd.ParentRecordID WHERE pd.ParentRecordID = %s",
+        sql: "SELECT pd.ParentRecordID, pd.Date, pd.Machine, pd.Shift, AssociateCode = pd.[Employee #], pd.MultiMachine, pd.CreatedOn, pd.CreatedBy, pd.Flagged, pd.chkCompleted, pd.chkConverted, pd.chkEdited, pd.txtFlagReason, pd.intFlagCode, pd.Machine_ID, pd.OperatorStage, pd.Stage5Target, pdd.RecordID, pdd.LineNum, pdd.Task, pdd.CrewSize, pdd.CStart, CounterEnd = pdd.[End], Scrap = pdd.Reject, AssignedMinutes = pdd.[Assigned Minutes], MeterStart = pdd.[Meter Start], MeterStop = pdd.[Meter Stop], pdd.ReAssgnMinTotal, pdd.ClockSetup, pdd.ClockRun, pdd.ClockEnd, pdd.TotalPacked, pdd.chkBreak1, pdd.chkBreak2, pdd.chkLunch, pdd.PID, pdd.OpSeq, pdd.PSoft, pdd.Setup, pdd.UserStamp, pdd.UserStampDate, pdd.lngLinkRecord, pdd.chkAsstd, pdd.txtAsstdColor, pdd.lngMachine2Start, pdd.lngMachine2End, pdd.txtProduct, pdd.lngCalculatedSetup, pdd.Item_ID, pdd.LastItem_ID, pdd.Paper_ID, pdd.LastPaper_ID, pdd.EachesPerDrop, pdd.UnitOfMeasure, pdd.CompiledReportingData_ID, pdd.ProductionDemandGroup_ID, pdd.SetupMinutes, crd.NetQtyProduced, crd.NetQtyProducedTarget, crd.WorkCenter_ID, crd.ItemCode, crd.Cell_ID, crd.ScrapPercentageTarget, crd.OperatorSetupMinutesTarget, crd.MachineSpeedTarget, crd.MachineRunTimePercentage, crd.MachineRunTimePercentageTarget, crd.MachineRunTimeMinutesTarget, crd.MachineRunTimeMinutes FROM ProductionData AS pd INNER JOIN ProductionDataDetails AS pdd ON pd.ParentRecordID = pdd.ParentRecordID LEFT JOIN dbo.viewProductionPerformanceData crd ON pdd.RecordID=crd.DetailRecord_ID AND crd.Multiprocess = 0 WHERE pd.ParentRecordID = %s",
         sqlArgs: [41111],
         store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
         dataRender: function(){
@@ -23,7 +23,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 if (date3 < date1 || date3 < date2) {
                     date3.setDate(date3.getDate() + 1);
                 }
-
+                line.MachineRunTimePercentage = (Math.round(line.MachineRunTimePercentage*10000)/100).toFixed(1)              
+                line.MachineRunTimePercentageTarget = Math.round(line.MachineRunTimePercentageTarget*1000)/100
                 line.runClock = (date3 - date2)/1000/60;
                 line.runMeter = ((line.MeterStop - line.MeterStart)*60).toFixed(0);                
                 line.SetupMinutes = (date2 - date1)/1000/60;

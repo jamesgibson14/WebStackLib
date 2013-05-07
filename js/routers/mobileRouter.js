@@ -18,16 +18,17 @@ define(['jquery','backbone'], function($, Backbone){
         },
 
         'home': function(){
-            var user = Backbone.Model.extend({urlRoot : '/users'});
-            var model = new user({id:3})
+            var user = Backbone.Model.extend({urlRoot : 'data/users'});
+            var model = new user()
             
             model.set({hair: "brown"});
             model.save();
+            
             model.on('sync', function(){
-                $('#bodyview').append('<div>Name: ' + model.get('name') + '</div>');
-                $('#bodyview').append('<div>age: ' + model.get('age') + '</div>');
-                $('#bodyview').append('<div>hair: ' + model.get('hair') + '</div>');
-                $('#bodyview').append('<div>url: ' + model.url() + '</div>');  
+                var attrs = model.toJSON();
+                $.each(attrs,function(value, key){
+                    $('#bodyview').append('<div>' + key + ': ' + value + '</div>');
+                });
             })
         }
     });

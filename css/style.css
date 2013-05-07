@@ -40,15 +40,18 @@ h1.ui-widget-header, h2.ui-widget-header {
 	padding-left:25%;
 }
 #bodyview {
-	margin-left:0%;
-	margin-right:0%;
+	position:fixed;
+	left:0;
+	right:0;
+	bottom:0;
+	top:0;
 	background-color:#ff9428  /*#ff9428 rgb(178, 255, 38)*/;
 	/*filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff9428', endColorstr='#fbec39');/*For IE7-8-9*/ 
 	padding-top:15px;
 	padding-left: 30px;
 	padding-right: 20px;
 	padding-bottom:50px;
-	height:97%;
+	overflow:auto;
 }
 #header{
 	margin-bottom: 6px;
@@ -61,6 +64,7 @@ h1.ui-widget-header, h2.ui-widget-header {
 	border-radius: 15px;
 	box-shadow:0px 0px 5px 1px rgba(1,1,1,0.7);
 	padding: 5px;
+	margin-bottom: 50px;
 }
 #footer {
 	position:fixed;
@@ -80,7 +84,6 @@ h1.ui-widget-header, h2.ui-widget-header {
 	bottom:6px;
 	left:0px;
 	right:0px;
-	z-index: 1;
 }
 .clearfloat {
 	clear:both
@@ -756,6 +759,9 @@ textarea {
 }
 
 .border {
+	border:1px solid black;
+}
+.borderCells td, .borderCells th {
 	border:1px solid black;
 }
 .cell { 

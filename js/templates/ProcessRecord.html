@@ -5,7 +5,7 @@
 		<label>Associate:</label> <span  class="spanInput">{{AssociateCode}}</span>
 		<label>Shift:</label> <span  class="spanInput">{{Shift}}</span>
 	</div>
-	<table class="tablesorter left">
+	<table class="tablesorter left borderCells">
 	<thead class='row header'><tr>
 		<th class="hcell"><br /></th>
 		<th class="hcell">PID</th>
@@ -41,11 +41,25 @@
 		<td class='cell border'>B<input type="checkbox" {{#if chkBreak1}}checked="checked"{{/if}} /> L<input type="checkbox" {{#if chkLunch}}checked="checked"{{/if}} /> B<input type="checkbox" {{#if chkBreak2}}checked="checked"{{/if}} /></td>
 		<td class='cell border'>{{MeterStart}}</td>
 		<td class='cell border'>{{MeterStop}}</td>
-		<td class='cell border'><span class="left minutes">A {{AssignedMinutes}}</span> <span class="right minutes">R {{runMeter}}</span><div class="clearfloat"></div> <span class="left minutes">S {{SetupMinutes}}</span> <span class="right minutes">D {{downTime}}</span></td>
+		<td class='cell border'>
+			{{#if LineNum}}
+			<table class="borderCells">
+				<tr><th>AM</th><td>{{AssignedMinutes}}</td><td>Re-A:{{ReAssgnMinTotal}}</td><td></td></tr>
+				<tr><th>RT</th><td>{{runMeter}}</td><td>{{MachineRunTimeMinutesTarget}}</td><td>{{MachineRunTimePercentage}}%</td></tr>
+				<tr><th>ST</th><td>{{SetupMinutes}}</td><td>{{OperatorSetupMinutesTarget}}</td><td></td></tr>
+				<tr><th>DT</th><td>{{downTime}}</td><td>{{MachineRunTimeMinutesTarget}}</td><td>{{MachineRunTimePercentage}}</td></tr>
+			</table>
+			{{/if}}
+		</td>
 		<td class='cell border'><br /> {{ReAssgnMinTotal}}</td>
 		<td class='cell border'>{{#if Cstart}}{{CStart}}{{/if}}</td>
 		<td class='cell border'>{{#if CounterEnd}}{{CounterEnd}}<br />mC:&nbsp;{{machineCount}}{{/if}}</td>
-		<td class='cell border'>{{TotalPacked}}</td>
+		<td class='cell border'>
+			{{TotalPacked}}<br />
+			eaches: {{NetQtyProduced}} <br />
+			target: {{NetQtyProducedTarget}}
+			
+		</td>
 		<td class='cell border'>{{Scrap}}</td>
 		<td class='cell border'>PkQty:&nbsp;{{UnitOfMeasure}}<br />itemID:&nbsp;{{status}}<br />{{Item_ID}}</td>
 		</tr>

@@ -4,14 +4,14 @@ function($, Backbone, E, Handlebars, template, Collection){
     var View = Backbone.View.extend({
 
         tagName:  "div",
-        className: 'ProcessRecord',
+        className: 'ProcessRecord ofh',
         collection: new Collection(),
         template: template,
         initialize: function() {
             _.bindAll(this, 'render');   
         },
         render: function(Record_ID) {
-            this.collection.sqlArgs = [Record_ID]
+            this.collection.sqlArgs = [Record_ID || 48285]
             this.collection.fetch();
             var html;
             if(this.collection.length>0){
