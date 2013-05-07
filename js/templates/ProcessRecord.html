@@ -17,7 +17,7 @@
 		<th class="hcell">Breaks</th>		
 		<th class="hcell">Start</th>
 		<th class="hcell">End</th>
-		<th class="hcell">Minutes</th>
+		<th class="hcell">Compiled Data</th>
 		<th class="hcell">ReAssigned</th>
 		<th class="hcell">Start</th>
 		<th class="hcell">End</th>
@@ -44,11 +44,21 @@
 		<td class='cell border'>
 			{{#if LineNum}}
 			<table class="borderCells">
-				<tr><th>AM</th><td>{{AssignedMinutes}}</td><td>Re-A:{{ReAssgnMinTotal}}</td><td></td></tr>
-				<tr><th>RT</th><td>{{runMeter}}</td><td>{{MachineRunTimeMinutesTarget}}</td><td>{{MachineRunTimePercentage}}%</td></tr>
-				<tr><th>ST</th><td>{{SetupMinutes}}</td><td>{{OperatorSetupMinutesTarget}}</td><td></td></tr>
-				<tr><th>DT</th><td>{{downTime}}</td><td>{{MachineRunTimeMinutesTarget}}</td><td>{{MachineRunTimePercentage}}</td></tr>
+				<tr>
+					<td class="noBorder"></td>
+					<td title="AssignedMinutes">AM</td>
+					<td title="RunTime">RT</td>
+					<td title="SetupTime">ST</td>
+					<td title="DownTime">DT</td>
+					<td title="Performance %">Goal Perf.</td>
+				</tr>
+				<tr><th>Actual</th><td rowspan="4">{{AssignedMinutes}}</td><td>{{runMeter}}</td><td>{{SetupMinutes}}</td><td>{{downTime}}</td><td><b>{{NetQtyProducedPercentage}}%</b></td></tr>
+				<tr><th>Target</th><td>{{MachineRunTimeMinutesTarget}}</td><td>{{OperatorSetupMinutesTarget}}</td><td>{{downTimeTarget}}</td><td>{{NetQtyProducedPercentageTarget}}%</td></tr>
+				<tr><th>Percent</th><td>{{MachineRunTimePercentage}}%</td><td>{{SetupTimePercentage}}%</td><td>{{DownTimePercentage}}%</td><td><b>{{StagePercent}}%</b></td></tr>
+				<tr><th>Target</th><td>{{MachineRunTimePercentageTarget}}</td><td>{{SetupTimePercentageTarget}}%</td><td>{{DownTimePercentageTarget}}%</td><td>100%</td></tr>
 			</table>
+			{{else}}
+				<span>Re-Assigned:{{ReAssgnMinTotal}}</span>
 			{{/if}}
 		</td>
 		<td class='cell border'><br /> {{ReAssgnMinTotal}}</td>
@@ -57,10 +67,14 @@
 		<td class='cell border'>
 			{{TotalPacked}}<br />
 			eaches: {{NetQtyProduced}} <br />
-			target: {{NetQtyProducedTarget}}
-			
+			target: {{NetQtyProducedTarget}}			
 		</td>
-		<td class='cell border'>{{Scrap}}</td>
+		<td class='cell border'>
+			{{Scrap}}<br />
+			tar: {{ScrapTarget}}<br />
+			{{ScrapPercentage}}%<br />
+			tar: {{ScrapPercentageTarget}}%			
+		</td>
 		<td class='cell border'>PkQty:&nbsp;{{UnitOfMeasure}}<br />itemID:&nbsp;{{status}}<br />{{Item_ID}}</td>
 		</tr>
 	{{/with}}

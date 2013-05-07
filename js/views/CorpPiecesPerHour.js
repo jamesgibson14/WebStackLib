@@ -109,8 +109,19 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                     yvalues: 1,
                     formatString:'<div class="boxpad border"><p>date: %s</p><p>PiecesPerHour: %s</p><div>',
                     useAxesFormatters: true,
-                    tooltipContentEditor: function(str, seriesIndex, pointIndex, plot, data){
-                        debugger;
+                    tooltipContentEditor: function(str, seriesIndex, pointIndex, plot){
+                        /*
+                        var data = plot.series[seriesIndex].data[pointIndex]
+                        data[0] = new Date(data[0]).format('mm/dd/yyyy');
+
+                        data[1] = new Number(data[1]).toFixed(1)
+                        if(plot.legend.labels[seriesIndex].indexOf('Target') > 1){
+                            str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>Stage:</td><td>%s</td></tr></table>'
+                        }
+                        else
+                            str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr><tr><td>Record #</td><td>%s</td></tr></table>'
+                        str = $.jqplot.sprintf.apply($.jqplot.sprintf, [str].concat(data));
+                        */
                         return str;
                     }
                },

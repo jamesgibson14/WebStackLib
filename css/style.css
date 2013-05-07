@@ -84,6 +84,7 @@ h1.ui-widget-header, h2.ui-widget-header {
 	bottom:6px;
 	left:0px;
 	right:0px;
+	z-index: 1;
 }
 .clearfloat {
 	clear:both
@@ -763,6 +764,12 @@ textarea {
 }
 .borderCells td, .borderCells th {
 	border:1px solid black;
+}
+.borderCells .noBorder {
+	border:none;
+}
+.bold {
+	font-weight: bold;
 }
 .cell { 
 	display:table-cell;
