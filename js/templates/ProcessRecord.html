@@ -15,10 +15,10 @@
 		<th class="hcell">PID</th>
 		<th class="hcell">OpSeq<br /></th>
 		<th class="hcell">Crew</th>
-		<th class="hcell">Setup</th>
+		<th class="hcell">Clock</th>
 		<th class="hcell">Run</th>
 		<th class="hcell">End</th>
-		<th class="hcell">Breaks</th>		
+		<th class="hcell">Counters</th>		
 		<th class="hcell">Start</th>
 		<th class="hcell">End</th>
 		<th class="hcell">Compiled Data</th>
@@ -39,10 +39,23 @@
 		<td class='cell border'>{{PID}}<br />item: {{txtProduct}}</td>
 		<td class='cell border'>op: {{OpSeq}}</td>
 		<td class='cell border'>{{CrewSize}}<br />{{Task}}</td>
-		<td class='cell border'>{{ClockSetup}}</td>
-		<td class='cell border'>{{ClockRun}}<br /><span class="right minutes">S: {{SetupMinutes}}</span></td>
-		<td class='cell border'>{{ClockEnd}}<br /><span class="right minutes">R: {{runClock}}</span></td>
-		<td class='cell border'>B<input type="checkbox" {{#if chkBreak1}}checked="checked"{{/if}} /> L<input type="checkbox" {{#if chkLunch}}checked="checked"{{/if}} /> B<input type="checkbox" {{#if chkBreak2}}checked="checked"{{/if}} /></td>
+		<td class='cell border'>
+			<table class="borderCells">
+				<tr><td title="ClockSetup">{{ClockSetup}}</td><td>{{ClockRun}}</td><td>{{ClockEnd}}</td></tr>
+				<tr><td colspan="3">
+					B<input type="checkbox" {{#if chkBreak1}}checked="checked"{{/if}} /> 
+					L<input type="checkbox" {{#if chkLunch}}checked="checked"{{/if}} /> 
+					B<input type="checkbox" {{#if chkBreak2}}checked="checked"{{/if}} />
+				</td></tr>
+				<tr><td colspan="2">S</td><td>{{SetupMinutes}}</td></tr>
+				<tr><td colspan="2">R</td><td>{{runClock}}</td></tr>
+				<tr><td colspan="2">AM</td><td>{{AssignedMinutes}}</td></tr>
+			
+			</table>
+		</td>
+		<td class='cell border'><br /><span class="right minutes">S: </span></td>
+		<td class='cell border'><br /><span class="right minutes">R: </span></td>
+		<td class='cell border'></td>
 		<td class='cell border'>{{MeterStart}}</td>
 		<td class='cell border'>{{MeterStop}}</td>
 		<td class='cell border'>
