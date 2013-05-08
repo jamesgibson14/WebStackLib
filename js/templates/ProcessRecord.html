@@ -4,6 +4,10 @@
 		<label>Date:</label> <span  class="spanInput">{{Date}}</span>
 		<label>Associate:</label> <span  class="spanInput">{{AssociateCode}}</span>
 		<label>Shift:</label> <span  class="spanInput">{{Shift}}</span>
+		<label>Current Stage:</label> <span  class="spanInput">{{OperatorStage}}</span>
+		<label>Target Percentage:</label> <span  class="spanInput">{{Stage5Target}}</span>
+		<div><label>Flagged:</label><span class="ui-icon ui-icon-close"></span></div>
+		<div><label>Completed:</label><span class="ui-icon ui-icon-check"></span></div>
 	</div>
 	<table class="tablesorter left borderCells">
 	<thead class='row header'><tr>
@@ -50,12 +54,13 @@
 					<td title="RunTime">RT</td>
 					<td title="SetupTime">ST</td>
 					<td title="DownTime">DT</td>
-					<td title="Performance %">Goal Perf.</td>
+					<td title="Goal Performance %">Goal Perf.</td>
+					<td title="Machine Speed">Speed</td>
 				</tr>
-				<tr><th>Actual</th><td rowspan="4">{{AssignedMinutes}}</td><td>{{runMeter}}</td><td>{{SetupMinutes}}</td><td>{{downTime}}</td><td><b>{{NetQtyProducedPercentage}}%</b></td></tr>
-				<tr><th>Target</th><td>{{MachineRunTimeMinutesTarget}}</td><td>{{OperatorSetupMinutesTarget}}</td><td>{{downTimeTarget}}</td><td>{{NetQtyProducedPercentageTarget}}%</td></tr>
-				<tr><th>Percent</th><td>{{MachineRunTimePercentage}}%</td><td>{{SetupTimePercentage}}%</td><td>{{DownTimePercentage}}%</td><td><b>{{StagePercent}}%</b></td></tr>
-				<tr><th>Target</th><td>{{MachineRunTimePercentageTarget}}</td><td>{{SetupTimePercentageTarget}}%</td><td>{{DownTimePercentageTarget}}%</td><td>100%</td></tr>
+				<tr><th>Actual</th><td>{{AssignedMinutes}}</td><td>{{runMeter}}</td><td>{{SetupMinutes}}</td><td>{{downTime}}</td><td><b>{{NetQtyProducedPercentage}}%</b></td><td>{{MachineSpeed}}</td></tr>
+				<tr><th>Target</th><td>{{AssignedMinutesTarget}}</td><td>{{MachineRunTimeMinutesTarget}}</td><td>{{OperatorSetupMinutesTarget}}</td><td>{{downTimeTarget}}</td><td>{{NetQtyProducedPercentageTarget}}%</td><td>{{MachineSpeedTarget}}</td></tr>
+				<tr><th>Percent</th><td>{{AssignedMinutes}}</td><td>{{MachineRunTimePercentage}}%</td><td>{{SetupTimePercentage}}%</td><td>{{DownTimePercentage}}%</td><td><b>{{StagePercent}}%</b></td></tr>
+				<tr><th>Target</th><td>{{AssignedMinutes}}</td><td>{{MachineRunTimePercentageTarget}}</td><td>{{SetupTimePercentageTarget}}%</td><td>{{DownTimePercentageTarget}}%</td><td>100%</td></tr>
 			</table>
 			{{else}}
 				<span>Re-Assigned:{{ReAssgnMinTotal}}</span>
