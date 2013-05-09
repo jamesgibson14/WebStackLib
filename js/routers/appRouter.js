@@ -2,7 +2,7 @@ define(['jquery','backbone','engine', 'handlebars', 'require','models/user', 'da
 function($, Backbone, E, Handlebars, require,user){
     
     var Router = Backbone.Router.extend({
-        mainView: null,
+        bodyView: null,
         initialize: function(){        
             // Tells Backbone to start watching for hashchange events
             Backbone.View.prototype.close = function () {    
@@ -56,7 +56,7 @@ function($, Backbone, E, Handlebars, require,user){
 
         'home': function(){
             var that = this;
-            var viewName = 'view';
+            var viewName = 'home';
             var defaults = {
                 header: true,
                 footer: true,
@@ -65,8 +65,8 @@ function($, Backbone, E, Handlebars, require,user){
             };
             
             
-            if (this.mainView)
-                this.mainView.close();
+            if (this.bodyView)
+                this.bodyView.close();
             if(E.GET['module'] != undefined){
                viewName = E.GET['module'];
                defaults.header = false;
@@ -76,21 +76,18 @@ function($, Backbone, E, Handlebars, require,user){
             }
             E.views.currentView = viewName
             
-            require(['views/view'], function(View) { 
+            require(['views/body'], function(View) { 
                 var view = new View(defaults);
-                that.mainView = view;
-                $('#bodyview').html(view.render().el);
-                
-                if (viewName != "view"){                                
-                    require(['views/'+viewName], function(View) { 
-                        var view = new View();
-                        $(that.mainView.el).html(view.render().el);
-                        if(view.postRender)
-                            E.loading(that.mainView, view.postRender,view) 
-                        
-                    });
-                } 
-                
+                that.bodyView = view;
+                $('#bodyview').html(view.render().el);                
+                                             
+                require(['views/'+viewName], function(View) { 
+                    var view = new View();
+                    that.bodyView.$('#mainview').append(view.render().el);
+                    if(view.postRender)
+                        E.loading(that.bodyView, view.postRender,view) 
+                    
+                });
             });
             
             

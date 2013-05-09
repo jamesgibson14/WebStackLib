@@ -18,7 +18,7 @@ function($, Backbone, E, Handlebars){
             proto.templateCache = Handlebars.compile(this.template);
         },        
         render: function(){
-            var data;
+            var data = {};
             if (this.serializeData){
                 data = this.serializeData();
             };

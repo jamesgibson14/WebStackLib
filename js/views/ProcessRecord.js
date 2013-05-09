@@ -14,11 +14,12 @@ function($, Backbone, E, Handlebars, template, Collection){
             this.collection.sqlArgs = [Record_ID || 48285]
             this.collection.fetch();
             var html;
-            if(this.collection.length>0){
+            if(this.collection.length >0){
                 var ctemp = Handlebars.compile(this.template);
                 var context = {};
                 var model = this.collection.at(0)
                 context = $.extend(context,model.toJSON());
+                context.Date =  new Date(context.Date).format('mm/dd/yyyy')
                 context.details = this.collection.dataRender();
                 html = ctemp(context);
             }

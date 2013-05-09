@@ -26,6 +26,7 @@ require.config({
 		jq: 'jqplot/',
 		jqp: 'jqplot/jquery.jqplot',
 		jqpp: "jqplot/plugins",
+		raphael: 'raphael-2.1.0.min',
       	// Require.js Plugins
       	sg: 'SlickGrid-2.02',
       	text: "plugins/text-2.0.0"

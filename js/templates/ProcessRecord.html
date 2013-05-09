@@ -13,18 +13,9 @@
 	<thead class='row header'><tr>
 		<th class="hcell"><br /></th>
 		<th class="hcell">PID</th>
-		<th class="hcell">OpSeq<br /></th>
-		<th class="hcell">Crew</th>
 		<th class="hcell">Clock</th>
-		<th class="hcell">Run</th>
-		<th class="hcell">End</th>
-		<th class="hcell">Counters</th>		
-		<th class="hcell">Start</th>
-		<th class="hcell">End</th>
+		<th class="hcell">Counters</th>	
 		<th class="hcell">Compiled Data</th>
-		<th class="hcell">ReAssigned</th>
-		<th class="hcell">Start</th>
-		<th class="hcell">End</th>
 		<th class="hcell">Total Packed</th>
 		<th class="hcell">Scrap</th>
 		<th class="hcell">Other</th>
@@ -36,9 +27,9 @@
 	{{#with this}}
 		<tr>
 		<td class='cell border'>{{LineNum}}</td>
-		<td class='cell border'>{{PID}}<br />item: {{txtProduct}}</td>
-		<td class='cell border'>op: {{OpSeq}}</td>
-		<td class='cell border'>{{CrewSize}}<br />{{Task}}</td>
+		{{#if LineNum}}	
+		<td class='cell border'>{{PID}}<br />						
+			op:&nbsp;{{OpSeq}}<br />item:&nbsp;{{txtProduct}}<br />Task:&nbsp;{{Task}}</td>		
 		<td class='cell border'>
 			<table class="borderCells">
 				<tr><td title="ClockSetup">{{ClockSetup}}</td><td>{{ClockRun}}</td><td>{{ClockEnd}}</td></tr>
@@ -47,17 +38,19 @@
 					L<input type="checkbox" {{#if chkLunch}}checked="checked"{{/if}} /> 
 					B<input type="checkbox" {{#if chkBreak2}}checked="checked"{{/if}} />
 				</td></tr>
+				{{#if LineNum}}
 				<tr><td colspan="2">S</td><td>{{SetupMinutes}}</td></tr>
 				<tr><td colspan="2">R</td><td>{{runClock}}</td></tr>
-				<tr><td colspan="2">AM</td><td>{{AssignedMinutes}}</td></tr>
-			
+				<tr><td colspan="2">AM</td><td>{{AssignedClock}}</td></tr>
+				{{/if}}
 			</table>
 		</td>
-		<td class='cell border'><br /><span class="right minutes">S: </span></td>
-		<td class='cell border'><br /><span class="right minutes">R: </span></td>
-		<td class='cell border'></td>
-		<td class='cell border'>{{MeterStart}}</td>
-		<td class='cell border'>{{MeterStop}}</td>
+		<td class='ui-state-error'>
+			<table class="borderCells">			
+				<tr><th class="noBorder">Hour</th><td><span class="ui-icon ui-icon-alert"></span>{{MeterStart}}</td><td>{{MeterStop}}</td><td>diff:{{hourDiff}}</td></tr>
+				<tr><th class="noBorder">Counter</th><td>{{Cstart}}</td><td>{{CounterEnd}}</td><td>diff:{{counterDiff}}</td></tr>				
+			</table>
+		</td>
 		<td class='cell border'>
 			{{#if LineNum}}
 			<table class="borderCells">
@@ -70,7 +63,7 @@
 					<td title="Goal Performance %">Goal Perf.</td>
 					<td title="Machine Speed">Speed</td>
 				</tr>
-				<tr><th>Actual</th><td>{{AssignedMinutes}}</td><td>{{runMeter}}</td><td>{{SetupMinutes}}</td><td>{{downTime}}</td><td><b>{{NetQtyProducedPercentage}}%</b></td><td>{{MachineSpeed}}</td></tr>
+				<tr><th>Actual</th><td>{{AssignedMinutes}}</td><td>{{runMeter}}</td><td>{{OperatorSetupMinutes}}</td><td>{{downTime}}</td><td><b>{{NetQtyProducedPercentage}}%</b></td><td>{{MachineSpeed}}</td></tr>
 				<tr><th>Target</th><td>{{AssignedMinutesTarget}}</td><td>{{MachineRunTimeMinutesTarget}}</td><td>{{OperatorSetupMinutesTarget}}</td><td>{{downTimeTarget}}</td><td>{{NetQtyProducedPercentageTarget}}%</td><td>{{MachineSpeedTarget}}</td></tr>
 				<tr><th>Percent</th><td>{{AssignedMinutes}}</td><td>{{MachineRunTimePercentage}}%</td><td>{{SetupTimePercentage}}%</td><td>{{DownTimePercentage}}%</td><td><b>{{StagePercent}}%</b></td></tr>
 				<tr><th>Target</th><td>{{AssignedMinutes}}</td><td>{{MachineRunTimePercentageTarget}}</td><td>{{SetupTimePercentageTarget}}%</td><td>{{DownTimePercentageTarget}}%</td><td>100%</td></tr>
@@ -79,9 +72,6 @@
 				<span>Re-Assigned:{{ReAssgnMinTotal}}</span>
 			{{/if}}
 		</td>
-		<td class='cell border'><br /> {{ReAssgnMinTotal}}</td>
-		<td class='cell border'>{{#if Cstart}}{{CStart}}{{/if}}</td>
-		<td class='cell border'>{{#if CounterEnd}}{{CounterEnd}}<br />mC:&nbsp;{{machineCount}}{{/if}}</td>
 		<td class='cell border'>
 			{{TotalPacked}}<br />
 			eaches: {{NetQtyProduced}} <br />
@@ -93,7 +83,22 @@
 			{{ScrapPercentage}}%<br />
 			tar: {{ScrapPercentageTarget}}%			
 		</td>
-		<td class='cell border'>PkQty:&nbsp;{{UnitOfMeasure}}<br />itemID:&nbsp;{{status}}<br />{{Item_ID}}</td>
+		<td >PkQty:&nbsp;{{UnitOfMeasure}}<br />Crew:&nbsp;{{CrewSize}}<br />Color: {{txtAsstdColor}}</td>
+		{{else}} {{! This is for reassigned rows}} 
+		<td class="cell">
+			{{PID}}<br />
+			<span>Re-Assigned:&nbsp;{{ReAssgnMinTotal}}</span>
+		</td>
+		<td colspan="6>">
+			<table class="borderCells">
+				<tr><td title="ClockSetup">{{ClockSetup}}</td><td>{{ClockRun}}</td><td>{{ClockEnd}}</td><td colspan="3">
+					B<input type="checkbox" {{#if chkBreak1}}checked="checked"{{/if}} /> 
+					L<input type="checkbox" {{#if chkLunch}}checked="checked"{{/if}} /> 
+					B<input type="checkbox" {{#if chkBreak2}}checked="checked"{{/if}} />
+				</td></tr>				
+			</table>
+		</td>
+		{{/if}}
 		</tr>
 	{{/with}}
 	{{/each}}
