@@ -7,24 +7,24 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
         className: 'SlickGrid',
         collection: new Collection(),
         template: template,
+        groupingOn: true,
         events: {
-            'click .test': 'temp'
+            'click .test': 'groupOnOff'
         },
         initialize: function() {
-            _.bindAll(this, 'render','postRender','temp');
-               
+            _.bindAll(this, 'render','postRender','groupOnOff','setData');
+            this.listenTo(this.collection,'reset',this.setData)              
         },
         render: function(options) {
             if(!options)
                 options = {};
-            var sql = options.sql || '';
             var html;
             var sortdir;
             var sortcol;
             var that = this;
+            
             html = Handlebars.compile(this.template)            
-            //html = "<div>No data found</div>"   
-            var columns;
+
             // TODO : extract all data to SlickGrid - model
             options.grid = {
                 editable: true,
@@ -35,15 +35,15 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
                 dataItemColumnValueExtractor: this.collection.dataItemColumnValueExtractor,
                 defaultFormatter: this.collection.defaultFormatter,
                 explicitInitialization: true
-            };
-        
+            };        
             
-            var data;
+            var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+            this.collection.sql = options.sql || '';
+            this.collection.sqlArgs = options.sqlArgs || null;
+            if (options.store)
+                this.collection.store = options.store;
             
-            this.collection.sql = options.sql;
-            this.collection.fetch({add_id: true});
-            data = this.collection;
-            var customColumns = {
+           this.customColumns = {
                 SetupHrs: {
                     editor: Slick.Editors.Text
                 },
@@ -51,13 +51,14 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
                     editor: Slick.Editors.Date
                 }
             }
-            if (!columns)
-                columns = this.collection.getColumns(customColumns);
+            if (!this.columns)
+                this.columns = this.collection.getColumns($.extend(this.customColumns,options.customColumns));
             if (options.columns)
-                $.extend(columns,options.columns);
-            this.dataView = new Slick.Data.DataView();   
+                $.extend(this.columns,options.columns);
+            
+            this.dataView = new Slick.Data.DataView({groupItemMetadataProvider: groupItemMetadataProvider});   
             this.myGrid = $("<div id='myGrid' style='width:98%;height:500px;'></div>");
-            this.grid = new Slick.Grid(this.myGrid, this.dataView, columns, options.grid);        
+            this.grid = new Slick.Grid(this.myGrid, this.dataView, this.columns, options.grid);        
             this.grid.onCellChange.subscribe(function(e){
                 alert('cell change')
             })
@@ -68,35 +69,48 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             }
 
             this.grid.onSort.subscribe(function (e, args) {
-                debugger;
+                //alert('gridOnSort')
                 sortdir = args.sortAsc ? 1 : -1;
                 sortcol = args.sortCol.field;
                 that.dataView.sort(comparer, args.sortAsc);
                 
             });
+            this.grid.registerPlugin(groupItemMetadataProvider);
             this.dataView.onRowCountChanged.subscribe(function (e, args) {
+                //alert('rowsCountChanged')
                 that.grid.updateRowCount();
                 that.grid.render();
             });
         
             this.dataView.onRowsChanged.subscribe(function (e, args) {
+                //alert('rowsChanged')
                 that.grid.invalidateRows(args.rows);
                 that.grid.render();
             });
             
-            this.dataView.setItems(this.collection.toDataView());
-
+            this.collection.reset({'id':1,'PIDText':'test', 'Opseq':20, 'Status':'30', 'ParentRecord_ID':'999999', 'Code':'item', 'Description':'description', 'TaskCode':'taskcode', 'WorkCenter_ID':'99999', 'Scrap':'50', 'Date':'10/10/2012', 'Shift':'F', 'NetQtyProduced':'5000'});
             this.$el.html( html );
-
+            setTimeout(this.postRender,100)
             return this;
         },
         postRender: function(){
             this.$el.append(this.myGrid)
             this.grid.init();
-            E.hideLoading();
         },
         temp: function(e){
             alert(this.collection.getColumns());  
+        },
+        setData: function(){
+            //alert('hello')
+            this.grid.setColumns(this.collection.getColumns(this.customColumns))
+            this.dataView.setItems(this.collection.toDataView());            
+            //if (this.grouping){
+            //    _.bind(this.grouping,this);
+            //    this.grouping();                
+            //}
+        },
+        setColumns: function(){
+              
         },
         TextEditor: function (args) {
             var $input;
@@ -165,6 +179,34 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
             };
         
             this.init();
+        },
+        avgTotalsFormatter: function(totals, columnDef) {
+            var val = totals.avg && totals.avg[columnDef.field];
+            if (val != null) {
+                return "avg: " + Math.round(val);
+            }
+            return "";
+        },        
+        sumTotalsFormatter: function(totals, columnDef) {
+            var val = totals.sum && totals.sum[columnDef.field];
+            if (val != null) {
+                return "total: " + ((Math.round(parseFloat(val)*100)/100));
+            }
+            return "";
+        },
+        groupOnOff: function(){
+            this.groupingOn = !this.groupingOn
+            if(this.groupingOn && this.grouping)
+                this.grouping();
+            else
+                this.dataView.setGrouping([])
+        },
+        dateFormatter: function(row, cell, value, columnDef, dataContext) {      
+            if (value == null) {        
+                return "";      
+            } else {        
+                return new Date(value).format('mm/dd/yyyy')     
+            }    
         }
     });
     

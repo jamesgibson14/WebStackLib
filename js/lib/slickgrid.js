@@ -14,5 +14,5 @@ define(['jquery', 'backbone','engine',
     
     ], 
 function($, Backbone,E, core) {
-
+    return core;
 });
