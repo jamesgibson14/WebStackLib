@@ -26,14 +26,8 @@ engine.ADODB = function(options){
     conn.open(conn_str);
 	this.executeSql = function(SQL,success,error){
 		var rs = new ActiveXObject("ADODB.Recordset");
-		try{
-		    var now = new Date();
+		try{		    
 			rs = conn.Execute(SQL);
-			//alert('opend query time: ' + (new Date()-now));
-			now = new Date();
-			success(SQL,rs);
-			//alert('callback success run time: ' + (new Date()-now));
-			return true;
 		}
 		catch(err){
 			alert('Error: ' + err.message + ', sql: ' + SQL);
@@ -43,6 +37,7 @@ engine.ADODB = function(options){
 			//rs.close();
 			return false;
 		}
+		success(SQL,rs);
 	};
 	this.transaction = function(func){
 		var now = new Date();

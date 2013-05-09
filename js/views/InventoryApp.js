@@ -7,38 +7,54 @@ function($, Backbone, E, Handlebars, Model, template, SlickGrid){
         className: 'PSApp',
         model: new Model(),
         template: template,
+        SlickGrid: new SlickGrid(),
         events: {
             'blur .pid':'change',
-            'change #iPID':'loadPID',
+            'keypress input':'loadPID',
             'click .loadtable': 'loadPID'      
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change');
-            this.SlickGrid = new SlickGrid();
+            _.bindAll(this, 'render','change','loadPID');
         },
-        loadPID: function(){
-            var that = this;
-            var pid = this.$('#iPID').val();
-            var options = {
-                sql: "SELECT TOP 500 PIDText, p.Status, i.Code, i.Description, r.TaskCode,r.WorkCenter_ID, r.Scrap, crd.opseq, crd.Date, crd.Shift, crd.NetQtyProduced, crd.Scrap FROM ProductionDemandGroups p LEFT JOIN ProductionDemandGroupsRouting r ON PIDText=r.PID INNER JOIN CompiledReportingData crd ON PIDText= crd.PID AND r.Opseq=crd.Opseq LEFT JOIN Items i ON p.Item_ID=i.ID WHERE PIDText<>'DCP' AND Status > 0 AND Status < 70 ORDER By crd.OpSeq, crd.Date, crd.Shift",
-                store: this.model.store,
-                customColumns: {
-                    Scrap: {groupTotalsFormatter: this.SlickGrid.avgTotalsFormatter},
-                    NetQtyProduced: {groupTotalsFormatter: this.SlickGrid.sumTotalsFormatter}                    
-                }
-            };
-            this.SlickGrid.grouping = this.model.groupByPIDOpseqDate
-            html = this.SlickGrid.render(options).el
-            this.$('#slickGrid').html(html)
-            setTimeout(function(){                
-                that.SlickGrid.postRender();
-            },1)
+        loadPID: function(e){
+            if (e.key != "Enter") return;
+           
+            
+            var filter = $(e.target).attr('id')
+            var where = ' 1=0 '
+            var col = this.SlickGrid.collection
+            if(filter == 'component')
+                where = " Component = '" + e.target.value + "'"
+            else if(filter == 'item')
+                where = " i.Code = '" + e.target.value + "'"
+            else if (filter == 'pid')
+                where = " PIDText = '" + e.target.value + "'"
+            col.sql= "SELECT DISTINCT PIDText, crd.Opseq, p.Status, ParentRecord_ID, i.Code, i.Description, r.TaskCode,r.WorkCenter_ID, r.Scrap, crd.Date, crd.Shift, crd.NetQtyProduced, crd.Scrap FROM ProductionDemandComponents c INNER JOIN ProductionDemandGroups p ON c.PID=p.PIDText LEFT JOIN SQLPROD2.CCDB.DBO.ProductionDemandGroupsRouting r ON PIDText=r.PID LEFT JOIN SQLPROD2.CCDB.DBO.viewProductionPerformanceData crd ON PIDText= crd.PID AND r.Opseq=crd.Opseq LEFT JOIN Items i ON p.Item_ID=i.ID WHERE %s AND Status > 0 AND Status < 70",
+            col.sqlArgs = [where]
+            $(e.target).siblings().val('')
+            col.fetch({reset:true,add_id: true});
+            e.preventDefault();
         },
         render: function() {
             var temp = this.model.toJSON();            
             temp = this.template(temp);            
             this.$el.html( temp );
+            
+            var that = this;
+            var pid = this.$('#iPID').val();
+            var options = {
+                store: this.model.store,
+                customColumns: {
+                    'PIDText': {width:300},
+                    'Scrap': {groupTotalsFormatter: this.SlickGrid.avgTotalsFormatter},
+                    'NetQtyProduced': {groupTotalsFormatter: this.SlickGrid.sumTotalsFormatter},
+                    'Date': {formatter: this.SlickGrid.dateFormatter}                   
+                }
+            };
+            this.SlickGrid.grouping = this.model.groupByPIDOpseqDate
+            html = this.SlickGrid.render(options).el
+            this.$('#slickGrid').html(html)
             return this;
         },
         change: function(){            

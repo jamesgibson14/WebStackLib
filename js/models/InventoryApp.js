@@ -1,11 +1,11 @@
 define(['jquery', 'backbone','engine'], function($, Backbone,E) {
 
     var Model = Backbone.Model.extend({
-            store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
+            store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false),
             defaults: {
 	            component: "",
 	            item: "",
-	            pid: "PID1610999"
+	            pid: ""
             },
 
             // Model Constructor
