@@ -1,10 +1,10 @@
-define(['jquery', 'backbone', 'engine','handlebars', 'models/task', 'text!templates/taskList.html','models/tasks','text!templates/TodoStats.html','views/task'], 
-function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subView){
-    var View = Backbone.View.extend({
+define(['jquery', 'backbone', 'engine','handlebars', 'models/taskList', 'text!templates/taskList.html','text!templates/TodoStats.html','models/task','views/task'], 
+function($, Backbone, E, Handlebars, Model, template, statsTemp,subModel, subView){
+    var View = E.BaseView.extend({
 
         tagName:  "div",
         className: 'PSApp',
-        collection: new collection(),
+        model: new Model(),
         filteredModels: [],
 
         // Our template for the line of statistics at the bottom of the app.
@@ -25,9 +25,10 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
         // collection, when items are added or changed. Kick things off by
         // loading any preexisting todos that might be saved in *localStorage*.
         initialize: function() {
+            this.collection = this.model.tasks;
             _.bindAll(this, 'addOne', 'addAll', 'render', 'toggleAllComplete','renderStats','reOrder','filter');
-            this.collection.bind('reset',     this.filter);
-            this.collection.bind('add',     this.addOne);
+            this.listenTo(this.collection,'reset',     this.filter);
+            this.listenTo(this.collection,'add',     this.addOne);
              
             this.template = Handlebars.compile(this.template);
             this.statsTemplate = Handlebars.compile(this.statsTemplate);
@@ -36,7 +37,8 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
              
             this.input = this.$("#new-todo");
 
-            this.collection.fetch();
+            this.collection.fetch({reset:true});
+            this.collection.sort();
            
         },
         test: function(e){

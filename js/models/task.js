@@ -1,6 +1,6 @@
-define(['jquery', 'backbone','engine'], function($, Backbone,E) {
+define(['jquery', 'backbone','engine', 'models/BaseADODBModel'], function($, Backbone,E, BaseADOModel) {
 
-    var Todo = Backbone.Model.extend({
+    var Todo = BaseADOModel.extend({
 
     // Default attributes for the todo.
     defaults: {
@@ -12,12 +12,10 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         Task:'Task',
         AssignedTo: 'AssignedTo'
     },
-    storetype: 'autosql',
     // Ensure that each todo created has `content`.
     initialize: function() {
 
     },
-
     // Toggle the `done` state of this todo item.
     toggle: function() {
       this.save({done: !this.get("done")});

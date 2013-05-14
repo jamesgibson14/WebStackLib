@@ -30,7 +30,7 @@ function($, Backbone, E, Handlebars, Model, template, SlickGrid){
                 where = " i.Code = '" + e.target.value + "'"
             else if (filter == 'pid')
                 where = " PIDText = '" + e.target.value + "'"
-            col.sql= "SELECT DISTINCT PIDText, crd.Opseq, p.Status, ParentRecord_ID, i.Code, i.Description, r.TaskCode,r.WorkCenter_ID, r.Scrap, crd.Date, crd.Shift, crd.NetQtyProduced, crd.Scrap FROM ProductionDemandComponents c INNER JOIN ProductionDemandGroups p ON c.PID=p.PIDText LEFT JOIN SQLPROD2.CCDB.DBO.ProductionDemandGroupsRouting r ON PIDText=r.PID LEFT JOIN SQLPROD2.CCDB.DBO.viewProductionPerformanceData crd ON PIDText= crd.PID AND r.Opseq=crd.Opseq LEFT JOIN Items i ON p.Item_ID=i.ID WHERE %s AND Status > 0 AND Status < 70",
+            col.sql= "SELECT DISTINCT PIDText, crd.Opseq, i.Code, crd.Date, r.TaskCode, r.WorkCenter_ID, crd.NetQtyProduced, crd.Scrap, crd.Shift, p.Status, ParentRecord_ID, i.Description FROM ProductionDemandComponents c INNER JOIN ProductionDemandGroups p ON c.PID=p.PIDText LEFT JOIN SQLPROD2.CCDB.DBO.ProductionDemandGroupsRouting r ON PIDText=r.PID LEFT JOIN SQLPROD2.CCDB.DBO.viewProductionPerformanceData crd ON PIDText= crd.PID AND r.Opseq=crd.Opseq LEFT JOIN Items i ON p.Item_ID=i.ID AND c.Opseq=r.Opseq WHERE %s AND Status > 0 AND Status < 70",
             col.sqlArgs = [where]
             $(e.target).siblings().val('')
             col.fetch({reset:true,add_id: true});
@@ -46,10 +46,10 @@ function($, Backbone, E, Handlebars, Model, template, SlickGrid){
             var options = {
                 store: this.model.store,
                 customColumns: {
-                    'PIDText': {width:300},
+                    'PIDText': {width:115},
                     'Scrap': {groupTotalsFormatter: this.SlickGrid.avgTotalsFormatter},
                     'NetQtyProduced': {groupTotalsFormatter: this.SlickGrid.sumTotalsFormatter},
-                    'Date': {formatter: this.SlickGrid.dateFormatter}                   
+                    'Date': {width: 110,formatter: this.SlickGrid.dateFormatter}                   
                 }
             };
             this.SlickGrid.grouping = this.model.groupByPIDOpseqDate

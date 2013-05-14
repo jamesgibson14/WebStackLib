@@ -8,8 +8,8 @@ define([
   var collection = Backbone.Collection.extend({
 // Reference to this collection's model.
     model: Model,
-    url: function(){ return this.urlRoot;},
-    sql: 'Execute dbo.spTasks',
+    url: '/Tasks',
+    sql: 'SELECT Tasks.ID, Tasks.Task, Tasks.Type, Tasks.AssignedTo, Tasks.PreviousTask_ID, Tasks.Options, Tasks.Created, Tasks.CreatedBy, Tasks.Completed, Tasks.LastUpdated,Tasks.UpdatedBy, Associates.Name, Associates_1.Name AS CreatedByName FROM dbo.Associates AS Associates_1 INNER JOIN dbo.Users AS Users_1 ON Associates_1.RecordID = Users_1.Associate_ID INNER JOIN dbo.Tasks INNER JOIN dbo.Users INNER JOIN dbo.Associates ON Users.Associate_ID = Associates.RecordID ON Tasks.AssignedTo = Users.ID ON Users_1.ID = dbo.Tasks.CreatedBy',
     sqlqueue: ';',
     // set all of the todo items under the `"todos"` namespace.
     //localStorage: new Store("todos-backbone"),
@@ -32,10 +32,8 @@ define([
       if (!this.length) return 1;
       return this.last().get('order') + 1;
     },
-
-    // Todos are sorted by their original insertion order.
     comparator: function(model) {
-      return model.get('order');
+        return model.get("Options").LP;
     },
     saveQueued: function(){
         Backbone.sync('updateAll',this,{});

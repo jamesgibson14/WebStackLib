@@ -37,7 +37,9 @@ engine.ADODB = function(options){
 			//rs.close();
 			return false;
 		}
-		success(SQL,rs);
+		if(success)
+		  success(SQL,rs);
+		return rs;
 	};
 	this.transaction = function(func){
 		var now = new Date();

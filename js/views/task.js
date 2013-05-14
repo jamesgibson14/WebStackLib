@@ -56,7 +56,8 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
     
         // Close the `"editing"` mode, saving changes to the todo.
         close: function() {
-          this.model.save({Task: this.$('.todo-input').val()});
+          this.model.set({Task: this.$('.todo-input').val()})
+          this.model.save();
           $(this.el).removeClass("editing");
         },
     

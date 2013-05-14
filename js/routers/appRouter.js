@@ -86,7 +86,7 @@ function($, Backbone, E, Handlebars, require,user){
                     that.bodyView.$('#mainview').append(view.render().el);
                     if(view.postRender)
                         E.loading(that.bodyView, view.postRender,view) 
-                    
+                    document.title = 'SmeadAnalytics - ' + viewName    
                 });
             });
             
@@ -98,12 +98,13 @@ function($, Backbone, E, Handlebars, require,user){
             //alert('modelid: ' + modelid)
             E.views.currentView = view
             require(['views/' + view], function(View) { 
-                
+                document.title = 'SmeadAnalytics - ' + E.views.currentView
                 var view = new View({modelid:modelid});
                 
                 $('#mainview').html(view.render().el);
                 if(view.postRender)
                     E.loading($('#mainview'), view.postRender,view) 
+                
             }); 
         },
         'tab': function(view){
