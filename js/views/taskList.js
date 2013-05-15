@@ -6,51 +6,25 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp,subModel, subVie
         className: 'PSApp',
         model: new Model(),
         filteredModels: [],
-
-        // Our template for the line of statistics at the bottom of the app.
         template: template,
         statsTemplate: statsTemp,
-    
-        // Delegated events for creating new items, and clearing completed ones.
         events: {
           "keypress #new-todo":  "createOnEnter",
           "keyup #new-todo":     "showTooltip",
           "click .todo-clear a": "clearCompleted",
           "click .mark-all-done": "toggleAllComplete",
-          "click .filter-all-done": "filter",
-          'click #btnTest': 'test'
+          "click .filter-all-done": "filter"
         },
-    
-        // At initialization we bind to the relevant events on the `Todos`
-        // collection, when items are added or changed. Kick things off by
-        // loading any preexisting todos that might be saved in *localStorage*.
         initialize: function() {
             this.collection = this.model.tasks;
             _.bindAll(this, 'addOne', 'addAll', 'render', 'toggleAllComplete','renderStats','reOrder','filter');
             this.listenTo(this.collection,'reset',     this.filter);
             this.listenTo(this.collection,'add',     this.addOne);
-             
-            this.template = Handlebars.compile(this.template);
-            this.statsTemplate = Handlebars.compile(this.statsTemplate);
-            var temp = this.template({});
-            this.$el.html( temp );
-             
+            this.statsTemplate = Handlebars.compile(this.statsTemplate);                    
+        },
+        onRender: function(){
+            this.collection.fetch({reset:true});  
             this.input = this.$("#new-todo");
-
-            this.collection.fetch({reset:true});
-            this.collection.sort();
-           
-        },
-        test: function(e){
-            //for testing UI interactions
-            alert("Test Code");
-            
-        },
-    
-        // Re-rendering the App just means refreshing the statistics -- the rest
-        // of the app doesn't change.
-        render: function() {
-            return this;
         },
         renderStats: function() {
             var done = this.collection.done().length;
@@ -64,7 +38,7 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp,subModel, subVie
             this.$(".mark-all-done")[0].checked = !remaining;
         },
     
-        // Add a single todo item to the list by creating a view for it, and
+        // Add a single task to the list by creating a view for it, and
         // appending its element to the `<ul>`.
         addOne: function(model) {
             var view = new subView({model: model});
@@ -73,26 +47,26 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp,subModel, subVie
         },
         
         filter: function() {
-            //alert('filter and sort');
-            debugger;
-            this.collection.sort({silent:true});
-            if(this.$(".filter-all-done")[0].checked)
+            if(this.$el.find(".filter-all-done")[0].checked)
                 this.filteredModels = this.collection.remaining();
             else
                 this.filteredModels = this.collection.models
         
             this.addAll();
         },
-        reOrder: function(event, ui) {
+        reOrder: function(e, ui) {
             //alert('pos: ' + ui.item.index() + ', ' + ui.placeholder.index());
             var now = new Date();
-            
+            var startAt = ui.item.index();
+            alert(startAt)
             var that = this;
             this.$('div.todo').each(function(i){
-                
+                debugger;
                 var id = $(this).attr('data-id');
-                var model = that.collection.get(id); 
-                model.set({order: i + 1},{silent:true,queue:true});
+                var model = that.collection.get(id);
+                var obj = $.extend({},model.get('Options'),{LP:i + 1})
+                model.set({Options: obj});                
+                that.collection.sqlqueue += ';' + model.update({queue:true})
             });
             this.collection.saveQueued();
             //alert(new Date()-now);
@@ -100,10 +74,8 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp,subModel, subVie
         
         // Add all items in the **Todos** collection at once.
         addAll: function() {
-            // create in memory element
-            //this.$('#todo-list').sortable('destroy');
+            // create element in memory 
             var $el = this.$('#todo-list').clone(true,true); 
-            // also get the `className`, `id`, `attributes` if you need them 
             $el.empty();
             // append everything to the in-memory element 
             _.each(this.filteredModels, function(model){ 

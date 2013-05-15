@@ -913,7 +913,9 @@ textarea:focus, input:focus {
 	margin-left: 25px;
 }
 
-
+.ui-icon{
+	display:inline-block;
+}
 
 /*
 IMPORTANT:

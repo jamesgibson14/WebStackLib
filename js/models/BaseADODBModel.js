@@ -35,18 +35,34 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             this._executeSql('Select id= SCOPE_IDENTITY();',null,success)
         },
         update: function(options){
+            var sql = this.sql || ''
             if (!this.hasChanged())
-                return;
-            var that = this
-            var params = this.router._extractParameters(this.router._routeToRegExp('/:table/:id'),this.url())
-            var sql = "UPDATE " + params[0] + ' SET '; 
-            debugger;
-            $.each(this.changed,function(key, value){
-                sql += key + " = '" + that._escapeQuotes(value) + "'";
-            })
-            sql += " WHERE ID = " + params[1]
-           var rs = this._executeSql(sql)
-           alert(sql)
+                return sql;
+            var that = this;
+            
+            
+            if (!sql){
+                var params = this.router._extractParameters(this.router._routeToRegExp('/:table/:id'),this.url())
+                sql = "UPDATE " + params[0] + ' SET '; 
+                
+                $.each(this.changed,function(key, value){
+                    //alert(typeof(value))
+                    if(typeof(value) == 'String')
+                        sql += key + " = '" + that._escapeQuotes(value) + "'";
+                    else if(typeof(value) == 'Boolean')
+                        sql += key + " = '" + value ? 1 : 0 + "'";
+                    else if(typeof(value) == 'object')
+                        sql += key + " = '" + JSON.stringify(value) + "'";
+                    else
+                        sql += key + " = '" + value + "'";
+                })
+                sql += " WHERE ID = " + params[1]
+            }
+            
+            if(!options.queue)
+                var rs = this._executeSql(sql)
+            
+            return sql;
         },
         destroy: function(model,options){
             

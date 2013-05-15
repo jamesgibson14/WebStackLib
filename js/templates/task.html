@@ -1,8 +1,9 @@
-<div class="todo{{#if done}} done ui-state-disabled{{/if}}" data-id="{{ id }}">
+<div class="todo{{#if done}} done ui-state-disabled{{/if}}" data-id="{{ ID }}" >
     <div class="display">
-      <input class="check" type="checkbox" {{#if done}}checked="checked"{{/if}} />
+      <input class="check" type="checkbox" title="{{Completed}}" {{#if done}}checked="checked"{{/if}} />
       <label class="todo-content">{{ Task }}</label><br />
 	  <label class="todo-assigned">for: {{ Name }}</label>
+	  <span  title="Created by {{CreatedByName}} on {{Created}}" class="ui-icon ui-icon-info"></span>
       <span class="todo-destroy"></span>
     </div>
     <div class="edit">
