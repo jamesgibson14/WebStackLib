@@ -14,7 +14,8 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
           "dblclick label.todo-content" : "edit",
           "click span.todo-destroy"   : "clear",
           "keypress .todo-input"      : "updateOnEnter",
-          "blur .todo-input"          : "close"
+          "blur .todo-input"          : "close",
+          "dblclick .dueAt": "editText"
         },
     
         // The TodoView listens for changes to its model, re-rendering. Since there's
@@ -27,11 +28,11 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
         },        
         serializeData: function(){
             var obj = this.model.toJSON();
-            if(obj.Completed=== null)
+            if(!obj.Completed)
                 obj.done =  false
             else {
                 obj.done =  true
-                obj.Completed = new Date(obj.Completed).format('m/d/yyyy h:MM:ss TT')
+                obj.Completed.format('m/d/yyyy h:MM:ss TT')
             }
                 
             return obj;

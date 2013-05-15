@@ -45,7 +45,7 @@ h1.ui-widget-header, h2.ui-widget-header {
 	right:0;
 	bottom:0;
 	top:0;
-	background-color:#ffcb66; /* #faf25f #ff9428 rgb(178, 255, 38)*/;
+	background-color:#ffcb66; /* #faf25f #ff9428 rgb(178, 255, 38)*/
 	/*filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff9428', endColorstr='#fbec39');/*For IE7-8-9*/ 
 	padding-top:15px;
 	padding-left: 30px;
@@ -99,7 +99,7 @@ h1.ui-widget-header, h2.ui-widget-header {
 		color:#FFFFFF; font:12px arial, helvetica, sans-serif; padding:0;
 		/*-ms-transform: rotate(90deg);  
 		-ms-transform-origin:right top; /* IE 9 */
-		overflow:hidden:
+		overflow:hidden;
 	}
 	html {
 		background: #FFFFFF;

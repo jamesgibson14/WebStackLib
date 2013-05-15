@@ -11,12 +11,17 @@ var Todo = BaseADOModel.extend({
     },
     // Ensure that each todo created has `content`.
     initialize: function() {
-        if(typeof(this.get('Completed'))==='date')
-            alert("Date")
+        //if(typeof(this.get('Completed'))==='date')
+            //this.set('Completed',new)
     },
     // Toggle the `done` state of this todo item.
     toggle: function() {
-      this.save({Completed: this.get("Completed") ? NULL : new Date().format('isoDateTime')});
+      this.save({Completed: this.get("Completed") ? NULL : new Date()});
+    },
+    parse: function(res){
+        if(typeof(res.Completed) ==='date')
+            res.Completed = new Date(res.Completed)
+        return res
     }
 
   });

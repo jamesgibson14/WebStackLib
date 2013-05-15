@@ -13,7 +13,8 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp,subModel, subVie
           "keyup #new-todo":     "showTooltip",
           "click .todo-clear a": "clearCompleted",
           "click .mark-all-done": "toggleAllComplete",
-          "click .filter-all-done": "filter"
+          "click .filter-all-done": "filter",
+          "click .print": "print"
         },
         initialize: function() {
             this.collection = this.model.tasks;

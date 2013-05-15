@@ -10,6 +10,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         db: E.sqlTest2,      
         sync: function(method, model, options) {
             var exec
+            var options = $.extend({queue:false},options)
             switch(method) {
                 case "read":   this.find(options); 
                     break;
@@ -17,7 +18,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     break;
                 case "update":   this.update(options);
                     break;
-                case "delete":  this.destroy(options);
+                case "delete":  this._destroy(options);
                     break;
                 default:
                     alert(method);
@@ -39,8 +40,6 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             if (!this.hasChanged())
                 return sql;
             var that = this;
-            
-            
             if (!sql){
                 var params = this.router._extractParameters(this.router._routeToRegExp('/:table/:id'),this.url())
                 sql = "UPDATE " + params[0] + ' SET '; 
@@ -51,8 +50,14 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                         sql += key + " = '" + that._escapeQuotes(value) + "'";
                     else if(typeof(value) == 'Boolean')
                         sql += key + " = '" + value ? 1 : 0 + "'";
-                    else if(typeof(value) == 'object')
-                        sql += key + " = '" + JSON.stringify(value) + "'";
+                    else if(typeof(value) == 'object'){
+                        if(Object.prototype.toString.call(value) === "[object Date]")
+                            sql += key + " = '" + value.format('isoDateTime') + "'";
+                        else
+                            sql += key + " = '" + JSON.stringify(value) + "'";
+                         
+                        
+                    }
                     else
                         sql += key + " = '" + value + "'";
                 })
@@ -64,8 +69,18 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             
             return sql;
         },
-        destroy: function(model,options){
+        _destroy: function(options){
+            var sql = this.sql || ''
+            var that = this;
+            if (!sql){
+                var params = this.router._extractParameters(this.router._routeToRegExp('/:table/:id'),this.url())
+                sql = "DELETE FROM " + params[0] + " WHERE ID = " + params[1]
+            }
             
+            if(!options.queue)
+                var rs = this._executeSql(sql)
+            
+            return sql;
         },
         _executeSql: function(sql){
             return this.db.transaction(function(db) {

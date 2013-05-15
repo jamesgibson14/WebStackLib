@@ -30,7 +30,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     line.breakMinutes += 10
                 if (line.chkBreakLunch)
                     line.breakMinutes += 30
-                line.AssignedMinutesTarget = Math.round((line.NetQtyProduced / line.MachineSpeedTarget)+line.OperatorSetupMinutesTarget + line.breakMinutes)
+                line.AssignedMinutesTarget = Math.round((line.NetQtyProduced / line.MachineSpeedTarget)+line.OperatorSetupMinutesTarget)
+                line.AssignedMinutesPercentage = Math.round((line.NetQtyProduced / line.MachineSpeedTarget)+line.OperatorSetupMinutesTarget)
                 line.ScrapPercentage = (Math.round(line.ScrapPercentage*10000)/100).toFixed(1)              
                 line.ScrapPercentageTarget = (Math.round(line.ScrapPercentageTarget*10000)/100).toFixed(1) 
                 line.MachineRunTimePercentage = (Math.round(line.MachineRunTimePercentage*10000)/100).toFixed(1)              
@@ -45,7 +46,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 line.downTime = (line.AssignedMinutes-line.runMeter-line.SetupMinutes);
                 line.machineCount = (line.CounterEnd-line.CStart);
                 line.MachineSpeed = Math.round(line.MachineSpeed);
-                return line;
+                return line; 
             })
         },
         parseTime: function(s) {

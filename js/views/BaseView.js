@@ -6,7 +6,7 @@ function($, Backbone, E, Handlebars){
         tagName:  "div",
         constructor: function(){
             Backbone.View.apply(this, arguments);
-
+            _.bindAll(this,'editText')
             this.buildTemplateCache();
         },
         buildTemplateCache: function(){
@@ -44,9 +44,10 @@ function($, Backbone, E, Handlebars){
                 HKEY_Root: "HKEY_CURRENT_USER",
                 HKEY_Path: "\\Software\\Microsoft\\Internet Explorer\\PageSetup\\",
                 HKEY_Keys: {
-                    header: "&w &b on page 00 yards, &p / &P",
-                    footer: "&u &b &d",
-                    Shrink_To_Fit: "10%"
+                    header: "&w &b &D",
+                    footer: "&b &b &p / &P",
+                    Shrink_To_Fit: "yes",
+                    Print_Background: "no"
                 }
             }
             $.extend(defaults,options);
@@ -63,6 +64,45 @@ function($, Backbone, E, Handlebars){
             setTimeout(function(){
                 window.print();
             },500);
+        },
+        editor: function(){
+            
+        },
+        editText: function(e){
+            debugger;
+            
+            var $container = $(e.currentTarget)
+            var model =  this.model
+            var attr = $container.attr('data-attr')
+            var value;            
+            var $input;
+            
+            $input = $("<INPUT type=text class='editor-text' />")
+                  .appendTo(e.currentTarget)
+                  .on("keydown", function (e) {
+                    if (e.key === 'Enter') {
+                      applyValue()
+                      destroy()
+                    }
+                  })
+                  .focus()
+                  .select();
+            
+            var destroy = function () {
+              $input.remove();
+            };
+            
+            var loadValue = function () {
+              value = model.get(attr) || "";
+              $input.val(value);
+              $input[0].defaultValue = value;
+              $input.select();
+            };
+            
+            var applyValue = function () {
+              model.set(attr, $input.val());
+            };
+            loadValue();   
         }
         
     });

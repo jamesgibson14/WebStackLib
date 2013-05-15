@@ -15,6 +15,8 @@
 		<th class="hcell">PID</th>
 		<th class="hcell">Clock</th>
 		<th class="hcell">Counters</th>	
+		<th class="hcell" title="AssignedMinutes">AM</th>
+		<th class="hcell" title="RunTime Minutes">RT</th>	
 		<th class="hcell">Compiled Data</th>
 		<th class="hcell">Total Packed</th>
 		<th class="hcell">Scrap</th>
@@ -52,12 +54,23 @@
 				<tr><th class="noBorder">Counter</th><td>{{Cstart}}</td><td>{{CounterEnd}}</td><td>diff:{{counterDiff}}</td></tr>				
 			</table>
 		</td>
+		<td>
+			<table class="borderCells">			
+				<tr><th class="noBorder">Act</th><td>{{AssignedMinutes}}</td><td rowspan="2" style="vertical-align: middle">{{AssignedMinutesPercentage}}%</td></tr>
+				<tr title="Qty: {{NetQtyProduced}} / mSpeedTarget: {{MachineSpeedTarget}} + SetupTarget {{OperatorSetupMinutesTarget}}"><th class="noBorder">Tar</th><td>{{AssignedMinutesTarget}}</td></tr>				
+			</table>
+		</td>
+		<td>
+			<table class="borderCells">			
+				<tr><th class="noBorder">Act</th><td>{{runMeter}}</td><td rowspan="2" style="vertical-align: middle">{{RunTimePercentage}}%</td></tr>
+				<tr title="Qty: {{NetQtyProduced}} / mSpeedTarget: {{MachineSpeedTarget}} + SetupTarget {{OperatorSetupMinutesTarget}}"><th class="noBorder">Tar</th><td>{{RunTimeTarget}}</td></tr>				
+			</table>
+		</td>
 		<td class='cell border'>
 			{{#if LineNum}}
 			<table class="borderCells">
 				<tr>
 					<td class="noBorder"></td>
-					<td title="AssignedMinutes">AM</td>
 					<td title="RunTime">RT</td>
 					<td title="SetupTime">ST</td>
 					<td title="DownTime">DT</td>
@@ -65,7 +78,6 @@
 					<td title="Machine Speed">Speed</td>
 				</tr>
 				<tr><th>Actual</th>
-					<td>{{AssignedMinutes}}</td>
 					<td>{{runMeter}}</td>
 					<td>{{OperatorSetupMinutes}}</td>
 					<td>{{downTime}}</td>
@@ -73,23 +85,12 @@
 					<td><b>{{StagePercent}}%</b></td>
 					<td>{{MachineSpeed}}</td></tr>
 				<tr><th>Target</th>
-					<td>{{AssignedMinutesTarget}}</td>
 					<td>{{MachineRunTimeMinutesTarget}}</td>
 					<td>{{OperatorSetupMinutesTarget}}</td>
 					<td>{{downTimeTarget}}</td>
 					<td>{{NetQtyProducedPercentageTarget}}%</td>
 					<td>100%</td>
 					<td>{{MachineSpeedTarget}}</td></tr>
-				<tr><th>Percent</th>
-					<td>{{AssignedMinutes}}</td>
-					<td>{{MachineRunTimePercentage}}%</td>
-					<td>{{SetupTimePercentage}}%</td>
-					<td>{{DownTimePercentage}}%</td>
-					</tr>
-				<tr><th>Target</th><td>{{AssignedMinutes}}</td>
-					<td>{{MachineRunTimePercentageTarget}}</td>
-					<td>{{SetupTimePercentageTarget}}%</td>
-					<td>{{DownTimePercentageTarget}}%</td></tr>
 			</table>
 			{{else}}
 				<span>Re-Assigned:{{ReAssgnMinTotal}}</span>
@@ -125,6 +126,7 @@
 		</tr>
 	{{/with}}
 	{{/each}}
+	<tr><th colspan="6">Totals</th></tr>
 	</tbody>
 	
 	<!-- Here is where I need to add a list of PID Module views instead of the following-->
