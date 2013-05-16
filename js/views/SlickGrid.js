@@ -7,7 +7,7 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
         className: 'SlickGrid',
         collection: new Collection(),
         template: template,
-        groupingOn: true,
+        groupingOn: false,
         events: {
             'click .test': 'groupOnOff'
         },

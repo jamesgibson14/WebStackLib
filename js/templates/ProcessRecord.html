@@ -15,8 +15,8 @@
 		<th class="hcell">PID</th>
 		<th class="hcell">Clock</th>
 		<th class="hcell">Counters</th>	
-		<th class="hcell" title="AssignedMinutes">AM</th>
-		<th class="hcell" title="RunTime Minutes">RT</th>	
+		<th class="hcell" title="Machine Speed">Speed</th>	
+		<th class="hcell" title="Performance">Performance</th>
 		<th class="hcell">Compiled Data</th>
 		<th class="hcell">Total Packed</th>
 		<th class="hcell">Scrap</th>
@@ -51,19 +51,23 @@
 		<td>
 			<table class="borderCells">			
 				<tr><th class="noBorder">Hour</th><td>{{MeterStart}}</td><td>{{MeterStop}}</td><td>diff:{{hourDiff}}</td></tr>
-				<tr><th class="noBorder">Counter</th><td>{{Cstart}}</td><td>{{CounterEnd}}</td><td>diff:{{counterDiff}}</td></tr>				
+				<tr><th class="noBorder">Counter</th><td>{{CStart}}</td><td>{{CounterEnd}}</td><td>diff:{{counterDiff}}</td></tr>				
 			</table>
 		</td>
 		<td>
 			<table class="borderCells">			
-				<tr><th class="noBorder">Act</th><td>{{AssignedMinutes}}</td><td rowspan="2" style="vertical-align: middle">{{AssignedMinutesPercentage}}%</td></tr>
-				<tr title="Qty: {{NetQtyProduced}} / mSpeedTarget: {{MachineSpeedTarget}} + SetupTarget {{OperatorSetupMinutesTarget}}"><th class="noBorder">Tar</th><td>{{AssignedMinutesTarget}}</td></tr>				
+				<tr><td title="Machine Speed">Speed</td></tr>
+				<tr><td>{{MachineSpeed}}</td></tr>
+				<tr><td>{{MachineSpeedTarget}}</td></tr>				
 			</table>
 		</td>
 		<td>
 			<table class="borderCells">			
-				<tr><th class="noBorder">Act</th><td>{{runMeter}}</td><td rowspan="2" style="vertical-align: middle">{{RunTimePercentage}}%</td></tr>
-				<tr title="Qty: {{NetQtyProduced}} / mSpeedTarget: {{MachineSpeedTarget}} + SetupTarget {{OperatorSetupMinutesTarget}}"><th class="noBorder">Tar</th><td>{{RunTimeTarget}}</td></tr>				
+				<tr><td title="Goal Performance %" colspan="2">Goal Perf.</td></tr>
+				<tr><td><b>{{NetQtyProducedPercentage}}%</b></td>
+					<td><b>{{StagePercent}}%</b></td></tr>
+				<tr><td>{{NetQtyProducedPercentageTarget}}%</td>
+					<td>100%</td></tr>				
 			</table>
 		</td>
 		<td class='cell border'>
@@ -71,26 +75,24 @@
 			<table class="borderCells">
 				<tr>
 					<td class="noBorder"></td>
-					<td title="RunTime">RT</td>
+					<td title="Assigned Minutes" colspan="2">AM</td>
+					<td title="Runtime" colspan="2">RT</td>
 					<td title="SetupTime">ST</td>
 					<td title="DownTime">DT</td>
-					<td title="Goal Performance %" colspan="2">Goal Perf.</td>
-					<td title="Machine Speed">Speed</td>
 				</tr>
 				<tr><th>Actual</th>
+					<td>{{AssignedMinutes}}</td>
+					<td rowspan="2" style="vertical-align: middle">{{AssignedMinutesPercentage}}%</td>
 					<td>{{runMeter}}</td>
+					<td rowspan="2" style="vertical-align: middle">{{RunTimePercentage}}%</td>
 					<td>{{OperatorSetupMinutes}}</td>
-					<td>{{downTime}}</td>
-					<td><b>{{NetQtyProducedPercentage}}%</b></td>
-					<td><b>{{StagePercent}}%</b></td>
-					<td>{{MachineSpeed}}</td></tr>
+					<td>{{downTime}}</td></tr>
 				<tr><th>Target</th>
-					<td>{{MachineRunTimeMinutesTarget}}</td>
+					<td>{{AssignedMinutesTarget}}</td>
+					<td>{{RunTimeTarget}}</td>
 					<td>{{OperatorSetupMinutesTarget}}</td>
 					<td>{{downTimeTarget}}</td>
-					<td>{{NetQtyProducedPercentageTarget}}%</td>
-					<td>100%</td>
-					<td>{{MachineSpeedTarget}}</td></tr>
+					</tr>
 			</table>
 			{{else}}
 				<span>Re-Assigned:{{ReAssgnMinTotal}}</span>

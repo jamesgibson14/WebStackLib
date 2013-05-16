@@ -30,8 +30,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     line.breakMinutes += 10
                 if (line.chkBreakLunch)
                     line.breakMinutes += 30
-                line.AssignedMinutesTarget = Math.round((line.NetQtyProduced / line.MachineSpeedTarget)+line.OperatorSetupMinutesTarget)
-                line.AssignedMinutesPercentage = Math.round((line.NetQtyProduced / line.MachineSpeedTarget)+line.OperatorSetupMinutesTarget)
+                line.AssignedMinutesTarget = Math.round(((line.NetQtyProduced + line.ScrapTarget) / line.MachineSpeedTarget)+line.OperatorSetupMinutesTarget)
+                line.AssignedMinutesPercentage = Math.round((line.AssignedMinutesTarget*100) / line.AssignedMinutes)
                 line.ScrapPercentage = (Math.round(line.ScrapPercentage*10000)/100).toFixed(1)              
                 line.ScrapPercentageTarget = (Math.round(line.ScrapPercentageTarget*10000)/100).toFixed(1) 
                 line.MachineRunTimePercentage = (Math.round(line.MachineRunTimePercentage*10000)/100).toFixed(1)              
