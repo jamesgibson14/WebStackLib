@@ -14,10 +14,15 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             _.bindAll(this, 'render','renderCollection');
             this.collection = new this.collection()
             this.listenTo(this.collection,'reset',this.renderCollection)
+            
         
             
             //this.collection.fetch();
         },
+        events: {
+           "click #button1": "loadReport"
+        },
+        
        render: function() {
             var that = this;
             var obj = {};
@@ -28,14 +33,22 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             
             this.$el.html( temp );
             this.$('.dPicker').datepicker();
-            this.collection.fetch({reset: true});
+            this.$('button').button()
+            
             return this
         },
         renderCollection: function() {
             var that = this;
+            that.$("#reportwindow").html()
             this.collection.each(function(model) {
-                that.$el.append('<div>this is a row ' + model.get('ErrorType') + ': ' + model.get('CountOfErrorType')+' </div>')
+                that.$("#reportwindow").append('<div>this is a row ' + model.get('ErrorType') + ': ' + model.get('CountOfErrorType')+' </div>')
             })
+        },
+        loadReport: function(e){
+            var startDate = this.$("#startDate").val();
+            var endDate = this.$("#endDate").val();
+            this.collection.sqlArgs= [startDate,endDate]
+           this.collection.fetch({reset: true}); 
         }
         
        

@@ -2,17 +2,13 @@
 <p class="defaultForm">
 	Date Range 
 	
-<input class="dPicker" type="text" value="{{StartDate}}" />
-<input class="dPicker" type="text" value="{{EndDate}}" />
-<select>
-		
-		{{#each errorTypes}}
-			<option value="{{@index}}">{{this}}</option>
-		{{/each}}
-	</select>
-</p>
-<div>
-	Pick Error Type
+<input class="dPicker" type="text" id="startDate" value="{{StartDate}}" />
+<input class="dPicker" type="text" id="endDate" value="{{EndDate}}" />
+
+	</p>
+	<p>
+		<button id="button1">Run Report</button>
+	</p>
+	<div id="reportwindow">
 	
-</div>
-	
+	</div>
