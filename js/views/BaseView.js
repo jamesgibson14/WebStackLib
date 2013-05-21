@@ -84,6 +84,11 @@ function($, Backbone, E, Handlebars){
                       applyValue()
                       destroy()
                     }
+                  }).autocomplete({
+                      autoFocus: true,
+                      delay: 0,
+                      minLength:  0,
+                      source: ['James','David','Samual']
                   })
                   .focus()
                   .select();
@@ -102,7 +107,8 @@ function($, Backbone, E, Handlebars){
             var applyValue = function () {
               model.set(attr, $input.val());
             };
-            loadValue();   
+            loadValue(); 
+            return $input;  
         }
         
     });

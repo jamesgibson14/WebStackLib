@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'views/BaseView', 'text!templates/home.html', 'raphael', 'app/engine.outlook'], 
-function($, Backbone, E, Handlebars, BaseView,  template, Raphael){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'views/BaseView', 'text!templates/home.html', 'raphael', 'icons', 'app/engine.outlook'], 
+function($, Backbone, E, Handlebars, BaseView,  template, Raphael, Icons){
 
     var View = BaseView.extend({
         // Represents the actual DOM element that corresponds to your View (There is a one to one relationship between View Objects and DOM elements)
@@ -32,8 +32,13 @@ function($, Backbone, E, Handlebars, BaseView,  template, Raphael){
                     }
                 });
                 $( ".resizable" ).resizable({handles: "se"});
-                var paper = Raphael(36, 36, 40, 40);
-                
+                var paper = Raphael(this.$('#icon1').get(0),40, 40);
+                var c = paper.path(Icons.stopsign).attr({fill: "#000", stroke: "none"});
+                var paper = Raphael(this.$('#icon2').get(0),40, 40);
+                var c = paper.path(Icons.arrowleft2).attr({fill: "#000", stroke: {stroke: "#fff", "stroke-width": 3, "stroke-linejoin": "round", opacity: 0}});
+                var paper = Raphael(this.$('#icon3').get(0),40, 40);
+                var c = paper.path(Icons.warning).attr({fill: "#000", stroke: "none"});
+                //this.$el.append(c);
                 //var wshshell=new ActiveXObject("wscript.shell");
                 //var objShell = new ActiveXObject("shell.application");
                 //wshshell.run("powershell ./test.ps1")

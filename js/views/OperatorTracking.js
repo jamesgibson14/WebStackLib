@@ -6,9 +6,9 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
         tagName:  "div",
         className: 'ReportApp ofh',
         attributes: {style:'border:none;'},
-        model: Backbone.Model.extend({
-            sql: "Execute spGetLists 'operatorQualifications'",
-            store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false), }),
+        qualificationList: Backbone.Collection.extend({
+            sql: "SELECT id = AssociatesToQualifications.ID, label= [Name]+ '- Q' + [QualificationName], cell= ExprCell, qualification= [QualificationName] FROM dbo.Associates INNER JOIN dbo.AssociatesToQualifications ON dbo.Associates.RecordID = dbo.AssociatesToQualifications.Associate_ID INNER JOIN dbo.Qualifications q ON dbo.AssociatesToQualifications.Qualifications_ID = q.ID WHERE (ExprStatus <> N'Terminated') AND ExprStatus <> '' ORDER BY Name, QualificationName",
+            store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         modelStageTotals: Backbone.Model.extend({
             sql: "SELECT m.Code, m.Cell_ID, m.WorkCenter_ID, m.Stage5Target, m.Inactive, qa.Stage1Minutes, qa.Stage2Minutes, qa.Stage3Minutes, qa.Stage4Minutes, qa.Stage5Minutes, atq.CurrentStage,(SELECT MAX(ReviewDate) AS MaxOfReviewDate FROM dbo.MachineOperatorReviews mor WHERE (mor.QualID=atq.ID)) AS LastReviewDate FROM AssociatesToQualifications atq INNER JOIN Qualifications AS q ON atq.Qualifications_ID = q.ID INNER JOIN QualificationsToMachines ON q.ID = QualificationsToMachines.Qualifications_ID INNER JOIN Machines AS m ON QualificationsToMachines.Machines_ID = m.ID INNER JOIN QualificationsAttributes qa ON q.ID = qa.Qualifications_ID WHERE atq.ID = %s",
             sqlArgs: [430],
@@ -22,17 +22,16 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
         initialize: function() {
           this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','loadData','renderProcessRecord');
-            this.model = new this.model()
+            this.qualificationList = new this.qualificationList()
             this.modelStageTotals = new this.modelStageTotals();
-            this.model.fetch();
+            this.qualificationList.fetch();
             this.ProcessRecordView = new ProcessRecord()
             //this.collection.fetch();
         },
         loadData: function(){
            
             //E.loading(this.$el,that.collection.fetch,this.collection);
-            $.jqplot.config.enablePlugins = true;
-            var attrs = this.model.toJSON()
+            $.jqplot.config.enablePlugins = true;           
             if (this.plot)
                 this.plot.destroy();
             
@@ -199,7 +198,7 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 }  
                 return valid              
             }  
-            var qualificationList = this.model.get('operatorQualifications');
+            //var qualificationList = this.model.get('operatorQualifications');
             var success = function(atq_id){
                 that.collection.sqlArgs = [atq_id], //= "EXECUTE dbo.spOperatorTracking @AssociateToQualification_ID = " + atq_id;
                 that.collection.fetch();
@@ -213,7 +212,7 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 E.hideLoading();
             }
             this.$( "#iqualification" ).autocomplete({
-                source: qualificationList,
+                source: this.qualificationList.toJSON(),
                 autoFocus: true,
                 minLength: 0,
                 delay: 0,

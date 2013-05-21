@@ -33,8 +33,12 @@ function($, Backbone, E, Handlebars, require,user){
             }
             var loc = document.location + ''
             E.appState = loc.indexOf('prodweb')>=0 ? 'Production' : (loc.indexOf('webdev')>=0 ? 'Test' : (loc.indexOf('DevProjects')>=0 ? 'Developer' : 'n/a'))
-            E.user = new user({username: username, appState: E.appState, screen: {aHeight: screen.availHeight, aWidth: screen.availWidth, width: screen.width, height: screen.height}});
-            E.user.fetch();    
+            var obj = {username: username, appState: E.appState, screen: {aHeight: screen.availHeight, aWidth: screen.availWidth, width: screen.width, height: screen.height}}
+            if (E.appState == 'Developer')
+                obj.id = 3;
+            E.user = new user(obj);
+            if (E.appState != 'Developer')
+                E.user.fetch();    
             
             //alert(E.user.get('PicturePath'));
             //E.loadCss("js/lib/css/dark-hive/jquery-ui.css")

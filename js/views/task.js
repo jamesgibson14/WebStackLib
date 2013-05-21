@@ -11,11 +11,11 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
         // The DOM events specific to an item.
         events: {
           "click .check"              : "toggleDone",
-          "dblclick label.todo-content" : "edit",
+          "dblclick label.todo-content" : "editText",
           "click span.todo-destroy"   : "clear",
           "keypress .todo-input"      : "updateOnEnter",
           "blur .todo-input"          : "close",
-          "dblclick .dueAt": "editText"
+          "dblclick .dueAt": "edit"
         },
     
         // The TodoView listens for changes to its model, re-rendering. Since there's
@@ -36,14 +36,12 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
             }
                 
             return obj;
-        },    
+        }, 
+        edit: function(){
+            
+        },
         toggleDone: function() {           
           this.model.toggle();
-        },        
-        // Switch this view into `"editing"` mode, displaying the input field.
-        edit: function() {
-          $(this.el).addClass("editing");
-          this.$('.todo-input').focus();
         },    
         // Close the `"editing"` mode, saving changes to the todo.
         close: function() {

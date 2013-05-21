@@ -116,8 +116,7 @@ h1.ui-widget-header, h2.ui-widget-header {
 		margin-bottom: 50px;
 	}
 	#bodyview {
-		position:static;
-		
+		position:static;		
 		background-color:#ff9428  /*#ff9428 rgb(178, 255, 38)*/;
 		background: none;
 		/*filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff9428', endColorstr='#fbec39');/*For IE7-8-9*/ 
@@ -144,6 +143,9 @@ h1.ui-widget-header, h2.ui-widget-header {
 	#poweredBy{
 		float: right;
 		text-align:right;
+	}
+	tr {
+		page-break-before: auto;
 	}
 }
 .ofh {

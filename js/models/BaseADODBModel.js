@@ -54,8 +54,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                         if(Object.prototype.toString.call(value) === "[object Date]")
                             sql += key + " = '" + value.format('isoDateTime') + "'";
                         else
-                            sql += key + " = '" + JSON.stringify(value) + "'";
-                         
+                            sql += key + " = '" + JSON.stringify(value) + "'";                         
                         
                     }
                     else
