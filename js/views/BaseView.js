@@ -109,6 +109,52 @@ function($, Backbone, E, Handlebars){
             };
             loadValue(); 
             return $input;  
+        },
+        editAutoComplete: function(e){
+            debugger;
+            
+            var $container = $(e.currentTarget)
+            var model =  this.model
+            var attr = $container.attr('data-attr')
+            var value;            
+            var $input;
+            var source = [{id: 3,label:'James'},{id: 82,label:'David'},{id: 13,label:'Lynae'}, {id: 33,label:'Carrie'}];
+            $input = $("<INPUT type=text class='editor-text' />")
+                  .appendTo(e.currentTarget)
+                  .on("keydown", function (e) {
+                    if (e.key === 'Enter') {
+                      applyValue()
+                      destroy()
+                    }
+                  }).autocomplete({
+                      autoFocus: true,
+                      delay: 0,
+                      minLength:  0,
+                      source: source,
+                      select: applyValue
+                  })
+                  .focus()
+                  .select();
+            
+            var destroy = function () {
+              $input.remove();
+            };
+            
+            var loadValue = function () {
+              value = model.get(attr) || "";
+              var result = $.grep(source, function(e){ return e.id == value; });
+              value = result[0].label
+              $input.val(value);
+              $input[0].defaultValue = value;
+              $input.select();
+            };
+            
+            var applyValue = function (e, ui) {
+              model.set(attr, $input.val());
+              alert(ui.item.label);
+            };
+            loadValue(); 
+            return $input;  
         }
         
     });

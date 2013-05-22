@@ -149,11 +149,13 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
             this.$('#plot').off('jqplotDataClick');
             this.$('#plot').on('jqplotDataClick',this.renderProcessRecord);             
                 
-            this.modelStageTotals.sqlArgs = new Array(this.associateToQualification_ID);
-            this.modelStageTotals.fetch()
+            var cd;
             var cs = this.collection.getCurrentStage()
-            var cd = new Date(this.modelStageTotals.get('LastReviewDate'))
-            if (!cd) cd = "n/a"
+            if(cs != 8){
+                this.modelStageTotals.sqlArgs = [this.associateToQualification_ID];
+                this.modelStageTotals.fetch({error:function(model, response, options){alert()}})
+                cd = this.modelStageTotals.get('LastReviewDate') ? new Date(this.modelStageTotals.get('LastReviewDate')) : 'n/a';
+            }
             var cm = (this.collection.getStageMinutes(cd)/440).toFixed(2);
             var ns = this.nextStage(cs);
             if(ns==5)
@@ -211,8 +213,10 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 that.loadData()
                 E.hideLoading();
             }
+            var source = this.qualificationList.toJSON()
+            
             this.$( "#iqualification" ).autocomplete({
-                source: this.qualificationList.toJSON(),
+                source: source,
                 autoFocus: true,
                 minLength: 0,
                 delay: 0,
@@ -223,7 +227,7 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                     that.$('#qualName').html( ui.item.qualification );
                     that.$('#scell').html( ui.item.cell );
                     that.$('#sAssociate').html( ui.item.label.split('-')[0] );
-                    if(removeIfInvalid( ui.item.label,qualificationList)) {
+                    if(removeIfInvalid( ui.item.label,source)) {
                         E.loading(that.$el, function() {success(ui.item.id );},that)
                     }
                     $(this).val('').blur();

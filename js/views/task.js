@@ -15,7 +15,8 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
           "click span.todo-destroy"   : "clear",
           "keypress .todo-input"      : "updateOnEnter",
           "blur .todo-input"          : "close",
-          "dblclick .dueAt": "edit"
+          "dblclick .dueAt": "edit",
+          "dblclick .AssignedTo": "editAutoComplete"
         },
     
         // The TodoView listens for changes to its model, re-rendering. Since there's
