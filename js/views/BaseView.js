@@ -5,9 +5,11 @@ function($, Backbone, E, Handlebars){
 
         tagName:  "div",
         constructor: function(){
-            Backbone.View.apply(this, arguments);
-            _.bindAll(this,'editText')
-            this.buildTemplateCache();
+           _.bindAll(this, "render");    
+           var args = Array.prototype.slice.apply(arguments);    
+           Backbone.View.prototype.constructor.apply(this, args);
+           
+           this.buildTemplateCache();
         },
         buildTemplateCache: function(){
             var proto = Object.getPrototypeOf(this);
@@ -73,25 +75,10 @@ function($, Backbone, E, Handlebars){
             
             var $container = $(e.currentTarget)
             var model =  this.model
-            var attr = $container.attr('data-attr')
+            var attr = $container.attr('data-attr')            
             var value;            
-            var $input;
+            var $input;      
             
-            $input = $("<INPUT type=text class='editor-text' />")
-                  .appendTo(e.currentTarget)
-                  .on("keydown", function (e) {
-                    if (e.key === 'Enter') {
-                      applyValue()
-                      destroy()
-                    }
-                  }).autocomplete({
-                      autoFocus: true,
-                      delay: 0,
-                      minLength:  0,
-                      source: ['James','David','Samual']
-                  })
-                  .focus()
-                  .select();
             
             var destroy = function () {
               $input.remove();
@@ -107,6 +94,16 @@ function($, Backbone, E, Handlebars){
             var applyValue = function () {
               model.set(attr, $input.val());
             };
+            $input = $("<INPUT type=text />")
+                .appendTo(e.currentTarget)
+                .on("keydown", function (e) {
+                    if (e.key === 'Enter') {
+                      applyValue()
+                      destroy()
+                    }
+                })
+                .focus()
+                .select();
             loadValue(); 
             return $input;  
         },
@@ -116,26 +113,11 @@ function($, Backbone, E, Handlebars){
             var $container = $(e.currentTarget)
             var model =  this.model
             var attr = $container.attr('data-attr')
+            var label = $container.attr('data-label')
             var value;            
             var $input;
             var source = [{id: 3,label:'James'},{id: 82,label:'David'},{id: 13,label:'Lynae'}, {id: 33,label:'Carrie'}];
-            $input = $("<INPUT type=text class='editor-text' />")
-                  .appendTo(e.currentTarget)
-                  .on("keydown", function (e) {
-                    if (e.key === 'Enter') {
-                      applyValue()
-                      destroy()
-                    }
-                  }).autocomplete({
-                      autoFocus: true,
-                      delay: 0,
-                      minLength:  0,
-                      source: source,
-                      select: applyValue
-                  })
-                  .focus()
-                  .select();
-            
+           
             var destroy = function () {
               $input.remove();
             };
@@ -144,15 +126,28 @@ function($, Backbone, E, Handlebars){
               value = model.get(attr) || "";
               var result = $.grep(source, function(e){ return e.id == value; });
               value = result[0].label
-              $input.val(value);
-              $input[0].defaultValue = value;
-              $input.select();
+              
+              $input.focus();
+              $input.autocomplete('search',"");
+              
             };
             
             var applyValue = function (e, ui) {
-              model.set(attr, $input.val());
-              alert(ui.item.label);
+              model.set(attr, ui.item.id,{silent:true});
+              model.set(label, ui.item.label);
+              destroy();
             };
+            
+             $input = $("<INPUT type=text />")
+                .on('blur', function(){destroy();model.trigger('change')})
+                 .autocomplete({
+                      autoFocus: true,
+                      delay: 0,
+                      minLength:  0,
+                      source: source,
+                      select: applyValue
+                  })
+            $container.replaceWith($input)
             loadValue(); 
             return $input;  
         }

@@ -37,7 +37,7 @@ function($, Backbone, E, Handlebars, require,user){
             if (E.appState == 'Developer')
                 obj.id = 3;
             E.user = new user(obj);
-            if (E.appState != 'Developer')
+            if ((E.appState == 'Developer' || username == 'Train9u01') && !E.GET['module'] )
                 E.user.fetch();    
             
             //alert(E.user.get('PicturePath'));
@@ -76,7 +76,7 @@ function($, Backbone, E, Handlebars, require,user){
                defaults.header = false;
                defaults.footer = false;
                defaults.sidebar = false;
-               defaults.module = true;               
+               defaults.module = true;                              
             }
             E.views.currentView = viewName
             

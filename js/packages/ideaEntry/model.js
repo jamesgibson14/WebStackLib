@@ -37,11 +37,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     var sql = "UPDATE qryData_NewRecord SET qryData_NewRecord.Flagged = %s, qryData_NewRecord.txtFlagReason = '%s' WHERE qryData_NewRecord.PID='%s' AND qryData_NewRecord.OpSeq=%s;",
                     params = [temp,reason,this.get('pid'),this.get('opseq')],
                     success = function(sql){alert('sucess: ' + sql);},error = function(sql){alert('error on: ' + sql);};
-                    debugger;
-                    //this.db.transaction(function(db) {
-                        //return db.executeSql(sql, params, success, error);
-                    //});
-                }
+
             },
             markAsEntered: function(){
                 var temp = this.get("entered");
@@ -57,9 +53,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     
                     if (this.get('Paper_ID')) 
                         sql += 'AND Paper_ID = %s;';
-                    this.db.transaction(function(db) {
-                        return db.executeSql(sql, params, success, error);
-                    });
+                    this.db.executeSql(sql, params, success, error);
                 }
             }
     });

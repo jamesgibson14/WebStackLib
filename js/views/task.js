@@ -23,7 +23,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
         // a one-to-one correspondence between a **Todo** and a **TodoView** in this
         // app, we set a direct reference on the model for convenience.
         initialize: function() {
-            _.bindAll(this, 'render', 'close', 'remove');
+            _.bindAll(this, 'close', 'remove');
             this.model.bind('change', this.render);
             this.model.bind('destroy', this.remove,this);
         },        

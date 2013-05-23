@@ -26,7 +26,11 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         },
         find: function(options){
             var id = (this.id || this.attributes.id);
-            this._executeSql("SELECT * FROM "+this.url+" WHERE " + this.idAttribute + " = '" + id + "'");
+            var sql = this.sql || "SELECT * FROM "+this.url()+" WHERE " + this.idAttribute + " = '" + id + "'"
+            var result = null;
+            if(!options.queue)
+                options.success(this._executeSql(sql,null,null)[0]); 
+                
         },
         create: function(options){
             var columns;
@@ -82,9 +86,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             return sql;
         },
         _executeSql: function(sql){
-            return this.db.transaction(function(db) {
-                return db.executeSql(sql);
-            });
+            return this.db.executeSql(sql);
         },
         _escapeQuotes: function(string){
             return string.replace("'","''")

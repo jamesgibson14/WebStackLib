@@ -11,9 +11,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         },
         read: function(){
             var sql ='SELECT * FROM Ideas';
-            this.db.transaction(function(db) {
-                return db.executeSql(SQL, success, error);
-            });
+            this.db.executeSql(SQL, success, error);
         },
         create: function(){
             var that = this
@@ -26,9 +24,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 
             },
             error = function(){alert('failed');return}
-            this.db.transaction(function(db) {
-                return db.executeSql(sql, success, error);
-            });
+            this.db.executeSql(sql, success, error);
         },
         update: function(){
               

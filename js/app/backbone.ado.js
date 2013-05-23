@@ -25,10 +25,8 @@ var WebSQLStore = function (db, tableName, createTable, isJSON, initSuccessCallb
     	error = function (tx,error) {
     		if (initErrorCallback) initErrorCallback();
     	};
-    	db.transaction (function(db) {
-    		return db.executeSql("CREATE TABLE " + tableName + "(ID VARCHAR(100) PRIMARY KEY, [value] MEMO)",[],success, error);
+    	db.executeSql("CREATE TABLE " + tableName + "(ID VARCHAR(100) PRIMARY KEY, [value] MEMO)",[],success, error);
     		//CREATE TABLE Employees("EmployeeId INTEGER NOT NULL, LastName   VARCHAR(40)  NOT NULL, FirstName  VARCHAR(40)  NOT NULL)"
-    	});
 	}
 };
 
@@ -121,9 +119,7 @@ _.extend(WebSQLStore.prototype,{
           SQL = vsprintf(SQL,params);
         if(this.debug)
             alert(SQL);
-		this.db.transaction(function(db) {
-			return db.executeSql(SQL, success, error,true);
-		});
+		this.db.executeSql(SQL, success, error);
 	},
 	_parseUpdateString: function(attrs, attrMap){
 	    var string = '';
