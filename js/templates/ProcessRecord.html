@@ -24,7 +24,7 @@
 		</tr>
 	</thead>
 	
-	<tbody id="pidlisttbody" class="tablebody">
+	<tbody id="pidlisttbody" class="tablebody" >
 	{{#each details}}
 	{{#with this}}
 		<tr>
@@ -34,29 +34,25 @@
 			op:&nbsp;{{OpSeq}}<br />item:&nbsp;{{txtProduct}}<br />Task:&nbsp;{{Task}}</td>		
 		<td class='cell border'>
 			<table class="borderCells">
-				<tr><td title="ClockSetup">{{ClockSetup}}</td><td>{{ClockRun}}</td><td>{{ClockEnd}}</td><td colspan="2">S</td><td colspan="2">R</td><td colspan="2">AM</td></tr>
+				<tr><td title="ClockSetup">{{ClockSetup}}</td><td>{{ClockRun}}</td><td>{{ClockEnd}}</td></tr>
 				<tr><td colspan="3">
 					B<input type="checkbox" {{#if chkBreak1}}checked="checked"{{/if}} /> 
 					L<input type="checkbox" {{#if chkLunch}}checked="checked"{{/if}} /> 
 					B<input type="checkbox" {{#if chkBreak2}}checked="checked"{{/if}} />
 				</td>
-					{{#if LineNum}}
-					<td>{{SetupMinutes}}</td>
-					<td>{{runClock}}</td>
-					<td>{{AssignedClock}}</td>
-					{{/if}}
 				</tr>			
 			</table>
 		</td>
 		<td>
-			<table class="borderCells">			
-				<tr><th class="noBorder">Hour</th><td>{{MeterStart}}</td><td>{{MeterStop}}</td><td>diff:{{hourDiff}}</td></tr>
-				<tr><th class="noBorder">Counter</th><td>{{CStart}}</td><td>{{CounterEnd}}</td><td>diff:{{counterDiff}}</td></tr>				
+			<table class="borderCells">	
+				<tr><td class="noBorder" ></td><th>Start</th><th>End</th></tr>		
+				<tr title="Difference: {{runMeter}}mins"><th class="noBorder">Hour</th><td>{{MeterStart}}</td><td>{{MeterStop}}</td></tr>
+				<tr title="Difference: {{machineCount}}"><th class="noBorder">Counter</th><td>{{CStart}}</td><td>{{CounterEnd}}</td></tr>				
 			</table>
 		</td>
 		<td>
 			<table class="borderCells">			
-				<tr><td title="Machine Speed">Speed</td></tr>
+				<tr><th title="Machine Speed">Speed</th></tr>
 				<tr><td>{{MachineSpeed}}</td></tr>
 				<tr><td>{{MachineSpeedTarget}}</td></tr>				
 			</table>
@@ -75,21 +71,21 @@
 			<table class="borderCells">
 				<tr>
 					<td class="noBorder"></td>
-					<td title="Assigned Minutes" colspan="2">AM</td>
-					<td title="Runtime" colspan="2">RT</td>
-					<td title="SetupTime">ST</td>
-					<td title="DownTime">DT</td>
+					<th title="Assigned Minutes" colspan="2">AM</th>
+					<th title="Runtime" colspan="2">RT</th>
+					<th title="SetupTime">ST</th>
+					<th title="DownTime">DT</th>
 				</tr>
-				<tr><th>Actual</th>
+				<tr><td class="noBorder">Actual</td>
 					<td>{{AssignedMinutes}}</td>
 					<td rowspan="2" style="vertical-align: middle">{{AssignedMinutesPercentage}}%</td>
 					<td>{{runMeter}}</td>
 					<td rowspan="2" style="vertical-align: middle">{{RunTimePercentage}}%</td>
 					<td>{{OperatorSetupMinutes}}</td>
 					<td>{{downTime}}</td></tr>
-				<tr><th>Target</th>
+				<tr><td class="noBorder">Target</td>
 					<td>{{AssignedMinutesTarget}}</td>
-					<td>{{RunTimeTarget}}</td>
+					<td>{{RuntimeTarget}}</td>
 					<td>{{OperatorSetupMinutesTarget}}</td>
 					<td>{{downTimeTarget}}</td>
 					</tr>
@@ -134,7 +130,7 @@
 	<!-- Here is where I need to add a list of PID Module views instead of the following-->
 	
 	</table>
-	<table class="left tablesorter" style="margin-left: 20px">
+	<table class="left" style="margin-left: 20px">
 		<tr><th colspan="2">Legend</th></tr>
 		<tr><td>A</td><td>Assigned Minutes</td></tr>
 		<tr><td>S</td><td>Setup Minutes</td></tr>

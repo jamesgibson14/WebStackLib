@@ -11,6 +11,7 @@ function($, Backbone, E, Handlebars, template, Collection){
             _.bindAll(this, 'render');   
         },
         render: function(Record_ID) {
+            var that = this;
             this.collection.sqlArgs = [Record_ID || 48285]
             this.collection.fetch();
             var html;
@@ -28,7 +29,8 @@ function($, Backbone, E, Handlebars, template, Collection){
             }       
                 
             this.$el.html( html );
-
+         
+            
             return this;
         }
     });

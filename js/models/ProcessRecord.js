@@ -9,7 +9,6 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         dataRender: function(){
             var that = this;
             return this.map(function(model){
-                debugger;
                 var line = model.toJSON()
                 var s = that.parseTime(line.ClockSetup);
                 var r = that.parseTime(line.ClockRun);
@@ -30,7 +29,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     line.breakMinutes += 10
                 if (line.chkBreakLunch)
                     line.breakMinutes += 30
-                line.AssignedMinutesTarget = Math.round(((line.NetQtyProduced + line.ScrapTarget) / line.MachineSpeedTarget)+line.OperatorSetupMinutesTarget)
+                line.RuntimeTarget = Math.round(((line.NetQtyProduced + line.ScrapTarget) / line.MachineSpeedTarget))
+                line.AssignedMinutesTarget = Math.round(line.RuntimeTarget + line.OperatorSetupMinutesTarget)
                 line.AssignedMinutesPercentage = Math.round((line.AssignedMinutesTarget*100) / line.AssignedMinutes)
                 line.ScrapPercentage = (Math.round(line.ScrapPercentage*10000)/100).toFixed(1)              
                 line.ScrapPercentageTarget = (Math.round(line.ScrapPercentageTarget*10000)/100).toFixed(1) 
@@ -40,7 +40,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 line.NetQtyProducedPercentageTarget = (Math.round(line.NetQtyProducedPercentageTarget*10000)/100).toFixed(1) 
                 line.StagePercent = (Math.round(line.NetQtyProducedPercentageTarget/line.NetQtyProducedPercentage*10000)/100)
                 line.runClock = (date3 - date2)/1000/60;
-                line.runMeter = ((line.MeterStop - line.MeterStart)*60).toFixed(0);                
+                line.runMeter = ((line.MeterStop - line.MeterStart)*60).toFixed(0);                 
                 line.SetupMinutes = (date2 - date1)/1000/60;
                 line.AssignedClock = ((date3 - date1)/1000/60)-line.breakMinutes;
                 line.downTime = (line.AssignedMinutes-line.runMeter-line.SetupMinutes);
