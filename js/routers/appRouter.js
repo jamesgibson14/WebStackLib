@@ -37,9 +37,9 @@ function($, Backbone, E, Handlebars, require,user){
             if (E.appState == 'Developer')
                 obj.id = 3;
             E.user = new user(obj);
-            if ((E.appState == 'Developer' || username == 'Train9u01') && !E.GET['module'] )
+            if (!(E.appState == 'Developer' || username == 'Train9u01') || !E.GET['module'] )
                 E.user.fetch();    
-            
+
             //alert(E.user.get('PicturePath'));
             //E.loadCss("js/lib/css/dark-hive/jquery-ui.css")
             E.loadCss("js/lib/jqplot/jquery.jqplot.css")
