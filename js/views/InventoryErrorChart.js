@@ -39,9 +39,9 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
         },
         renderCollection: function() {
             var that = this;
-            that.$("#reportwindow").html()
+            that.$("#reportwindow").html("")
             this.collection.each(function(model) {
-                that.$("#reportwindow").append('<div>this is a row ' + model.get('ErrorType') + ': ' + model.get('CountOfErrorType')+' </div>')
+                that.$("#reportwindow").append('<div>'+ model.get('DateEntered') +' : '  + model.get('ErrorType') + ': ' + model.get('DailyErrorCount')+' </div>')
             })
         },
         loadReport: function(e){
