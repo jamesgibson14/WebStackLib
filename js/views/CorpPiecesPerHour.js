@@ -14,7 +14,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','loadData','renderRawData');
+            _.bindAll(this, 'render','loadData','renderDataGrid');
 
             this.model = new this.model()
             this.model.fetch();
@@ -110,18 +110,14 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                     formatString:'<div class="boxpad border"><p>date: %s</p><p>PiecesPerHour: %s</p><div>',
                     useAxesFormatters: true,
                     tooltipContentEditor: function(str, seriesIndex, pointIndex, plot){
-                        /*
+                        debugger;
                         var data = plot.series[seriesIndex].data[pointIndex]
-                        data[0] = new Date(data[0]).format('mm/dd/yyyy');
-
+                        data[0] = new Date(data[0] + 1).format('mm/dd/yyyy');
+                        
                         data[1] = new Number(data[1]).toFixed(1)
-                        if(plot.legend.labels[seriesIndex].indexOf('Target') > 1){
-                            str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>Stage:</td><td>%s</td></tr></table>'
-                        }
-                        else
-                            str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr><tr><td>Record #</td><td>%s</td></tr></table>'
+                        var label = plot.legend.labels[seriesIndex].indexOf('Target') 
+                        str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>PiecesPerHour:</td><td>%s</td></tr></table>'
                         str = $.jqplot.sprintf.apply($.jqplot.sprintf, [str].concat(data));
-                        */
                         return str;
                     }
                },
@@ -150,7 +146,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                     that.$('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
             }); 
             this.$('#plot').off('jqplotDataClick');
-            this.$('#plot').on('jqplotDataClick',this.renderRawData);   
+            this.$('#plot').on('jqplotDataClick',this.renderDataGrid);   
             
         },
         render: function() {
@@ -257,9 +253,14 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             E.hideLoading();
         },
         renderMachines: function(){
-            this.$('#atq_id').html( this.model.get('machineCodes').join(', ') );
+            var html = '';
+            $.each(this.model.get('machineCodes'), function(i, item){
+                html += '<li class="ui-state-default">' + item + '</li>'
+            })
+            this.$('#selectable').html();
+            this.$('#selectable').html(html);
         },
-        renderRawData: function(ev, seriesIndex, pointIndex, data){
+        renderDataGrid: function(ev, seriesIndex, pointIndex, data){
             //Instead of destroying plot just reload data, lables and then re-plot
             var that = this;
             var html;

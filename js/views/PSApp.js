@@ -173,8 +173,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             
             return this;
         },
-        change: function(){
-            
+        change: function(){            
             var newvalue = this.$el.find('.pid').val();
             this.model.set({pid: newvalue})
         },
@@ -577,6 +576,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         _step = 'stepSaveScrap'
                     else
                         _step = 'step8';
+                    blockAlerts();
                     context.one('load', function(){
                         nextStep();       
                     }); 
@@ -632,22 +632,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         //alert(btnS[0]);
                         btnS[0].click();
                         _step = 'step10';
-                        /*
-                        document.getElementById("autoentry").onreadystatechange = function(){   
-                            //alert('change ' + this.readyState);
-                            if (this.readyState == 'interactive'){
-                                //alert('I am inside the interactive state');
-                                //unbind the function
-                                document.getElementById("autoentry").onreadystatechange = null;
-                                //block alert popups
-                                document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
-                                document.getElementById("autoentry").contentWindow.alert = function(){};
-                                
-                                //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
-                                //document.getElementById("autoentry").contentWindow.alert("Alert");
-                            }
-                        }
-                        */
+                        
+                        blockAlerts();
+                        
                         context.one('load', function(){
                             nextStep();       
                         });                        
@@ -690,7 +677,22 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //setTimeout(function(){thisStep(context,fr,data);},100);
                 }
             } 
-            
+            var blockAlerts = function(){
+                document.getElementById("autoentry").onreadystatechange = function(){   
+                    //alert('change ' + this.readyState);
+                    if (this.readyState == 'interactive'){
+                        //alert('I am inside the interactive state');
+                        //unbind the function
+                        document.getElementById("autoentry").onreadystatechange = null;
+                        //block alert popups
+                        document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
+                        document.getElementById("autoentry").contentWindow.alert = function(){};
+                        
+                        //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
+                        //document.getElementById("autoentry").contentWindow.alert("Alert");
+                    }
+                }
+            }
             return {
                 run: function(){
                     var thisStep = map[_step];
