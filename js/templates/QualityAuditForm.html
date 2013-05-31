@@ -1,0 +1,45 @@
+<!DOCTYPE>
+
+<body>
+	<P>Score (circle): 1 / 0 </P>
+	<P><strong>Final Quality Inspection</strong></P>
+	<label>Machine:</label><input type="text" />
+
+<label>Shift:</label>
+<label>F</label><input type="radio" name="ShiftRadio" /><label>G</label><input type="radio" name="ShiftRadio" /><label>E</label><input type="radio" name="ShiftRadio" />
+<br />
+<br />
+<label>Product:</label><input type="text" />
+<label>Brand:</label><input type="text" />
+<br />
+<br />
+<label>PID Run Date:</label><input type="text" />
+<label>Inspection Date:</label><input type="text" />
+
+<P><strong>Part of run inspected: <select> 
+	<option>Beginning</option>
+	<option>middle</option>
+	<option>end</option>
+	<option>warehouse</option></select>
+
+<ol>
+	<li>Carton condition and bar code correct: <label>Y</label><input type="radio"name="rl1" /><label>N</label><input type="radio" name="rl1" /></li>
+	<li>Date Stamp Correct: <label>Y</label><input type="radio"name="rl2" /><label>N</label><input type="radio" name="rl2" /></li>
+	<li>Carton, Box, Imprint correct: <label>Y</label><input type="radio"name="rl3" /><label>N</label><input type="radio" name="rl3" /></li>
+	<li>Imprint Standard correct: <label>Y</label><input type="radio"name="rl4" /><label>N</label><input type="radio" name="rl4" /></li>
+	<li>Count Correct: <label>Y</label><input type="radio"name="rl5" /><label>N</label><input type="radio" name="rl5" /></li>
+	<li>Box bottom/cover or Shrink Wrap: <label>Y</label><input type="radio"name="rl5" /><label>N</label><input type="radio" name="rl5" /></li>
+	<li>Product Meets Quality Standards: <label>Y</label><input type="radio"name="rl6" /><label>N</label><input type="radio" name="rl6" /></li>
+	<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If no, is a destructive test needed?: </span> <label>Y</label><input type="radio"name="rl7" /><label>N</label><input type="radio" name="rl7" />
+	<li>"1st piece" from this run inspected: <label>Y</label><input type="radio"name="rl8" /><label>N</label><input type="radio" name="rl8" /></li>
+	<li>The paper is the correct color, thickness, and recycled content: <label>Y</label><input type="radio"name="rl9" /><label>N</label><input type="radio" name="rl9" /></li>
+	<br />
+</ol>
+	<p>Acceptable format: <span>0427121425CED</span></p>
+	<div><label>Y</label><Input type="radio" name = "deviations"/><label>N</label><Input type="radio" name = "deviations"/><label>Are there any deviations from the standard?</label></div>
+	<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If yes, not the deviation, reason, and next steps.</span>
+	<div><label>Y</label><Input type="radio" name = "standardclarity"/><label>N</label><Input type="radio" name = "standardclarity"/><label>Are there any deviations from the standard?</label></div>
+<label>How can the process be improved? /Notes:</label>
+<div><textarea cols="25" rows="10"></textarea></div>
+
+</body>

@@ -785,6 +785,9 @@ textarea {
 .bold {
 	font-weight: bold;
 }
+.fontStrike {
+	text-decoration:line-through;
+}
 .cell { 
 	display:table-cell;
 	padding:5px;

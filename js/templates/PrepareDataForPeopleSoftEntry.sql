@@ -114,11 +114,19 @@ FROM
 					chkLunch,
 					0
 				)-dbo.fnMachineRunTimeMinutes([Meter Stop],[Meter Start])
-				-(CASE WHEN DateDiff("n", ClockSetup, ClockRun) < 0 THEN DateDiff("n", ClockSetup, ClockRun) + 1440 ELSE DateDiff("n", ClockSetup, ClockRun) END)
-				- ReAssgnMinTotal + (chkBreak1*10) + (chkBreak2 * 10) + (chkLunch * 30)
+				-(dbo.fnSetupMinutes(
+					ClockSetup, 
+					ClockRun, 
+					ReAssgnMinTotal,
+					chkBreak1,
+					chkBreak2,
+					chkLunch,
+					1
+				))
+				 + (chkBreak1*10) + (chkBreak2 * 10) + (chkLunch * 30)
 			),
 			setuptime = (
-				dbo.fnAssignedMinutes(
+				dbo.fnSetupMinutes(
 					ClockSetup, 
 					ClockRun, 
 					ReAssgnMinTotal,
@@ -134,7 +142,7 @@ FROM
 				dbo.fnAssignedMinutes(
 					ClockSetup, 
 					ClockEnd, 
-					ReAssgnMinTotal,
+					0,
 					chkBreak1,
 					chkBreak2,
 					chkLunch,
@@ -164,7 +172,7 @@ FROM
 			AND	ProductionDataDetails.PID <>'DCP' 
 			And ProductionDataDetails.PID <> 'extra'  
 			AND ProductionData.Machine <> '52102'
-			--AND	ProductionDataDetails.PID IN ('PID1609340', 'PID1612236')
+			--AND	ProductionDataDetails.PID IN ('PID1624558', 'PID162388')
 			AND ProductionData.chkCompleted = 1 
 			AND ProductionData.Date > '8/1/2012'
 		) AS dt1

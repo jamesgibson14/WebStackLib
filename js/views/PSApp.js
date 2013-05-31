@@ -291,6 +291,20 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var _errors=false;
             var context = $('#autoentry');
             var debug = false;
+            var blockAlerts = function(){   
+                //alert('change ' + this.readyState);
+                if (this.readyState == 'interactive'){
+                    //alert('I am inside the interactive state');
+                    //unbind the function
+                    document.getElementById("autoentry").onreadystatechange = null;
+                    //block alert popups
+                    document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
+                    document.getElementById("autoentry").contentWindow.alert = function(){};
+                    
+                    //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
+                    //document.getElementById("autoentry").contentWindow.alert("Alert");
+                }                
+            };
             var map = {
                 step1: function(){
                     //alert('step1: wait for login screen then login.');
@@ -501,6 +515,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         frm.ICAction.value = "SF_COMPL_WRK_COMPL_OP_SEQ$prompt$0";
                         frm.submit();
                         _step = 'step8_1';
+                        document.getElementById("autoentry").onreadystatechange = blockAlerts;
                         context.one('load', function(){
                             nextStep();       
                         }); 
@@ -515,7 +530,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         //alert('3')
                         op.value = _model.opseq;
                         op.onchange();
-                        _step = 'step8';                        
+                        _step = 'step8';
+                        document.getElementById("autoentry").onreadystatechange = blockAlerts;                       
                         context.one('load', function(){
                             nextStep();       
                         }); 
@@ -526,7 +542,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         txtScrapQty.focus()
                         txtScrapQty.value = _model.scrap;
                         txtScrapQty.onchange()          
-                        
+                        document.getElementById("autoentry").onreadystatechange = blockAlerts;
                         _step = 'step8';                        
                         context.one('load', function(){
                             nextStep();       
@@ -576,7 +592,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         _step = 'stepSaveScrap'
                     else
                         _step = 'step8';
-                    blockAlerts();
+                    
+                    document.getElementById("autoentry").onreadystatechange = blockAlerts;
                     context.one('load', function(){
                         nextStep();       
                     }); 
@@ -633,7 +650,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                         btnS[0].click();
                         _step = 'step10';
                         
-                        blockAlerts();
+                        document.getElementById("autoentry").onreadystatechange = blockAlerts;
                         
                         context.one('load', function(){
                             nextStep();       
@@ -677,22 +694,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //setTimeout(function(){thisStep(context,fr,data);},100);
                 }
             } 
-            var blockAlerts = function(){
-                document.getElementById("autoentry").onreadystatechange = function(){   
-                    //alert('change ' + this.readyState);
-                    if (this.readyState == 'interactive'){
-                        //alert('I am inside the interactive state');
-                        //unbind the function
-                        document.getElementById("autoentry").onreadystatechange = null;
-                        //block alert popups
-                        document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
-                        document.getElementById("autoentry").contentWindow.alert = function(){};
-                        
-                        //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
-                        //document.getElementById("autoentry").contentWindow.alert("Alert");
-                    }
-                }
-            }
+            
             return {
                 run: function(){
                     var thisStep = map[_step];
