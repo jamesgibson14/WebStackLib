@@ -70,7 +70,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                         // set to true to replot when toggling series on/off
                         // set to an options object to pass in replot options.
                         seriesToggle: 'normal',
-                        seriesToggleReplot: {resetAxes: true}
+                        seriesToggleReplot: {resetAxes: false}
                     }
                 },
                 axes: {
