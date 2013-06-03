@@ -44,6 +44,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             if (!this.hasChanged())
                 return sql;
             var that = this;
+            var queue = options && options.queue ? options.queue : false;
+            var success = options && options.success ? options.success : function(){return;}
             if (!sql){
                 var params = this.router._extractParameters(this.router._routeToRegExp('/:table/:id'),this.url())
                 sql = "UPDATE " + params[0] + ' SET '; 
@@ -67,8 +69,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 sql += " WHERE ID = " + params[1]
             }
             
-            if(!options.queue)
-                var rs = this._executeSql(sql)
+            if(!queue)
+                var rs = this._executeSql(sql,success)
             
             return sql;
         },
@@ -85,8 +87,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             
             return sql;
         },
-        _executeSql: function(sql){
-            return this.db.executeSql(sql);
+        _executeSql: function(sql,success,error){
+            return this.db.executeSql(sql,success,error);
         },
         _escapeQuotes: function(string){
             return string.replace("'","''")

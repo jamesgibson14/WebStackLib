@@ -1,6 +1,20 @@
 <!DOCTYPE>
 
 <body>
+<style>
+	body { 
+		font-family: "Arial"; font-size 12px;
+	}
+	.bold {
+		font-weight: bold; 
+	}
+	.tab {
+		margin-left: 20px;
+	}
+	.italic {
+		font-style: italic
+	}
+</style>	
 	<P>Score (circle): 1 / 0 </P>
 	<P><strong>Final Quality Inspection</strong></P>
 	<label>Machine:</label><input type="text" />
@@ -16,30 +30,54 @@
 <label>PID Run Date:</label><input type="text" />
 <label>Inspection Date:</label><input type="text" />
 
-<P><strong>Part of run inspected: <select> 
+<P>Part of run inspected: <select> 
 	<option>Beginning</option>
 	<option>middle</option>
 	<option>end</option>
 	<option>warehouse</option></select>
 
 <ol>
-	<li>Carton condition and bar code correct: <label>Y</label><input type="radio"name="rl1" /><label>N</label><input type="radio" name="rl1" /></li>
-	<li>Date Stamp Correct: <label>Y</label><input type="radio"name="rl2" /><label>N</label><input type="radio" name="rl2" /></li>
-	<li>Carton, Box, Imprint correct: <label>Y</label><input type="radio"name="rl3" /><label>N</label><input type="radio" name="rl3" /></li>
-	<li>Imprint Standard correct: <label>Y</label><input type="radio"name="rl4" /><label>N</label><input type="radio" name="rl4" /></li>
-	<li>Count Correct: <label>Y</label><input type="radio"name="rl5" /><label>N</label><input type="radio" name="rl5" /></li>
-	<li>Box bottom/cover or Shrink Wrap: <label>Y</label><input type="radio"name="rl5" /><label>N</label><input type="radio" name="rl5" /></li>
-	<li>Product Meets Quality Standards: <label>Y</label><input type="radio"name="rl6" /><label>N</label><input type="radio" name="rl6" /></li>
-	<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If no, is a destructive test needed?: </span> <label>Y</label><input type="radio"name="rl7" /><label>N</label><input type="radio" name="rl7" />
-	<li>"1st piece" from this run inspected: <label>Y</label><input type="radio"name="rl8" /><label>N</label><input type="radio" name="rl8" /></li>
-	<li>The paper is the correct color, thickness, and recycled content: <label>Y</label><input type="radio"name="rl9" /><label>N</label><input type="radio" name="rl9" /></li>
-	<br />
+	<li><span  class="bold">Carton condition and bar code correct: </span><label >Y</label><input type="radio"name="r11" /><label>N</label><input type="radio" name="r11" /></li>
+	<li><span  class="bold">Date Stamp Correct: </span><label>Y</label><input type="radio"name="rl2" /><label>N</label><input type="radio" name="rl2" /></li>
+	<li><span  class="bold">Carton, Box, Imprint correct: </span><label>Y</label><input type="radio"name="rl3" /><label>N</label><input type="radio" name="rl3" /></li>
+	<li><span  class="bold">Imprint Standard correct: </span><label>Y</label><input type="radio"name="rl4" /><label>N</label><input type="radio" name="rl4" /></li>
+	<li><span  class="bold">Count Correct: </span><label>Y</label><input type="radio"name="rl5" /><label>N</label><input type="radio" name="rl5" /></li>
+	<li><span  class="bold">Box bottom/cover or Shrink Wrap: </span><label>Y</label><input type="radio"name="rl6" /><label>N</label><input type="radio" name="rl6" /></li>
+	<li><span  class="bold">Product Meets Quality Standards:</span> <label>Y</label><input type="radio"name="rl7" /><label>N</label><input type="radio" name="rl7" /></li>
+	<span class="tab bold italic">If no, is a destructive test needed?: </span> <label>Y</label><input type="radio"name="rl8" /><label>N</label><input type="radio" name="r18" />
+	<li> <span class="bold"> Scrap Pieces and angel hair are minimal: </span> <label>Y</label><input type="radio"name="rl9" /><label>N</label><input type="radio" name="rl9" />
+	<li><span  class="bold">Product build to specifications:</span> <label>Y</label><input type="radio"name="r20" /><label>N</label><input type="radio" name="r20" /></li>
+	<li><span>"1st piece" from this run inspected:</span> <label>Y</label><input type="radio"name="r21" /><label>N</label><input type="radio" name="r21" /></li>
+	<li><span>The paper is the correct color, thickness, and recycled content: </span><label>Y</label><input type="radio"name="r22" /><label>N</label><input type="radio" name="r22" /></li>
+	<li><span>Box cover color is correct:</span><label>Y</label><input type="radio"name="r23" /><label>N</label><input type="radio" name="r23" /></li>
+	<li><span>The tabs are in the correct position:</span><label>Y</label><input type="radio"name="r24" /><label>N</label><input type="radio" name="r24" /></li>
+	<li><span>Carton is taped correctly:</span><label>Y</label><input type="radio"name="r25" /><label>N</label><input type="radio" name="r25" /></li>
+	<li><span>Marsh printer is in correct format:</span><label>Y</label><input type="radio"name="r26" /><label>N</label><input type="radio" name="r26" /></li>
 </ol>
-	<p>Acceptable format: <span>0427121425CED</span></p>
+	<p>Acceptable format: <span class=bold>0427121425CED</span></p>
 	<div><label>Y</label><Input type="radio" name = "deviations"/><label>N</label><Input type="radio" name = "deviations"/><label>Are there any deviations from the standard?</label></div>
-	<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If yes, not the deviation, reason, and next steps.</span>
+	<span class="tab">If yes, not the deviation, reason, and next steps.</span>
 	<div><label>Y</label><Input type="radio" name = "standardclarity"/><label>N</label><Input type="radio" name = "standardclarity"/><label>Are there any deviations from the standard?</label></div>
 <label>How can the process be improved? /Notes:</label>
 <div><textarea cols="25" rows="10"></textarea></div>
+<div>Audit should cover:</div>
+<div></div>
+	<div><input  type="checkbox" /><label>More Information</label></div>
+	<div><input  type="checkbox" /><label>Same</label><span class= "tab bold">(Should last 9 minutes)</span></div>
+	<div><input  type="checkbox" /><label>Less Information</label></div>
+<div>Audit should cover:</div>
 
+<div>
+	<div><input  type="checkbox" /><label>More Often</label></div>
+	<div><input  type="checkbox" /><label>Same</label><span class=" tab bold">(daily)</span></div>
+	<div><input  type="checkbox" /><label>Less often</label></div>
+</div>
+<label>How can the audit be improved? /Notes:</label>
+<div><textarea cols="25" rows="10"></textarea></div>
+<div><label>Operator reviewed with: (Employee #)</label><input type="text" /></div>
+<div><label>Audited by: (Employee #)</label><input type="text" /></div>
+<div><label>Date:</label><input type="text" /></div>
+
+	
+	
 </body>

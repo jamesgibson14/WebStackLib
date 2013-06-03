@@ -46,6 +46,10 @@ function($, Backbone, E, Handlebars, require,user){
             //E.loadCss("js/lib/SlickGrid-2.02/slick.grid.css")
             E.views = {};
             Backbone.history.start();
+            window.onbeforeunload = function() {  
+                if(E.user.get("Session_ID"))
+                    E.user.closeSession();
+            }
         },
 
         // All of your Backbone Routes (add more)

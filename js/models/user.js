@@ -14,6 +14,11 @@ define(['jquery', 'backbone', 'engine', 'models/BaseADODBModel'], function($, Ba
                 details = JSON.stringify(details)
                 this.sql = "Execute spGetUserInfoWeb @username = '" + this.get("username") + "', @now = '" + dt + "', @details = '" + details + "'";
                 this.db =  E.sqlProd2;
+            },
+            closeSession: function(){
+                var dt = new Date().format("isoDateTime");
+                this.sql = "UPDATE User_Sessions SET RenewedAt= '" + dt + "' WHERE ID= " + this.get("Session_ID")
+                this.update();
             }           
 
     });
