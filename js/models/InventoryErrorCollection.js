@@ -11,8 +11,36 @@ define([
         store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false),
         sqlArgs: ["04/01/2013","04/15/2013"],
         
-    model: Backbone.Model
-
+    model: Backbone.Model,
+    dataRenderer: function(url, plot, options){
+            var that = this;
+            var labels = [];
+            var obj = {};
+            var data = [];
+            this.map(function(model){
+                var label = model.get('ErrorType');
+                if (labels.indexOf(label) > -1){
+                    obj[label].push([new Date(model.get('DateEntered')),model.get('DailyErrorCount')]);
+                    
+                }
+                else{
+                    labels.push(label);
+                    obj[label]=[]
+                    obj[label].push([new Date(model.get('DateEntered')),model.get('DailyErrorCount')]);
+                }                           
+            });
+            $.each( obj, function(array, i) {
+                //alert(typeof(array) + ' ' + array + ' _ i:' + i)
+                data.push(i);
+                //alert(array + ' ' + array.length);
+            })
+            this.labels= labels;
+            return {
+                labels:labels,
+                data:data
+            }
+        },
+    
             
 
     });
