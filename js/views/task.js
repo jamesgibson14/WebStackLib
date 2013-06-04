@@ -1,17 +1,16 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'], function($, Backbone, E, Handlebars, template){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html', 'models/task'], function($, Backbone, E, Handlebars, template, Model){
 
     var View = E.BaseView.extend({
 
         //... is a list tag.
         tagName:  "li",
-        className: 'border',
         // Cache the template function for a single item.
         template: template,
     
         // The DOM events specific to an item.
         events: {
           "click .check"              : "toggleDone",
-          "dblclick label.todo-content" : "editText",
+          "dblclick label.content" : "edit",
           "click span.todo-destroy"   : "clear",
           "keypress .todo-input"      : "updateOnEnter",
           "blur .todo-input"          : "close",
@@ -24,9 +23,16 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
         // app, we set a direct reference on the model for convenience.
         initialize: function() {
             _.bindAll(this, 'close', 'remove');
-            this.model.bind('change', this.render);
-            this.model.bind('destroy', this.remove,this);
-        },        
+            if (!this.model)
+                this.model = new Model();
+            this.listenTo(this.model,'change', this.render);
+            this.listenTo(this.model,'destroy', this.remove,this);
+            
+        },
+        temp: function(){
+            this.model.set({ID:30})
+            this.model.trigger('sync')  
+        },     
         serializeData: function(){
             var obj = this.model.toJSON();
             if(!obj.Completed)
@@ -35,10 +41,26 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
                 obj.done =  true
                 obj.Completed.format('m/d/yyyy h:MM:ss TT')
             }
-                
+            obj.isNew = this.model.isNew();   
             return obj;
-        }, 
-        edit: function(){
+        },
+        edit: function(e){
+            var $container = $(e.currentTarget)
+            var attr = $container.attr('data-attr')
+            var label = $container.attr('data-label')
+            var $input;
+            
+            switch(attr){
+                case "DueAt": $input = this.editDatePicker(e)
+                break;
+                case "Task": $input = this.editText(e)
+                break;
+                case "DueAt": $input = this.editDatePicker(e)
+                break;
+                case "DueAt": $input = this.editDatePicker(e)
+                break;
+            } 
+              
             
         },
         toggleDone: function() {           

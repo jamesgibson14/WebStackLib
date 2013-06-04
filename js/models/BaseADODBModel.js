@@ -3,11 +3,10 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
    E.BaseADODB = Backbone.Model.extend({
         constructor: function(){
             Backbone.Model.apply(this, arguments);    
-            
+            this.db =  E.sqlTest2
         },
         router: new Backbone.Router(),
-        idAttribute: "ID",
-        db: E.sqlTest2,      
+        idAttribute: "ID",              
         sync: function(method, model, options) {
             var exec
             var options = $.extend({queue:false},options)
@@ -33,11 +32,28 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 
         },
         create: function(options){
+            var that = this;
             var columns;
             var values;
-            var sql ;
-            this._executeSql(model.sql,model.sqlArgs || null);
-            this._executeSql('Select id= SCOPE_IDENTITY();',null,success)
+            var params = this.router._extractParameters(this.router._routeToRegExp('/:table'),this.url())
+            var sql = 'INSERT INTO ' + params[0];
+            sql += this._parseInsertString(this.changed,this.changed)
+            var success = function(SQL,rs,conn){
+                var sql = 'Select id= SCOPE_IDENTITY();'
+                try{           
+                    rs = conn.Execute(sql);
+                }
+                catch(err){
+                    alert('Error: ' + err.message + ', sql: ' + sql);
+                    err.sql = sql
+                    conn.RollbackTrans();
+                    return false;
+                }
+                that.id = rs.Fields(0).value;
+                that.trigger('sync')
+            }
+            this._executeSql(sql,success,null);
+            //this._executeSql('Select id= SCOPE_IDENTITY();',success)
         },
         update: function(options){
             var sql = this.sql || ''
@@ -92,6 +108,15 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         },
         _escapeQuotes: function(string){
             return string.replace("'","''")
+        },
+        _parseInsertString: function(attrs, attrMap){
+            var columns = '';
+            var values = '';
+            for (var attr in attrMap){
+                columns = columns + " " + attr + ", ";
+                values = values + "'" + attrs[attr] + "', "
+            }
+            return " (" + columns.slice(0,-2) + ") VALUES (" + values.slice(0,-2) + ") ";
         }
         
     });

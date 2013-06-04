@@ -71,8 +71,6 @@ function($, Backbone, E, Handlebars){
             
         },
         editText: function(e){
-            debugger;
-            
             var $container = $(e.currentTarget)
             var model =  this.model
             var attr = $container.attr('data-attr')            
@@ -92,10 +90,11 @@ function($, Backbone, E, Handlebars){
             };
             
             var applyValue = function () {
-              model.set(attr, $input.val());
+                var obj = {}
+                obj[attr] = $input.val();
+              model.save(obj,{silent:true});
             };
-            $input = $("<INPUT type=text />")
-                .appendTo(e.currentTarget)
+            $input = $("<INPUT type=text />")                
                 .on("keydown", function (e) {
                     if (e.key === 'Enter') {
                       applyValue()
@@ -104,12 +103,11 @@ function($, Backbone, E, Handlebars){
                 })
                 .focus()
                 .select();
+            $container.replaceWith($input)
             loadValue(); 
             return $input;  
         },
         editAutoComplete: function(e){
-            debugger;
-            
             var $container = $(e.currentTarget)
             var model =  this.model
             var attr = $container.attr('data-attr')
@@ -125,7 +123,7 @@ function($, Backbone, E, Handlebars){
             var loadValue = function () {
               value = model.get(attr) || "";
               var result = $.grep(source, function(e){ return e.id == value; });
-              value = result[0].label
+              value = result.length ? result[0].label : ""; 
               
               $input.focus();
               $input.autocomplete('search',"");
@@ -147,6 +145,37 @@ function($, Backbone, E, Handlebars){
                       source: source,
                       select: applyValue
                   })
+            $container.replaceWith($input)
+            loadValue(); 
+            return $input;  
+        },
+        editDatePicker: function(e){
+            var $container = $(e.currentTarget)
+            var model =  this.model
+            var attr = $container.attr('data-attr')
+            var label = $container.attr('data-label')
+            var value;            
+            var $input;
+           
+            var destroy = function () {
+              $input.remove();
+            };
+            
+            var loadValue = function () {
+              value = model.get(attr) || "";
+              $input.val(value);
+              $input[0].defaultValue = value;
+              $input.select();
+            };
+            
+            var applyValue = function () {
+              model.set(attr, $input.val());
+            };
+            
+             $input = $("<INPUT type=text />")
+                //.on('blur', function(){destroy();model.trigger('change')})
+                .on('change', function(){applyValue();destroy();})
+                .datepicker()
             $container.replaceWith($input)
             loadValue(); 
             return $input;  

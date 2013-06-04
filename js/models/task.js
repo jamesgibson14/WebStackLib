@@ -6,8 +6,11 @@ var Todo = BaseADOModel.extend({
         Task:'Task',
         AssignedTo: 'AssignedTo'
     },
+    urlRoot : '/Tasks',
     defaults: {
-      Completed: false  
+      Completed: false,
+      Task: 'Double Click to Add New Task',
+      Name: "Assign To"  
     },
     // Ensure that each todo created has `content`.
     initialize: function() {

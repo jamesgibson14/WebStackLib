@@ -11,6 +11,7 @@ define([
     url: '/Tasks',
     sql: 'SELECT Tasks.ID, Tasks.Task, Tasks.Type, Tasks.AssignedTo, Tasks.PreviousTask_ID, Tasks.Options, Tasks.Created, Tasks.CreatedBy, Tasks.Completed, Tasks.LastUpdated,Tasks.UpdatedBy, Associates.Name, Associates_1.Name AS CreatedByName FROM dbo.Associates AS Associates_1 INNER JOIN dbo.Users AS Users_1 ON Associates_1.RecordID = Users_1.Associate_ID INNER JOIN dbo.Tasks INNER JOIN dbo.Users INNER JOIN dbo.Associates ON Users.Associate_ID = Associates.RecordID ON Tasks.AssignedTo = Users.ID ON Users_1.ID = dbo.Tasks.CreatedBy',
     sqlqueue: ';',
+    db: E.sqlTest2,
     // set all of the todo items under the `"todos"` namespace.
     //localStorage: new Store("todos-backbone"),
     store: new WebSQLStore(E.sqlTest2,'Tasks',false,false),
@@ -30,10 +31,11 @@ define([
     // GUID in the database. This generates the next order number for new items.
     nextOrder: function() {
       if (!this.length) return 1;
-      return this.last().get('order') + 1;
+      return this.last().get("Options").LP + 1;
     },
     comparator: function(model) {
-        return model.get("Options").LP;
+        var val = model.get("Options").LP
+        return val ? val : this.nextOrder();
     },
     saveQueued: function(){
         Backbone.sync('updateAll',this,{});

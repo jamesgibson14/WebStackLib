@@ -42,7 +42,7 @@ engine.ADODB = function(options){
 			return false;
 		}
 		if(success)
-		  success(SQL,rs);
+		  success(SQL,rs,conn);
 		else
 		   result = _rsToJSON(rs);
 		conn.CommitTrans();
