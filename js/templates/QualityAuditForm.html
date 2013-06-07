@@ -1,9 +1,10 @@
-<!DOCTYPE>
+<!DOCTYPE HTML>
 
 <body>
 <style>
 	body { 
-		font-family: "Arial"; font-size 12px;
+		font-family: Arial; 
+		font-size: 12px;
 	}
 	.bold {
 		font-weight: bold; 
@@ -12,7 +13,20 @@
 		margin-left: 20px;
 	}
 	.italic {
-		font-style: italic
+		font-style: italic;
+	}
+	.right {
+		float: right;	
+	}
+	.left {
+		float: left;
+	}
+	.orderedList1 li
+	{
+		clear: both;
+	}
+	.border {
+		border: 1px solid black;
 	}
 </style>	
 	<P>Score (circle): 1 / 0 </P>
@@ -36,44 +50,50 @@
 	<option>end</option>
 	<option>warehouse</option></select>
 
-<ol>
-	<li><span  class="bold">Carton condition and bar code correct: </span><label >Y</label><input type="radio"name="r11" /><label>N</label><input type="radio" name="r11" /></li>
-	<li><span  class="bold">Date Stamp Correct: </span><label>Y</label><input type="radio"name="rl2" /><label>N</label><input type="radio" name="rl2" /></li>
-	<li><span  class="bold">Carton, Box, Imprint correct: </span><label>Y</label><input type="radio"name="rl3" /><label>N</label><input type="radio" name="rl3" /></li>
-	<li><span  class="bold">Imprint Standard correct: </span><label>Y</label><input type="radio"name="rl4" /><label>N</label><input type="radio" name="rl4" /></li>
-	<li><span  class="bold">Count Correct: </span><label>Y</label><input type="radio"name="rl5" /><label>N</label><input type="radio" name="rl5" /></li>
-	<li><span  class="bold">Box bottom/cover or Shrink Wrap: </span><label>Y</label><input type="radio"name="rl6" /><label>N</label><input type="radio" name="rl6" /></li>
-	<li><span  class="bold">Product Meets Quality Standards:</span> <label>Y</label><input type="radio"name="rl7" /><label>N</label><input type="radio" name="rl7" /></li>
-	<span class="tab bold italic">If no, is a destructive test needed?: </span> <label>Y</label><input type="radio"name="rl8" /><label>N</label><input type="radio" name="r18" />
-	<li> <span class="bold"> Scrap Pieces and angel hair are minimal: </span> <label>Y</label><input type="radio"name="rl9" /><label>N</label><input type="radio" name="rl9" />
-	<li><span  class="bold">Product build to specifications:</span> <label>Y</label><input type="radio"name="r20" /><label>N</label><input type="radio" name="r20" /></li>
-	<li><span>"1st piece" from this run inspected:</span> <label>Y</label><input type="radio"name="r21" /><label>N</label><input type="radio" name="r21" /></li>
-	<li><span>The paper is the correct color, thickness, and recycled content: </span><label>Y</label><input type="radio"name="r22" /><label>N</label><input type="radio" name="r22" /></li>
-	<li><span>Box cover color is correct:</span><label>Y</label><input type="radio"name="r23" /><label>N</label><input type="radio" name="r23" /></li>
-	<li><span>The tabs are in the correct position:</span><label>Y</label><input type="radio"name="r24" /><label>N</label><input type="radio" name="r24" /></li>
-	<li><span>Carton is taped correctly:</span><label>Y</label><input type="radio"name="r25" /><label>N</label><input type="radio" name="r25" /></li>
-	<li><span>Marsh printer is in correct format:</span><label>Y</label><input type="radio"name="r26" /><label>N</label><input type="radio" name="r26" /></li>
+<ol class ="orderedList1" style="max-width: 400px">
+	
+	<li><span  class="bold">Carton condition and bar code correct: </span><div class="right"><input type="checkbox"name="r11" /></div></li>
+	<li><span  class="bold">Date Stamp Correct: </span><div class="right"><input type="checkbox"name="r12" /></div></li>
+	<li><span  class="bold">Carton, Box, Imprint correct: </span><div class="right"><input type="checkbox"name="r13" /></div></li>
+	<li><span  class="bold">Imprint Standard correct: </span><div class="right"><input type="checkbox"name="r14" /></div></li>
+	<li><span  class="bold">Count Correct: </span><div class="right"><input type="checkbox"name="r15" /></div></li>
+	<li><span  class="bold">Box bottom/cover or Shrink Wrap: </span><div class="right"><input type="checkbox"name="r16" /></div></li>
+	<li><span  class="bold">Product Meets Quality Standards:</span><div class="right"><input type="checkbox"name="r17" /></div><br />
+		<span class="tab bold italic">If no, is a destructive test needed?: </span><div class="right"><input type="checkbox"name="r18" /></div></li>
+	<li> <span class="bold"> Scrap Pieces and angel hair are minimal: </span><div class="right"><input type="checkbox"name="r19" /></div></li>
+	<li><span  class="bold">Product build to specifications:</span><div class="right"><input type="checkbox"name="r20" /></div></li>
+	<li><span>"1st piece" from this run inspected:</span><div class="right"><input type="checkbox"name="r11" /></div></li>
+	<li><span>The paper is the correct color, thickness, <br /> and recycled content: </span><div class="right"><input type="checkbox"name="r21" /></div></li>
+	<li><span>Box cover color is correct:</span><div class="right"><input type="checkbox"name="r22" /></div></li>
+	<li><span>The tabs are in the correct position:</span><div class="right"><input type="checkbox"name="r23" /></div></li>
+	<li><span>Carton is taped correctly:</span><div class="right"><input type="checkbox"name="r25" /></div></li>
+	<li><span>Marsh printer is in correct format:</span><div class="right"><input type="checkbox"name="r25" /></div></li>
 </ol>
 	<p>Acceptable format: <span class=bold>0427121425CED</span></p>
-	<div><label>Y</label><Input type="radio" name = "deviations"/><label>N</label><Input type="radio" name = "deviations"/><label>Are there any deviations from the standard?</label></div>
-	<span class="tab">If yes, not the deviation, reason, and next steps.</span>
-	<div><label>Y</label><Input type="radio" name = "standardclarity"/><label>N</label><Input type="radio" name = "standardclarity"/><label>Are there any deviations from the standard?</label></div>
-<label>How can the process be improved? /Notes:</label>
+	<div><Input type="checkbox" class= "left" name = "deviations"/><label class="tab">Are there any deviations from the standard?</label></div>
+	<span class="tab">If yes, note the deviation, reason, and next steps.</span>
+	<div><Input type="checkbox" class= "left" name = "standardclarity"/><label class="tab">Is the standard easy to understand and follow?</label></div>
+<br />	
+<label>How can the process be improved? / Notes:</label>
 <div><textarea cols="25" rows="10"></textarea></div>
+<br />
 <div>Audit should cover:</div>
 <div></div>
-	<div><input  type="checkbox" /><label>More Information</label></div>
-	<div><input  type="checkbox" /><label>Same</label><span class= "tab bold">(Should last 9 minutes)</span></div>
-	<div><input  type="checkbox" /><label>Less Information</label></div>
+	<div><input  type="radio" name= "auditinfo"/><label>More Information</label></div>
+	<div><input  type="radio" name= "auditinfo"/><label>Same</label><span class= "tab bold">(Should last 9 minutes)</span></div>
+	<div><input  type="radio" name= "auditinfo"/><label>Less Information</label></div>
+<br />
 <div>Audit should cover:</div>
 
 <div>
-	<div><input  type="checkbox" /><label>More Often</label></div>
-	<div><input  type="checkbox" /><label>Same</label><span class=" tab bold">(daily)</span></div>
-	<div><input  type="checkbox" /><label>Less often</label></div>
+	<div><input  type="radio" name= "auditfrequency" /><label>More Often</label></div>
+	<div><input  type="radio" name= "auditfrequency"/><label>Same</label><span class=" tab bold">(daily)</span></div>
+	<div><input  type="radio" name= "auditfrequency" /><label>Less often</label></div>
 </div>
-<label>How can the audit be improved? /Notes:</label>
+<br />
+<label>How can the audit be improved? / Notes:</label>
 <div><textarea cols="25" rows="10"></textarea></div>
+<br />
 <div><label>Operator reviewed with: (Employee #)</label><input type="text" /></div>
 <div><label>Audited by: (Employee #)</label><input type="text" /></div>
 <div><label>Date:</label><input type="text" /></div>

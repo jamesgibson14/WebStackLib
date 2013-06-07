@@ -4,7 +4,10 @@ var Todo = BaseADOModel.extend({
     idAttribute: "ID",
     attrMap: {
         Task:'Task',
-        AssignedTo: 'AssignedTo'
+        AssignedTo: 'AssignedTo',
+        Options: 'Options',
+        Created: 'Created',
+        CreatedBy: 'CreatedBy'
     },
     urlRoot : '/Tasks',
     defaults: {
@@ -14,17 +17,25 @@ var Todo = BaseADOModel.extend({
     },
     // Ensure that each todo created has `content`.
     initialize: function() {
-        //if(typeof(this.get('Completed'))==='date')
-            //this.set('Completed',new)
+
     },
-    // Toggle the `done` state of this todo item.
     toggle: function() {
-      this.save({Completed: this.get("Completed") ? NULL : new Date()});
+      this.save({Completed: this.get("Completed") ? null : new Date()});
     },
     parse: function(res){
         if(typeof(res.Completed) ==='date')
             res.Completed = new Date(res.Completed)
         return res
+    },
+    onBeforeCreate: function(options){
+        if (!this.get('Options')){
+            var op = this.get('Options') || {}
+            op.LP = this.collection.nextOrder()
+            this.set({Options: op},{silent:true})
+        }
+        if(!this.get('AssignedTo'))
+            this.set('AssignedTo',E.user.get('Associate_ID'),{silent:true})
+        this.set({Created: new Date(), CreatedBy: E.user.get('Associate_ID')},{silent:true})
     }
 
   });

@@ -70,13 +70,14 @@ function($, Backbone, E, Handlebars){
         editor: function(){
             
         },
-        editText: function(e){
+        editText: function(e, options){
+            var that = this;
             var $container = $(e.currentTarget)
             var model =  this.model
             var attr = $container.attr('data-attr')            
             var value;            
             var $input;      
-            
+            var options = options || {};
             
             var destroy = function () {
               $input.remove();
@@ -92,7 +93,8 @@ function($, Backbone, E, Handlebars){
             var applyValue = function () {
                 var obj = {}
                 obj[attr] = $input.val();
-              model.save(obj,{silent:true});
+                model.set(obj,options);
+                that.trigger('editText:apply')
             };
             $input = $("<INPUT type=text />")                
                 .on("keydown", function (e) {
@@ -107,7 +109,7 @@ function($, Backbone, E, Handlebars){
             loadValue(); 
             return $input;  
         },
-        editAutoComplete: function(e){
+        editAutoComplete: function(e,options){
             var $container = $(e.currentTarget)
             var model =  this.model
             var attr = $container.attr('data-attr')
@@ -131,9 +133,9 @@ function($, Backbone, E, Handlebars){
             };
             
             var applyValue = function (e, ui) {
-              model.set(attr, ui.item.id,{silent:true});
-              model.set(label, ui.item.label);
-              destroy();
+                model.set(attr, ui.item.id,{silent:true});
+                model.set(label, ui.item.label);
+                destroy();
             };
             
              $input = $("<INPUT type=text />")
@@ -149,7 +151,7 @@ function($, Backbone, E, Handlebars){
             loadValue(); 
             return $input;  
         },
-        editDatePicker: function(e){
+        editDatePicker: function(e, options){
             var $container = $(e.currentTarget)
             var model =  this.model
             var attr = $container.attr('data-attr')

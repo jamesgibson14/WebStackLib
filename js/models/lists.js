@@ -1,26 +1,33 @@
-define(['jquery', 'backbone','engine','BaseCollection'], function($, Backbone,E, BaseCollection) {
+define(['jquery', 'backbone','engine','models/BaseCollection'], function($, Backbone,E, BaseCollection) {
 
     var Model = Backbone.Model.extend({
 
             defaults: {
-	            associates: new BaseCollection(),
+	            associates: BaseCollection.extend({
+	                sql: "SELECT ID = RecordID, UserID = Users.ID, Name, AssociateCode = [Employee Number], Cell = ExprCell FROM Associates LEFT JOIN Users ON Users.Associate_ID=Associates.RecordID WHERE ExprStatus <> 'Terminated' OR ExprStatusDate > DateADD(year,-1,GETDATE())",
+	                db: E.sqlProd2,
+	                url: '/Associates',
+	                getByUserID:function(id){
+	                    return this.findWhere({User_ID: id});
+	                }
+	            }),
 	            users: new BaseCollection(),
 	            items: new BaseCollection(),
 	            
             },
-
-            // Model Constructor
-            initialize: function() {
-
-            },
-
-            // Any time a model attribute is set, this method is called
-            validate: function(attrs) {
-
+            getList: function(list){
+                var list = this.get(list)
+                if (!list.length){
+                    list = new list()
+                    this.set(list)
+                    list.fetch();
+                    return list; 
+                }
+                else
+                    return list;
             }
-
     });
-
+    E.lists = new Model()
     // Returns the Model class
     return Model;
 

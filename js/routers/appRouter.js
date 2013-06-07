@@ -35,7 +35,7 @@ function($, Backbone, E, Handlebars, require,user){
             E.appState = loc.indexOf('prodweb')>=0 ? 'Production' : (loc.indexOf('webdev')>=0 ? 'Test' : (loc.indexOf('DevProjects')>=0 ? 'Developer' : 'n/a'))
             var obj = {username: username, appState: E.appState, screen: {aHeight: screen.availHeight, aWidth: screen.availWidth, width: screen.width, height: screen.height}}
             if (E.appState == 'Developer')
-                obj.id = 3;
+                $.extend(obj, {id:3,Associate_ID:1912});
             E.user = new user(obj);
             if (!(E.appState == 'Developer' || username == 'Train9u01') || !E.GET['module'] )
                 E.user.fetch();    

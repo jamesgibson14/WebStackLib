@@ -159,7 +159,7 @@ Backbone.sync = function (method, model, options) {
     var dtime;
     if (options.now) dtime = options.now
 	 debugger;
-	success = function (sql,rs) {	   
+	success = function (sql,rs,conn) {	   
 	    if (options.now){
 	        alert('data from server in: ' + (dtime = (new Date() - dtime)))
 	        dtime = new Date()
@@ -228,6 +228,8 @@ Backbone.sync = function (method, model, options) {
 	       alert('data from server parsed in: ' + (dtime = (new Date() - dtime)))
 	       dtime = new Date()
         }
+       
+       rs.DataSource.ActiveConnection.CommitTrans();
 	   options.success(result);
 	   if (options.now){ 
            alert('Backbone ready: ' + (dtime = (new Date() - dtime)))

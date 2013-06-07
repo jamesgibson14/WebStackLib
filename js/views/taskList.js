@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'engine','handlebars', 'models/taskList', 'text!templates/taskList.html','text!templates/TodoStats.html','views/task', 'models/task'], 
-function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
+define(['jquery', 'backbone', 'engine','handlebars', 'models/taskList', 'text!templates/taskList.html','text!templates/TodoStats.html','views/task', 'models/task','models/lists'], 
+function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task, Lists){
     var View = E.BaseView.extend({
 
         tagName:  "div",
@@ -18,7 +18,10 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
             this.collection = this.model.tasks;
             _.bindAll(this, 'addOne', 'addAll', 'render','renderStats','reOrder');
             this.listenTo(this.collection,'reset',     this.addAll);
-            this.statsTemplate = Handlebars.compile(this.statsTemplate);                    
+            this.statsTemplate = Handlebars.compile(this.statsTemplate);
+            subView = subView.extend({
+                associateList: E.lists.getList('associates')
+            })              
         },
         onRender: function(){
             var that = this;
@@ -47,11 +50,12 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
         renderNew: function(){            
             var that = this;
             var view = new subView({model: null});
+            view.model.collection = this.collection;
+            view.model.set({Options: {LP:this.collection.length + 1}})
             this.$("#todo-list").append(view.render().el);
             this.renderStats();
             view.model.once('sync',function(){
-                var obj = $.extend({},view.model.get('Options'),{LP:that.collection.nextOrder()})
-                view.model.set({Options: obj}); 
+                view.model.trigger('change');               
                 that.collection.add(view.model)                
                 that.renderNew();
             })

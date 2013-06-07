@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html', 'models/task'], function($, Backbone, E, Handlebars, template, Model){
+    define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html', 'models/task'], function($, Backbone, E, Handlebars, template, Model){
 
     var View = E.BaseView.extend({
 
@@ -11,7 +11,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
         events: {
           "click .check"              : "toggleDone",
           "dblclick label.content" : "edit",
-          "click span.todo-destroy"   : "clear",
+          "click span.task-destroy"   : "clear",
           "keypress .todo-input"      : "updateOnEnter",
           "blur .todo-input"          : "close",
           "dblclick .dueAt": "edit",
@@ -27,7 +27,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
                 this.model = new Model();
             this.listenTo(this.model,'change', this.render);
             this.listenTo(this.model,'destroy', this.remove,this);
-            
+                        
         },
         temp: function(){
             this.model.set({ID:30})
@@ -41,26 +41,33 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
                 obj.done =  true
                 obj.Completed.format('m/d/yyyy h:MM:ss TT')
             }
+            obj.CreatedByName = (obj.CreatedBy) ? this.associateList.get(obj.CreatedBy).get('Name') : "N/A";
+            obj.Name = (obj.AssignedTo) ? this.associateList.get(obj.AssignedTo).get('Name') : "N/A";
             obj.isNew = this.model.isNew();   
             return obj;
         },
         edit: function(e){
+            var that = this;
             var $container = $(e.currentTarget)
             var attr = $container.attr('data-attr')
             var label = $container.attr('data-label')
             var $input;
-            
+            var success = function(){
+                that.model.save();
+                that.model.trigger('change');
+            }
             switch(attr){
                 case "DueAt": $input = this.editDatePicker(e)
                 break;
-                case "Task": $input = this.editText(e)
+                case "Task": 
+                    $input = this.editText(e, {silent:true})
+                    this.on('editText:apply', success)        
                 break;
                 case "DueAt": $input = this.editDatePicker(e)
                 break;
                 case "DueAt": $input = this.editDatePicker(e)
                 break;
             } 
-              
             
         },
         toggleDone: function() {           

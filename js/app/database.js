@@ -24,7 +24,7 @@ engine.ADODB = function(options){
     if (ActiveXObject)
 	   var conn = new ActiveXObject("ADODB.Connection");
     conn.open(conn_str);
-	this.executeSql = function(SQL,success,error){
+	this.executeSql = function(SQL,success,error,options){
 		var rs = new ActiveXObject("ADODB.Recordset");
 		var result;
 		conn.BeginTrans();
@@ -41,15 +41,19 @@ engine.ADODB = function(options){
 			E.hideLoading();
 			return false;
 		}
+
 		if(success)
 		  success(SQL,rs,conn);
 		else
-		   result = _rsToJSON(rs);
-		conn.CommitTrans();
+		   result = _rsToJSON(rs,options,conn);
+		try{
+		    conn.CommitTrans();
+		}
+		catch(e){} 		
 		return result;
 	};
 	
-    var _rsToJSON = function (rs, options) {      
+    var _rsToJSON = function (rs, options,conn) {      
         var count = 0,len = rs.Fields.Count,result = [];
         var options = options || {}
         if(options.noJSON){
@@ -91,8 +95,9 @@ engine.ADODB = function(options){
                 rs.movenext;
                 count++;
             }
-       }
-        return result;     
+       }       
+       conn.CommitTrans();
+       return result;     
     }
 	
 	//this.conn = "I am connected!"
