@@ -20,7 +20,8 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             //this.collection.fetch();
         },
         events: {
-           "click #button1": "loadReport"
+           "click #button1": "loadReport",
+           "change #grouping":"loadReport"
         },
         
         plotChart: function(){
@@ -30,8 +31,9 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             if (this.plot)
                 this.plot.destroy();
             
+                
             var data = this.collection.dataRenderer()  
-            
+        
             this.plot = $.jqplot("chart", data.data, {
                 title: "Item Verification Results",
                 //animate: true,
@@ -44,7 +46,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                         type: 'linear'
                     },
                     isDragable:false,
-                    showMarker:false             
+                    showMarker:true             
                 },
                 axesDefaults: {
                     labelRenderer: $.jqplot.CanvasAxisLabelRenderer
@@ -114,7 +116,9 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             
             
             this.$el.html( temp );
-            this.$('.dPicker').datepicker();
+            this.$('.dPicker').datepicker({
+                numberOfMonths:3
+            });
             this.$('button').button();
             
             return this
@@ -131,6 +135,8 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
         loadReport: function(e){
             var startDate = this.$("#startDate").val();
             var endDate = this.$("#endDate").val();
+            var grouping = this.$("#grouping").val()
+            this.collection.updateSql(grouping)
             this.collection.sqlArgs= [startDate,endDate]
            this.collection.fetch({reset: true}); 
         }

@@ -40,6 +40,17 @@ define([
                 data:data
             }
         },
+        
+        updateSql: function(grouping){
+            switch(grouping){
+                case "Day": this.sql = "select Table1.ErrorType, sum(CountOfErrorType) as DailyErrorCount, DateEntered  from  (SELECT [Error Type] AS ErrorType, Count([Error Type]) AS CountOfErrorType, convert(varchar,[Date Entered],101) as DateEntered FROM ItemVerification WHERE ((([Date Entered]) Between '%s' And '%s')) GROUP BY [Error Type],[Date Entered]) as Table1 Group By Table1.ErrorType, Table1.DateEntered;" 
+              break;
+                case "Month": this.sql= "select Table1.ErrorType, sum(CountOfErrorType) as DailyErrorCount, LEFT(convert(varchar, DateEntered, 121),7) as DateEntered from  (SELECT [Error Type] AS ErrorType, Count([Error Type]) AS CountOfErrorType, [Date Entered] as DateEntered FROM ItemVerification WHERE ((([Date Entered]) Between '01/01/2013' And '06/02/2013')) GROUP BY [Error Type],[Date Entered]) as Table1 Group By Table1.ErrorType, LEFT(convert(varchar, DateEntered, 121),7);"
+                break;
+                case "week": this.sql="" 
+                break;
+            }
+        }
     
             
 
