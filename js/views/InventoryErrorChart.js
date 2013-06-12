@@ -117,7 +117,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             
             this.$el.html( temp );
             this.$('.dPicker').datepicker({
-                numberOfMonths:3
+                numberOfMonths:3, showCurrentAtPos: 2
             });
             this.$('button').button();
             
