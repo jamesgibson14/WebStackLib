@@ -57,9 +57,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 }
                 that.id = rs.Fields(0).value;
                 that.trigger('sync')
-            }
+            };
             this._executeSql(sql,success,null);
-            //this._executeSql('Select id= SCOPE_IDENTITY();',success)
         },
         update: function(options){
             var that = this;
@@ -68,7 +67,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 return sql;
             var that = this;
             var queue = options && options.queue ? options.queue : false;
-            var success = options && options.success ? options.success : function(){return;}
+            var success = options && options.success ? options.success : function(){return;};
             if (!sql){
                 var params = this.router._extractParameters(this.router._routeToRegExp('/:table/:id'),this.url())
                 var values = '';
@@ -93,7 +92,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 var params = this.router._extractParameters(this.router._routeToRegExp('/:table/:id'),this.url())
                 sql = "DELETE FROM " + params[0] + " WHERE ID = " + params[1]
             }
-            var success = options && options.success ? options.success : function(){return;}
+            var success = options && options.success ? options.success : function(){return;};
             if(!options.queue)
                 var rs = this._executeSql(sql,success)
             
@@ -123,11 +122,12 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         _parseInsertString: function(attrs, attrMap){
             var columns = '';
             var values = '';
+            var attr;
             attrs || (attrs = this.attributes)
-            attrMap || (attrMap = this.attrMap)
-            for (var attr in attrMap){
+            attrMap || (attrMap = this.attrMap);
+            for (attr in attrMap){
                 columns = columns + " " + attr + ", ";
-                values = values + this._parseValue(attrs[attr]) + ", "
+                values = values + this._parseValue(attrs[attr]) + ", ";
             }
             return " (" + columns.slice(0,-2) + ") VALUES (" + values.slice(0,-2) + ") ";
         }

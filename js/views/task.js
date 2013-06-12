@@ -1,33 +1,22 @@
-    define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html', 'models/task'], function($, Backbone, E, Handlebars, template, Model){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html', 'models/task'], function($, Backbone, E, Handlebars, template, Model){
 
     var View = E.BaseView.extend({
-
-        //... is a list tag.
         tagName:  "li",
-        // Cache the template function for a single item.
-        template: template,
-    
-        // The DOM events specific to an item.
+        template: template,    
         events: {
-          "click .check"              : "toggleDone",
+          "click .check"              : "edit",
           "dblclick label.content" : "edit",
-          "click span.task-destroy"   : "clear",
-          "keypress .todo-input"      : "updateOnEnter",
-          "blur .todo-input"          : "close",
+          "click span.task-destroy"   : "edit",
           "dblclick .dueAt": "edit",
-          "dblclick .AssignedTo": "editAutoComplete"
+          "dblclick .AssignedTo": "edit"
         },
     
-        // The TodoView listens for changes to its model, re-rendering. Since there's
-        // a one-to-one correspondence between a **Todo** and a **TodoView** in this
-        // app, we set a direct reference on the model for convenience.
         initialize: function() {
             _.bindAll(this, 'close', 'remove');
             if (!this.model)
                 this.model = new Model();
             this.listenTo(this.model,'change', this.render);
-            this.listenTo(this.model,'destroy', this.remove,this);
-                        
+            this.listenTo(this.model,'destroy', this.remove,this);                        
         },
         temp: function(){
             this.model.set({ID:30})
@@ -39,10 +28,12 @@
                 obj.done =  false
             else {
                 obj.done =  true
-                obj.Completed.format('m/d/yyyy h:MM:ss TT')
+                obj.Completed = obj.Completed.format('m/d/yyyy h:MM:ss TT')
             }
-            obj.CreatedByName = (obj.CreatedBy) ? this.associateList.get(obj.CreatedBy).get('Name') : "N/A";
-            obj.Name = (obj.AssignedTo) ? this.associateList.get(obj.AssignedTo).get('Name') : "N/A";
+            if(obj.DueAt)
+                obj.DueAt = obj.DueAt.format('m/d/yyyy')
+            obj.CreatedByName = (obj.CreatedBy) ? this.associateCollection.get(obj.CreatedBy).get('Name') : "N/A";
+            obj.Name = (obj.AssignedTo) ? this.associateCollection.get(obj.AssignedTo).get('Name') : "N/A";
             obj.isNew = this.model.isNew();   
             return obj;
         },
@@ -55,38 +46,28 @@
             var success = function(){
                 that.model.save();
                 that.model.trigger('change');
+            };
+            var options = {
+                silent:true
             }
+            this.on('edit:success', success);
             switch(attr){
-                case "DueAt": $input = this.editDatePicker(e)
+                case "DueAt": $input = this.editDatePicker(e);
                 break;
                 case "Task": 
-                    $input = this.editText(e, {silent:true})
-                    this.on('editText:apply', success)        
+                    options.popup = false;
+                    $input = this.longTextEditor(e, options);                    
                 break;
-                case "DueAt": $input = this.editDatePicker(e)
+                case "AssignedTo": 
+                    options.source = this.associateList;
+                    $input = this.editAutoComplete(e,options);
                 break;
-                case "DueAt": $input = this.editDatePicker(e)
+                case "Completed": this.model.toggle();
                 break;
-            } 
-            
-        },
-        toggleDone: function() {           
-          this.model.toggle();
-        },    
-        // Close the `"editing"` mode, saving changes to the todo.
-        close: function() {
-          this.model.set({Task: this.$('.todo-input').val()})
-          this.model.save();
-          $(this.el).removeClass("editing");
-        },    
-        // If you hit `enter`, we're through editing the item.
-        updateOnEnter: function(e) {
-          if (e.keyCode == 13) this.close();
-        },    
-        // Remove the item, destroy the model.
-        clear: function() {
-          this.model.destroy();
-        }    
+                case "Clear": this.model.destroy();
+                break;
+            }             
+        }  
     });
     
     // Returns the View class

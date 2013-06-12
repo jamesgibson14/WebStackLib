@@ -1,10 +1,10 @@
 <div class="defaultForm border ofh left" style="width:1050px;">
   	<input id="iassociateID" type="hidden" />
-	<label for="Name">Name</label><input id="iassociate" placeholder="Associate:" type="text" />	  
-	<label for="Date">Date</label><input id="idate" placeholder="Date:" type="text" size="8" />
+	<label for="Name">Name</label><input data-attr="Associate_ID" class="editable associateList" placeholder="Associate:" type="text" />	  
+	<label for="Date">Date</label><input data-attr="CreatedAt" class="editable datepicker" placeholder="Date:" type="text" size="8" />
 	  
 	<label for="Machine">Machine</label>
-	<input id="imachine" placeholder="Machine:" type="text" size="6" />
+	<input  data-attr="Associate_ID" class="editable " placeholder="Machine:" type="text" size="6" />
 	  
 	<div class="right">
 	  	<input id="imachineCode" type="hidden" />
@@ -13,24 +13,15 @@
 	
 	  
 	<div id="tasksList" class="border clearfloat right" style="width: 500px">
-	  	<ul >
-	  		Action Steps:
-	  		<li><button class="right" id="removeTask"><span class="ui-icon ui-icon-minusthick"> </span></button><input value="Approval-" /><input type="checkbox" /></li>
-	  		<li class="ui-state-disabled"><input value="Design-" /><input type="checkbox" /></li>
-	  		<li class="ui-state-disabled"><input value="Planning-" /><input type="checkbox" /></li>
-	  		<li class="ui-state-disabled"><input value="Fabrication-" /><input type="checkbox" /></li>
-	  		<li class="ui-state-disabled"><input value="Installation-" /><input type="checkbox" /></li>
-	  		<li class="ui-state-disabled"><input value="Before Pic-" /><input type="checkbox" /></li>
-	  	</ul>
-	  	<div class="right" id="addTask"><span class="ui-icon ui-icon-plusthick"> </span></div>
+	  	
 	</div>
 	
   	<div class="left">
-  		<label for="Suggestion">Suggestion</label><br />
-		<textarea id="iidea" placeholder="Enter Idea here:" cols="40" rows="5" >{{suggestion}}</textarea><br />
+  		<label for="Suggestion">Idea</label><br />
+		<textarea id="iidea" data-attr="Idea" class="editable" placeholder="Enter Idea here:" cols="40" rows="5" >{{suggestion}}</textarea><br />
 		<label for="Suggestion">Gains</label><br />  
-		<textarea id="igain" placeholder="How will this improve the process (Gains)?" cols="40" rows="5"></textarea><br />
-  		<label for="alpha">Alpha </label><select id="ialpha" placeholder="Numeric:">        
+		<textarea data-attr="Gain" class="editable" placeholder="How will this improve the process (Gains)?" cols="40" rows="5"></textarea><br />
+  		<label for="alpha">Alpha </label><select data-attr="alpha" class="editable" placeholder="Numeric:">        
 	  		<option value="">Select Alpha...</option>
 	  		<option value="a">A	Items that STOP production (Downtime)</option>
 	  		<option value="b">B	Items that SLOW production ( less than 100% run Speed)</option>
@@ -41,7 +32,7 @@
 	  		<option value="z">Z	C.I. Support Items</option>
   		</select>
   		<br />
-	  	<label for="numeric">Numeric </label><select id="inumeric">        
+	  	<label for="numeric">Numeric </label><select data-attr="numeric" class="editable">        
 	  		<option value="">Select Numeric...</option>
 	  		<option value="1">1	$ 0 to $ 100</option>
 	  		<option value="2">2	$ 101 to $ 500</option>
@@ -53,9 +44,9 @@
 	  		<option value="n/a">N/A	Doesn't apply to Cell Suggestion</option>
 	  	</select><br />
 	  	<label for="iestimate">Estimate </label>
-		  <input id="iestimate" placeholder="$0.00" type="text" size="6" /><br />
+		  <input data-attr="estimate" class="editable" placeholder="$0.00" type="text" size="6" /><br />
 		<label for="iactual">Actual </label>
-		  <input id="iactual" placeholder="$0.00" type="text" size="6" />
+		  <input data-attr="actual" class="editable" placeholder="$0.00" type="text" size="6" />
   	</div>
   	<div class="clearfloat quote left">"Nothing is particularly hard if you <br />divide it into small jobs." - Hennry Ford</div>
 	<button id="btnCreate" type="button" class="right" style="margin:5px;">Create Idea</button>

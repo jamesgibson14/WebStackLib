@@ -9,6 +9,11 @@ define(['jquery', 'backbone','engine','models/BaseCollection'], function($, Back
 	                url: '/Associates',
 	                getByUserID:function(id){
 	                    return this.findWhere({User_ID: id});
+	                },
+	                renderForDataEntry: function(){
+	                    return this.map(function(model){
+	                        return {id:model.id, label: model.get('Name') + ' (' + model.get('AssociateCode') + ')'}
+	                    })
 	                }
 	            }),
 	            users: new BaseCollection(),
@@ -29,6 +34,6 @@ define(['jquery', 'backbone','engine','models/BaseCollection'], function($, Back
     });
     E.lists = new Model()
     // Returns the Model class
-    return Model;
+    return E.lists
 
 });

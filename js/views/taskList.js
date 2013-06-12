@@ -1,5 +1,5 @@
 define(['jquery', 'backbone', 'engine','handlebars', 'models/taskList', 'text!templates/taskList.html','text!templates/TodoStats.html','views/task', 'models/task','models/lists'], 
-function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task, Lists){
+function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
     var View = E.BaseView.extend({
 
         tagName:  "div",
@@ -20,7 +20,8 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task, 
             this.listenTo(this.collection,'reset',     this.addAll);
             this.statsTemplate = Handlebars.compile(this.statsTemplate);
             subView = subView.extend({
-                associateList: E.lists.getList('associates')
+                associateCollection: E.lists.getList('associates'),
+                associateList: E.lists.getList('associates').renderForDataEntry()
             })              
         },
         onRender: function(){
@@ -65,7 +66,7 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task, 
             var now = new Date();
             var startAt = ui.item.index();
             var that = this;
-            this.$('div.todo').each(function(i){
+            this.$('div.task').each(function(i){
                 var id = $(this).attr('data-id');
                 if (!id)
                     return;

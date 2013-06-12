@@ -23,7 +23,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 //alert('successfull id: ' + that.id);
                 
             },
-            error = function(){alert('failed');return}
+            var error = function(){alert('failed');return;};
             this.db.executeSql(sql, success, error);
         },
         update: function(){

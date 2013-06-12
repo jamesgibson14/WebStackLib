@@ -80,21 +80,22 @@ function($, Backbone, E, Handlebars){
             var options = options || {};
             
             var destroy = function () {
-              $input.remove();
+                $input.remove();
+                model.trigger('change')
             };
             
             var loadValue = function () {
-              value = model.get(attr) || "";
-              $input.val(value);
-              $input[0].defaultValue = value;
-              $input.select();
+                value = model.get(attr) || "";
+                $input.val(value);
+                $input[0].defaultValue = value;
+                $input.select();
             };
             
             var applyValue = function () {
                 var obj = {}
                 obj[attr] = $input.val();
                 model.set(obj,options);
-                that.trigger('editText:apply')
+                that.trigger('edit:success')
             };
             $input = $("<INPUT type=text />")                
                 .on("keydown", function (e) {
@@ -110,16 +111,18 @@ function($, Backbone, E, Handlebars){
             return $input;  
         },
         editAutoComplete: function(e,options){
+            var that = this;
             var $container = $(e.currentTarget)
             var model =  this.model
             var attr = $container.attr('data-attr')
             var label = $container.attr('data-label')
             var value;            
             var $input;
-            var source = [{id: 3,label:'James'},{id: 82,label:'David'},{id: 13,label:'Lynae'}, {id: 33,label:'Carrie'}];
+            var source = options.source || [{id: 3,label:'James'},{id: 82,label:'David'},{id: 13,label:'Lynae'}, {id: 33,label:'Carrie'}];
            
             var destroy = function () {
               $input.remove();
+              model.trigger('change')
             };
             
             var loadValue = function () {
@@ -133,13 +136,18 @@ function($, Backbone, E, Handlebars){
             };
             
             var applyValue = function (e, ui) {
-                model.set(attr, ui.item.id,{silent:true});
-                model.set(label, ui.item.label);
+                model.set(attr, ui.item.id,options);                
                 destroy();
+                that.trigger('edit:success')
             };
-            
+            var keyHandler = function(e){
+                if(e.key !== 'Esc')
+                    return;
+                destroy();               
+            };
              $input = $("<INPUT type=text />")
-                .on('blur', function(){destroy();model.trigger('change')})
+                .on('blur', function(){destroy();})
+                .on('keydown', keyHandler)
                  .autocomplete({
                       autoFocus: true,
                       delay: 0,
@@ -152,6 +160,7 @@ function($, Backbone, E, Handlebars){
             return $input;  
         },
         editDatePicker: function(e, options){
+            var that = this;
             var $container = $(e.currentTarget)
             var model =  this.model
             var attr = $container.attr('data-attr')
@@ -160,7 +169,8 @@ function($, Backbone, E, Handlebars){
             var $input;
            
             var destroy = function () {
-              $input.remove();
+                $input.remove();
+                model.trigger('change')
             };
             
             var loadValue = function () {
@@ -171,17 +181,94 @@ function($, Backbone, E, Handlebars){
             };
             
             var applyValue = function () {
-              model.set(attr, $input.val());
+              model.set(attr, $input.val(),options);
+              destroy();
+              that.trigger('edit:success');              
             };
             
              $input = $("<INPUT type=text />")
-                //.on('blur', function(){destroy();model.trigger('change')})
                 .on('change', function(){applyValue();destroy();})
                 .datepicker()
             $container.replaceWith($input)
             loadValue(); 
             return $input;  
+        },
+        longTextEditor: function(e,options) {
+            var $wrapper;
+            var that = this;
+            var $container = $(e.currentTarget)
+            var model =  this.model
+            var attr = $container.attr('data-attr')            
+            var value;            
+            var $input;      
+            var options = options || {};
+            var defaultValue;
+            var scope = this;
+                    
+            var handleKeyDown = function (e) {
+              if (e.key == 'Enter' && e.ctrlKey) {
+                applyValue();
+              } else if (e.key == 'Esc') {
+                e.preventDefault();
+                destroy();
+              } else if (e.which == $.ui.keyCode.TAB && e.shiftKey) {
+                e.preventDefault();
+              } else if (e.which == $.ui.keyCode.TAB) {
+                e.preventDefault();
+              }
+            };
+        
+            var position = function() {
+                $wrapper
+                  .css("top", $container.position().top - 5)
+                  .css("left", $container.position().left - 15);
+            };
+        
+            var destroy = function () {
+                $wrapper.remove();
+                model.trigger('change');
+            };
+
+            var loadValue = function (item) {
+                value = model.get(attr) || "";
+                $input.val(value);
+                $input[0].defaultValue = value;
+                $input.select();
+            };
+        
+            var applyValue = function () {
+                var obj = {}
+                obj[attr] = $input.val();
+                model.set(obj,options);                
+                destroy();
+                that.trigger('edit:success')
+            };
+
+            if(options.popup){
+                $wrapper = $("<div style='z-index:10000;position:absolute;background:white;padding:5px;border:2px solid gray; border-radius:10px;'/>")
+                    .appendTo($container.parent())
+            }
+            else{
+                $wrapper = $("<div style='padding:5px;'/>");
+                $container.replaceWith($wrapper);
+            }
+                
+            $input = $("<textarea style='backround:white;width:90%;height:80px;border:none;outline:0'>")
+                .appendTo($wrapper);
+            
+            $("<div style='text-align:right'><button>Save</button><button>Cancel</button></div>")
+                .appendTo($wrapper);
+            
+            $wrapper.find("button:first").bind("click", applyValue);
+            $wrapper.find("button:last").bind("click", destroy);
+            $input.bind("keydown", handleKeyDown);
+            loadValue();
+            position();
+            $input.focus().select();
+            
+            return $wrapper;
         }
+
         
     });
     

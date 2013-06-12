@@ -25,6 +25,8 @@ var Todo = BaseADOModel.extend({
     parse: function(res){
         if(typeof(res.Completed) ==='date')
             res.Completed = new Date(res.Completed)
+        if(typeof(res.DueAt) ==='date')
+            res.DueAt = new Date(res.DueAt)
         return res
     },
     onBeforeCreate: function(options){

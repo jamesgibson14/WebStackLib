@@ -15,8 +15,8 @@ define([
             options && (options = {});
             var getLabel = function(model){
                 return model.get('label');
-            }  
-            return _this.map(function(model){
+            }; 
+            return this.map(function(model){
                 return {id: model.id, label: getLabel(model)}
             })
         },

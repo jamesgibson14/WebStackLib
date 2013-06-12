@@ -1,6 +1,6 @@
-define(['jquery', 'backbone','engine'], function($, Backbone,E) {
+define(['jquery', 'backbone','engine', 'models/BaseADODBModel'], function($, Backbone,E, BaseADOModel) {
 
-    var Model = Backbone.Model.extend({
+    var Model = BaseADOModel.extend({
         sql: '',
         sqlArgs: [],
         store: new WebSQLStore(E.sqlTest2,'Tasks',false,false),
@@ -24,10 +24,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             return ($.isEmptyObject(err)) ? false : err;   
         },
         initialize: function() {
-            debugger;
-            if (this.isNew())
-                this.sql = "INSERT INTO Ideas (Idea, Associate_ID, DateCreated) VALUES ('THis is just a test', 3, '" + new Date().format('isoDateTime') + "');"
-            this.save()
+            
         },
         toggle: function() {
           this.set({done: !this.get("done")});
@@ -48,7 +45,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             suggestion = this.get('idea'),
             gain = this.get('gain'),
             workcenter = this.get('workcenter'),
-            associateID = this.get('associateID')
+            associateID = this.get('associateID'),
             cell = this.get('cell'),
             alpha = this.get('alpha') || 'n/a',
             numeric = this.get('numeric') || 0,

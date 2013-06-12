@@ -172,7 +172,7 @@ FROM
 			AND	ProductionDataDetails.PID <>'DCP' 
 			And ProductionDataDetails.PID <> 'extra'  
 			AND ProductionData.Machine <> '52102'
-			--AND	ProductionDataDetails.PID IN ('PID1624558', 'PID162388')
+			--AND	ProductionDataDetails.PID IN ('PID1628304', 'PID162388')
 			AND ProductionData.chkCompleted = 1 
 			AND ProductionData.Date > '8/1/2012'
 		) AS dt1
@@ -181,7 +181,7 @@ FROM
 	) as dt2	
 INNER JOIN dbo.ProductionData
 			 ON dt2.parentrecordID = dbo.ProductionData.ParentRecordID INNER JOIN
-	dbo.Associates on dbo.Associates.RecordID=dbo.ProductionData.[Employee #] INNER JOIN
+	dbo.Associates on dbo.Associates.RecordID=dbo.ProductionData.[Employee #] LEFT JOIN
 	dbo.ProductionDemandGroups ON ProductionDemandGroups.PIDText=dt2.pid LEFT JOIN
 	dbo.ProductionDemandGroupsRouting pdgr ON dt2.pid = pdgr.PID AND dt2.opseq =  pdgr.opseq LEFT JOIN
 	dbo.PeopleSoftData ON PeopleSoftData.PID=dt2.pid AND PeopleSoftData.OpSeq=dt2.opseq
@@ -281,7 +281,7 @@ FROM
 			dbo.Items ON dbo.ProductionDataMultiprocessDetails.Item_ID = dbo.Items.ID
 		WHERE     
 			ProductionDataMultiprocessDetails.txtPID is not null 
-			--AND ProductionDataMultiprocessDetails.txtPID in ('PID1559095')
+			--AND ProductionDataMultiprocessDetails.txtPID in ('PID1628339')
 			AND ProductionDataMultiprocess.chkCompleted = 1
 			AND ProductionDataMultiprocess.dtDate > '8/1/2012'
 		) AS dt1
@@ -290,7 +290,7 @@ FROM
 	) as dt2
 INNER JOIN dbo.ProductionDataMultiProcess
 			 ON dt2.parentrecordID = dbo.ProductionDataMultiProcess.ParentRecID INNER JOIN
-	dbo.Associates on dbo.Associates.RecordID=dbo.ProductionDataMultiProcess.txtAssociate INNER JOIN
+	dbo.Associates on dbo.Associates.RecordID=dbo.ProductionDataMultiProcess.txtAssociate LEFT JOIN
 	dbo.ProductionDemandGroups ON ProductionDemandGroups.PIDText=dt2.pid Left JOIN
 	dbo.ProductionDemandGroupsRouting pdgr ON dt2.pid = pdgr.PID AND dt2.opseq =  pdgr.opseq LEFT JOIN
 	dbo.PeopleSoftData ps ON ProductionDemandGroups.PIDText=ps.PID AND dt2.opseq = ps.opseq
