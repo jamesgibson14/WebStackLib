@@ -1,27 +1,18 @@
 <div class="defaultForm border ofh left" style="width:1050px;">
-  	<input id="iassociateID" type="hidden" />
-	<label for="Name">Name</label><input data-attr="Associate_ID" class="editable associateList" placeholder="Associate:" type="text" />	  
-	<label for="Date">Date</label><input data-attr="CreatedAt" class="editable datepicker" placeholder="Date:" type="text" size="8" />
-	  
-	<label for="Machine">Machine</label>
-	<input  data-attr="Associate_ID" class="editable " placeholder="Machine:" type="text" size="6" />
-	  
-	<div class="right">
-	  	<input id="imachineCode" type="hidden" />
-	  	<label for="Cell">Cell </label><span id="scell" >n/a</span><label for="workcenter">Workcenter </label><span id="sworkcenter" >n/a</span><br />
-	</div>
-	
-	  
-	<div id="tasksList" class="border clearfloat right" style="width: 500px">
-	  	
-	</div>
-	
+  		
   	<div class="left">
-  		<label for="Suggestion">Idea</label><br />
-		<textarea id="iidea" data-attr="Idea" class="editable" placeholder="Enter Idea here:" cols="40" rows="5" >{{suggestion}}</textarea><br />
+  		<input id="iassociateID" type="hidden" />
+		<label for="Name">Who's Idea:</label>
+		  <input data-attr="Associate_ID" class="editable associateList" placeholder="search by name or number" type="text" size="23" />
+  		<br /><label for="Suggestion">Idea</label><br />
+		<textarea id="idea" data-attr="Idea" class="editable" placeholder="Enter Idea here:" cols="40" rows="5" >{{Idea}}</textarea><br />
+		{{#unless isNew}}
 		<label for="Suggestion">Gains</label><br />  
 		<textarea data-attr="Gain" class="editable" placeholder="How will this improve the process (Gains)?" cols="40" rows="5"></textarea><br />
-  		<label for="alpha">Alpha </label><select data-attr="alpha" class="editable" placeholder="Numeric:">        
+		<label for="Machine">Machines</label>
+		<input  data-attr="Associate_ID" class="editable " placeholder="Machines:" type="text" size="6" /><br />
+  		<label for="alpha">Alpha </label>
+  		<select data-attr="alpha" class="editable" placeholder="Numeric:">        
 	  		<option value="">Select Alpha...</option>
 	  		<option value="a">A	Items that STOP production (Downtime)</option>
 	  		<option value="b">B	Items that SLOW production ( less than 100% run Speed)</option>
@@ -32,7 +23,8 @@
 	  		<option value="z">Z	C.I. Support Items</option>
   		</select>
   		<br />
-	  	<label for="numeric">Numeric </label><select data-attr="numeric" class="editable">        
+	  	<label for="numeric">Numeric </label>
+	  	<select data-attr="numeric" class="editable">        
 	  		<option value="">Select Numeric...</option>
 	  		<option value="1">1	$ 0 to $ 100</option>
 	  		<option value="2">2	$ 101 to $ 500</option>
@@ -47,7 +39,11 @@
 		  <input data-attr="estimate" class="editable" placeholder="$0.00" type="text" size="6" /><br />
 		<label for="iactual">Actual </label>
 		  <input data-attr="actual" class="editable" placeholder="$0.00" type="text" size="6" />
+		{{/unless}}
   	</div>
+  	<div id="tasksList" class="border left" style="width: 500px">
+	  	
+	</div>
   	<div class="clearfloat quote left">"Nothing is particularly hard if you <br />divide it into small jobs." - Hennry Ford</div>
 	<button id="btnCreate" type="button" class="right" style="margin:5px;">Create Idea</button>
 </div>

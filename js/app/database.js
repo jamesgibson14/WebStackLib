@@ -34,7 +34,8 @@ engine.ADODB = function(options){
 		catch(err){
 			alert('Error: ' + err.message + ', sql: ' + SQL);
 			err.sql = SQL
-			error(err);
+			if(error)
+			 error(err);
 			//throw err;
 			//rs.close();
 			conn.RollbackTrans();

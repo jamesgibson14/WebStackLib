@@ -5,57 +5,54 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
         className: "CellSuggestion ofh",
         template: template,
         serializeData:function(){
-            return {
-                suggestion: "this is a test",
-                isNew: true
-            }
+            var obj = this.model.toJSON();            
+            obj.isNew = this.model.isNew();   
+            return obj;
         },
         events: {
             'change .editable': 'edit'
         },
         initialize: function(){
-            this.model = new Model({Idea: 'Hello world'})
+            this.model = new Model({Idea: 'Hello world'});
             this.taskList = new TaskList();
         },
         onRender: function(){
-            this.$('#tasksList').html(this.taskList.render().el)
-            this.$el.find('input, textarea').placeholder();            
+            this.$('#tasksList').html(this.taskList.render().el);
+            this.$el.find('input, textarea').placeholder();
+            
+            this.$('.associateList').on('focus',function(){
+                $(this).autocomplete('search','')
+            }).autocomplete({
+                minLength: 0,
+                source: E.lists.getList('associates').renderForDataEntry()
+            }).focus();           
         },
-        edit: function(e){
+        create: function(e){
+            alert('create')
             var that = this;
-            var $container = $(e.currentTarget)
-            var attr = $container.attr('data-attr')
-            var label = $container.attr('data-label')
-            var $input;
+            var attr = $container.attr('data-attr'); 
             var val = $container.val();
             var success = function(){
-                that.model.save();
-                that.model.trigger('change');
+                alert('Model saved');
+                
+            };
+            var error = function(){
+                $.each(that.model.validationError, function(val, key){
+                    alert(val +': ' + key);
+                });
             };
             var options = {
-                silent:true
-            }
-            alert('Attr: ' + attr + ': ' + val);
+                success: success,
+                wait:true
+            };
+            var obj = {};
+            obj[attr] = val;
+            that.model.on("invalid",error);
+            that.model.save(obj,options);
+        },
+        edit: function(){
             
-            /*
-            this.on('edit:success', success);
-            switch(attr){
-                case "DueAt": $input = this.editDatePicker(e);
-                break;
-                case "Task": 
-                    options.popup = false;
-                    $input = this.longTextEditor(e, options);                    
-                break;
-                case "AssignedTo": 
-                    options.source = this.associateList;
-                    $input = this.editAutoComplete(e,options);
-                break;
-                case "Completed": this.model.toggle();
-                break;
-                case "Clear": this.model.destroy();
-                break;
-            }     */    
-        }        
+        }     
     
     });
     // Returns the View class

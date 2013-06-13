@@ -12,9 +12,9 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
         },
     
         initialize: function() {
-            _.bindAll(this, 'close', 'remove');
+            
             if (!this.model)
-                this.model = new Model();
+                this.model = new Model({Idea_ID: this.options.Idea_ID});
             this.listenTo(this.model,'change', this.render);
             this.listenTo(this.model,'destroy', this.remove,this);                        
         },

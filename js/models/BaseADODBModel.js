@@ -123,9 +123,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             var columns = '';
             var values = '';
             var attr;
-            attrs || (attrs = this.attributes)
-            attrMap || (attrMap = this.attrMap);
-            for (attr in attrMap){
+            attrs || (attrMap = this.attrMap) || (attrs = this.attributes);
+            for (attr in attrs){
                 columns = columns + " " + attr + ", ";
                 values = values + this._parseValue(attrs[attr]) + ", ";
             }
