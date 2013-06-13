@@ -12,9 +12,11 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
         },
     
         initialize: function() {
-            
+            var obj ={}
+            if(this.options.Idea_ID)
+                obj.Idea_ID = this.options.Idea_ID;
             if (!this.model)
-                this.model = new Model({Idea_ID: this.options.Idea_ID});
+                this.model = new Model(obj);
             this.listenTo(this.model,'change', this.render);
             this.listenTo(this.model,'destroy', this.remove,this);                        
         },
@@ -33,8 +35,10 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
             if(obj.DueAt)
                 obj.DueAt = obj.DueAt.format('m/d/yyyy')
             obj.CreatedByName = (obj.CreatedBy) ? this.associateCollection.get(obj.CreatedBy).get('Name') : "N/A";
-            obj.Name = (obj.AssignedTo) ? this.associateCollection.get(obj.AssignedTo).get('Name') : "N/A";
-            obj.isNew = this.model.isNew();   
+            obj.Name = (obj.AssignedTo) ? this.associateCollection.get(obj.AssignedTo).get('Name') : "Assign To";
+            obj.isNew = this.model.isNew();
+            obj.Completed || (obj.Completed =  '');
+            obj.Task || (obj.Task = 'Double Click to Add New Task');
             return obj;
         },
         edit: function(e){

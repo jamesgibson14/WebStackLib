@@ -37,7 +37,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     var sql = "UPDATE qryData_NewRecord SET qryData_NewRecord.Flagged = %s, qryData_NewRecord.txtFlagReason = '%s' WHERE qryData_NewRecord.PID='%s' AND qryData_NewRecord.OpSeq=%s;",
                     params = [temp,reason,this.get('pid'),this.get('opseq')],
                     success = function(sql){alert('sucess: ' + sql);},error = function(sql){alert('error on: ' + sql);};
-
+                }
             },
             markAsEntered: function(){
                 var temp = this.get("entered");

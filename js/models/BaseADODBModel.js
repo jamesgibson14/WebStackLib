@@ -104,8 +104,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         _parseValue: function(value){
             if (value == null)
                 return "NULL"
-            if(typeof(value) == 'String')
-                value = that._escapeQuotes(value);
+            if(typeof(value) == 'string')
+                value = this._escapeQuotes(value);
             else if(typeof(value) == 'Boolean')
                 value = value ? 1 : 0;
             else if(typeof(value) == 'object'){
@@ -123,7 +123,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             var columns = '';
             var values = '';
             var attr;
-            attrs || (attrMap = this.attrMap) || (attrs = this.attributes);
+            attrs || (attrs = this.attributes);
             for (attr in attrs){
                 columns = columns + " " + attr + ", ";
                 values = values + this._parseValue(attrs[attr]) + ", ";

@@ -40,9 +40,6 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
                 remaining:  remaining
             }));
         },
-    
-        // Add a single task to the list by creating a view for it, and
-        // appending its element to the `<ul>`.
         addOne: function(model) {
             var view = new subView({model: model});
             this.$("#todo-list").append(view.render().el);
@@ -51,13 +48,17 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
         renderNew: function(){            
             var that = this;
             var view = new subView({model: null});
+            var obj = {}
             view.model.collection = this.collection;
-            view.model.set({Options: {LP:this.collection.length + 1}})
+            obj.Options = {LP:this.collection.length + 1}
+            if(this.options.Item_ID)
+                obj.Item_ID = this.options.Item_ID;
+            view.model.set(obj)
             this.$("#todo-list").append(view.render().el);
             this.renderStats();
             view.model.once('sync',function(){
                 view.model.trigger('change');               
-                that.collection.add(view.model)                
+                that.collection.add(view.model);           
                 that.renderNew();
             })
         },
@@ -77,8 +78,6 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
             });
             this.collection.saveQueued();
         },
-        
-        // Add all items in the **Todos** collection at once.
         addAll: function() {
             this.filteredModels = this.collection.models;
             

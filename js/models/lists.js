@@ -20,11 +20,11 @@ define(['jquery', 'backbone','engine','models/BaseCollection'], function($, Back
 	            items: new BaseCollection(),
 	            
             },
-            getList: function(list){
-                var list = this.get(list)
+            getList: function(listAttr){
+                var list = this.get(listAttr)
                 if (!list.length){
                     list = new list()
-                    this.set(list)
+                    this.set(listAttr,list)
                     list.fetch();
                     return list; 
                 }

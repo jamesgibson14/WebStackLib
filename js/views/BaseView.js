@@ -188,22 +188,20 @@ function($, Backbone, E, Handlebars){
             
              $input = $("<INPUT type=text />")
                 .on('change', function(){applyValue();destroy();})
-                .datepicker()
-            $container.replaceWith($input)
+                .datepicker();
+            $container.replaceWith($input);
             loadValue(); 
             return $input;  
         },
         longTextEditor: function(e,options) {
             var $wrapper;
             var that = this;
-            var $container = $(e.currentTarget)
-            var model =  this.model
-            var attr = $container.attr('data-attr')            
+            var $container = $(e.currentTarget);
+            var model =  this.model;
+            var attr = $container.attr('data-attr');           
             var value;            
             var $input;      
-            var options = options || {};
-            var defaultValue;
-            var scope = this;
+            options || (options = {});
                     
             var handleKeyDown = function (e) {
               if (e.key == 'Enter' && e.ctrlKey) {
