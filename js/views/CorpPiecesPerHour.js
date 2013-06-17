@@ -9,33 +9,36 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
         collection: new Collection(),
         plot: null,
         template: template,
+        events:{
+            'click #chartOptions': 'renderChartOptions',
+            'click #selectable': 'addRemoveMachine',
+            'click .chartOptions': 'adjustChartOptions'
+        },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','loadData', 'renderPlot','renderRawData');
+            _.bindAll(this, 'render','loadData','renderDataGrid');
 
             this.model = new this.model()
             this.model.fetch();
             this.model.on('change:plotData', this.loadData);
             this.SlickGrid = new SlickGrid()
-            
-            //this.collection.fetch();
         },
         loadData: function(){
            var that = this;
             //E.loading(this.$el,that.collection.fetch,this.collection);
             $.jqplot.config.enablePlugins = true;
-            
+            this.$("#sql").html(this.model.collection.sql);
             if (this.plot)
                 this.plot.destroy();
             this.SlickGrid.$el.html('<h2><span>No Data Selected</span><h2>')
-            this.$('#atq_id').html( this.model.get('machineCodes').join(', ') );  
+            this.renderMachines();  
 
             var data = this.model.get('plotData'); 
             var labels = this.model.get('labels'); 
             var series = this.model.get('series');
             
             this.plot = $.jqplot("plot", data, {
-                title: "Machine Comparison",
+                title: "Pieces Per Hour (Runtime + Downtime)",
                 //animate: true,
                 seriesDefaults:{                    
                     pointLabels: { 
@@ -46,11 +49,15 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                         type: 'linear'
                     },
                     isDragable:false,
-                    showMarker:true             
+                    showMarker:true,
+                    markerOptions: {
+                        style:'diamond'
+                    }             
                 },
                 series: series,
                 axesDefaults: {
-                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                    pad: 1.2
                 },
                 legend: {
                     show: true,
@@ -63,7 +70,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                         // set to true to replot when toggling series on/off
                         // set to an options object to pass in replot options.
                         seriesToggle: 'normal',
-                        seriesToggleReplot: {resetAxes: true}
+                        seriesToggleReplot: {resetAxes: false}
                     }
                 },
                 axes: {
@@ -71,18 +78,21 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                         label: 'Timeline',
                         renderer:$.jqplot.DateAxisRenderer,          
                         tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                        numberTicks: 15,
+                        max: new Date(this.model.get('endDate')).format('mm/dd/2013'),
                         tickOptions: {
                             showGridline: false,
                             formatString:'%b %#d, %Y',
                             angle: -30 
-                        }
+                        },
+                        padMax: 500
                     },
                     yaxis: {
                         label: 'Folders Per Hour',
                         tickOptions: {
                             suffix: ''
                         },
-                        padMin: 0
+                        padMin: 1
                     }
                 },
                 grid: {
@@ -99,8 +109,22 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                     tooltipLocation: 'se',
                     tooltipAxes: 'xy',
                     yvalues: 1,
-                    formatString:'<div class="boxpad border z2k"><p>date: %s</p><p>PiecesPerHour: %s</p><div>',
-                    useAxesFormatters: true
+                    formatString:'<div class="boxpad border"><p>date: %s</p><p>PiecesPerHour: %s</p><div>',
+                    useAxesFormatters: true,
+                    tooltipContentEditor: function(str, seriesIndex, pointIndex, plot){
+                        debugger;
+                        var data = plot.series[seriesIndex].data[pointIndex];
+                        var format = [];
+                        if (that.model.get('groupBy')==='month')
+                            format[0] = new Date(data[0] + 1000*60*60*24).format('mmmm yyyy');
+                        else
+                            format[0] = new Date(data[0] ).format('mmmm dd, yyyy');
+                        format[1] = new Number(data[1]).toFixed(1)
+                        var label = plot.legend.labels[seriesIndex].indexOf('Target') 
+                        str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>PiecesPerHour:</td><td align="right">%s</td></tr></table>'
+                        str = $.jqplot.sprintf.apply($.jqplot.sprintf, [str].concat(format));
+                        return str;
+                    }
                },
                cursor: {
                  show: true,
@@ -112,22 +136,11 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             this.$('#resizable').off('resize')
             this.$('#resizable').on('resize', function(event, ui) {
                 if (that.plot)
-                    that.plot.replot( { resetAxes: true } );
+                    that.plot.replot();
             });
-            this.$('#plot').off('jqplotDataUnhighlight');
-            this.$('#plot').on('jqplotDataUnhighlight',         
-                function (ev) {   
-                    //alert('unhighlighted')          
-                    that.$('#info1b').html('Nothing');        
-            }); 
-            this.$('#plot').off('jqplotDataHighlight');
-            this.$('#plot').on('jqplotDataHighlight',         
-                function (ev, seriesIndex, pointIndex, data) {             
-                    alert('highlighted')
-                    that.$('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
-            }); 
+           
             this.$('#plot').off('jqplotDataClick');
-            this.$('#plot').on('jqplotDataClick',this.renderRawData);   
+            this.$('#plot').on('jqplotDataClick',this.renderDataGrid);   
             
         },
         render: function() {
@@ -155,6 +168,9 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                 that.$('#rmachine').prop('disabled', false);
                 that.model.set('machineCodes',that.model.get('machineTypes')[this.value].machines);
             });
+            this.$('#printLandscape').button({text: false, icons:{primary: 'ui-icon-print'}}).css('width','15px')
+            this.$('#chartOptions').button({text: false, icons:{primary: 'ui-icon-triangle-1-s', secondary: 'ui-icon-gear'}}).css('width','30px')
+
             function split( val ) {      return val.split( /,\s*/ );    }    
             function extractLast( term ) {      return split( term ).pop();    }
             
@@ -212,6 +228,17 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             })
             this.$('#resizable').resizable({delay:20,minHeight: 326,minWidth: 400});
             //this.$('input, textarea').placeholder();
+            this.$('#optionsView').dialog({      
+                autoOpen: false,      
+                show: {        
+                    effect: "blind",        
+                    duration: 300      
+                },      
+                hide: {        
+                    effect: "explode",        
+                    duration: 600      
+                }  
+            });  
             return this;
         },
         postRender: function(){
@@ -219,20 +246,19 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             //this.collection.fetch({noJSON:true})
             E.hideLoading();
         },
-        renderPlot: function(){
-            //Instead of destroying plot just reload data, lables and then re-plot 
-            //no data check
-            this.collection.sql = this.model.get('sqlPerLevel')[this.model.get('groupBy') + this.model.get('level')]  
-            this.collection.sqlArgs = [this.model.get('machineCodes'), this.model.get('startDate'),this.model.get('endDate')];
-            this.collection.fetch({noJSON:true})
+        addRemoveMachine: function(e){
+            $(e.target).toggleClass('ui-state-active').toggleClass('ui-state-highlight').toggleClass('fontStrike')
             
-            //var data = this.collection.data({MachineCode: 3191, MachineCode: 5147})
-            E.loading(this.$el, this.loadData,this)
-            this.$('#atq_id').html( this.model.get('machineCodes').join(', ') );
-            
-            E.hideLoading();
         },
-        renderRawData: function(ev, seriesIndex, pointIndex, data){
+        renderMachines: function(){
+            var html = '';
+            $.each(this.model.get('machineCodes'), function(i, item){
+                html += '<li class="ui-state-active" style="padding-left:3px;padding-right:3px">' + item + '</li>'
+            })
+            this.$('#selectable').html();
+            this.$('#selectable').html(html);
+        },
+        renderDataGrid: function(ev, seriesIndex, pointIndex, data){
             //Instead of destroying plot just reload data, lables and then re-plot
             var that = this;
             var html;
@@ -240,9 +266,9 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             var wDate ='';
             var model = this.model.toJSON();
             if (model.groupBy =='month')
-                wDate = "StartDate >'" + dt + "' AND StartDate <= DATEADD(month,1,'" + dt + "')";
+                wDate = "DateCompleted >'" + dt + "' AND DateCompleted <= DATEADD(month,1,'" + dt + "')";
             else
-                wDate = "StartDate = '" + dt + "'";
+                wDate = "DateCompleted = '" + dt + "'";
                 
             
             var labels = model.labels
@@ -257,8 +283,9 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
   
             
             var options = {
-                sql: "SELECT PiecesPerHr = ROUND(CompletedQty / NULLIF(RunHrs + DowntimeHrs,0),0), Unit, PID, Item, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), DateClosed = StartDate, Shift, AssociateCode, SetupHrs = ROUND(SetupHrs,2), RunHrs = ROUND(RunHrs,2), DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData WHERE " + wDate + " AND " + wLevel + " ORDER By Item"
+                sql: "SELECT PiecesPerHr = ROUND(CompletedQty / NULLIF(RunHrs + DowntimeHrs,0),0), Unit, PID, Item, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), DateCompleted, Shift, AssociateCode, SetupHrs = ROUND(SetupHrs,2), RunHrs = ROUND(RunHrs,2), DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData WHERE " + wDate + " AND " + wLevel + " ORDER By Item"
             };
+            this.$("#sql").html(options.sql);
             html = this.SlickGrid.render(options).el
             this.$('#processRecord').html(html)
             setTimeout(function(){
@@ -267,8 +294,30 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             },1)
             
         },
-        test: function(){
-            alert('testing')
+        renderChartOptions: function(e){
+            if($( "#optionsView" ).dialog( "isOpen" )){
+                $( "#optionsView" ).dialog( "close" )
+                return false;
+            }
+                
+            var $el = $('#optionsView')
+            $el.html('<span>Trendlines: </span><span class="chartOptions" data-attr="trendlines">Off</span><br /><span>Markers: </span><span class="chartOptions" data-attr="markers">Off</span>');
+            $el.dialog({
+                appendTo: this.$el,
+                position: {
+                    my: 'right top',
+                    at: 'right bottom',
+                    of: e.target
+                }  
+            })
+            $el.dialog('open')
+            
+        },
+        adjustChartOptions: function(e){
+            var val = $(e.target).html();
+            val == 'Off' ? val = "On" : val = 'Off'
+            $(e.target).html(val);
+            //TODO: update plot here
         }
          
     });

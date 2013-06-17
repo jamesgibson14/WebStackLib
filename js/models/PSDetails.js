@@ -2,16 +2,17 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'models/PSDetail'
-], function($, _, Backbone, Model){
+  'models/PSDetail',
+  'text!templates/PrepareDataForPeopleSoftEntry.sql'
+], function($, _, Backbone, Model,SQL){
     var collection = Backbone.Collection.extend({
         // Reference to this collection's model.
         model: Model,
         filters: {},
-        sql: 'Execute dbo.spGetDataForPeopleSoftEntry',
+        sql: SQL,
         modelsToSave: [],
         sqlToExecute: null,
-        store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false),
+        store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
         sqldb: E.sqlProd2,
         accessdb: E.accessdb,
         save: function(){
@@ -31,9 +32,7 @@ define([
             var sql = "UPDATE dbo_ProductionDataDetails INNER JOIN tblData2 ON dbo_ProductionDataDetails.RecordID = tblData2.RecordID SET dbo_ProductionDataDetails.PSoft = [tblData2].[PSoft] WHERE (((([dbo_ProductionDataDetails].[PSoft]))<>([tblData2].[PSoft])));",
             success = function(sql){return;},error = function(sql){alert('error on: ' + sql);};
 
-            this.db.transaction(function(db) {
-                return db.executeSql(sql, success, error);
-            });  
+            this.db.executeSql(sql, success, error);
         }    
 
     });

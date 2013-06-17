@@ -12,7 +12,7 @@ body {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 14px;
 	line-height: 1.4em;
-	background: #333333;
+	margin:0px;
 }
 iframe {
 	width:100%;
@@ -40,15 +40,18 @@ h1.ui-widget-header, h2.ui-widget-header {
 	padding-left:25%;
 }
 #bodyview {
-	margin-left:2%;
-	margin-right:2%;
-	width:95%;
-	background-color: #FFFFFF;
-	padding: 5px;
-	border-radius: 15px;
-	margin-bottom:50px;
-	height:97%;
-	z-index: 0;
+	position:fixed;
+	left:0;
+	right:0;
+	bottom:0;
+	top:0;
+	background-color:#ffcb66; /* #faf25f #ff9428 rgb(178, 255, 38)*/
+	/*filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff9428', endColorstr='#fbec39');/*For IE7-8-9*/ 
+	padding-top:15px;
+	padding-left: 30px;
+	padding-right: 20px;
+	padding-bottom:50px;
+	overflow:auto;
 }
 #header{
 	margin-bottom: 6px;
@@ -56,8 +59,12 @@ h1.ui-widget-header, h2.ui-widget-header {
 #mainview{
 	
 }
-#SmeadApp {
-
+.SmeadApp {
+	background-color: #F3F3F3;
+	border-radius: 15px;
+	box-shadow:0px 0px 5px 1px rgba(1,1,1,0.7);
+	padding: 5px;
+	margin-bottom: 50px;
 }
 #footer {
 	position:fixed;
@@ -88,19 +95,37 @@ h1.ui-widget-header, h2.ui-widget-header {
 }
 
 @media print {
-	body	{ color:#000; font:12px arial, helvetica, sans-serif; padding:0; }
+	body	{ 
+		color:#FFFFFF; font:12px arial, helvetica, sans-serif; padding:0;
+		/*-ms-transform: rotate(90deg);  
+		-ms-transform-origin:right top; /* IE 9 */
+		overflow:hidden;
+	}
 	html {
 		background: #FFFFFF;
 	}
 	.noprint{
 		display:none;
 	}
-	#bodyview {
-		max-width:97%;
-		background-color: #FFFFFF;
+	.SmeadApp {
+		position:static;
+		background: none;
+		border:none;
+		box-shadow:none;
 		padding: 5px;
-		border:0;
-		margin-bottom:50px;
+		margin-bottom: 50px;
+	}
+	#bodyview {
+		position:static;		
+		background-color:#ff9428  /*#ff9428 rgb(178, 255, 38)*/;
+		background: none;
+		/*filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff9428', endColorstr='#fbec39');/*For IE7-8-9*/ 
+		padding-top:0px;
+		padding-left: 0px;
+		padding-right: 0px;
+		padding-bottom:0px;
+		height:100%;
+		overflow:hidden;
 	}
 	
 	#header{
@@ -118,6 +143,9 @@ h1.ui-widget-header, h2.ui-widget-header {
 	#poweredBy{
 		float: right;
 		text-align:right;
+	}
+	tr {
+		page-break-before: auto;
 	}
 }
 .ofh {
@@ -168,7 +196,7 @@ tr {
 	display:block;
 }
 .inline {
-	display:inline;
+	display:inline-block;
 }
 .noSelect {
 	-webkit-user-select: none;  
@@ -346,7 +374,9 @@ tr {
 	margin: 2px;
 	margin-left:5px;
 }
-
+.defaultForm .ui-state-error{
+	font-size: 14pt;
+}
 .editable .hidden {
 	display:none;
 }
@@ -386,75 +416,6 @@ textarea {
 	margin-left: -85px;
 }
 
-#todo-list {
-	margin-top: 10px;
-}
-#todo-list li {
-	padding: 12px 20px 11px 0;
-	position: relative;
-	font-size: 24px;
-	line-height: 1.1em;
-	border-bottom: 1px solid #cccccc;
-}
-#todo-list li:after {
-	content: "\0020";
-	display: block;
-	height: 0;
-	clear: both;
-	overflow: hidden;
-	visibility: hidden;
-}
-#todo-list li.editing {
-	padding: 0;
-	border-bottom: 0;
-}
-#todo-list .editing .display,
-#todo-list .edit {
-	display: none;
-}
-#todo-list .editing .edit {
-	display: block;
-}
-#todo-list .editing input {
-	width: 444px;
-	font-size: 24px;
-	font-family: inherit;
-	margin: 0;
-	line-height: 1.6em;
-	border: 0;
-	outline: none;
-	padding: 10px 7px 0px 27px;
-	border: 1px solid #999999;
-	-moz-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-	-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-	-o-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-	box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0 inset;
-}
-#todo-list .check {
-	position: relative;
-	top: 9px;
-	margin: 0 10px 0 7px;
-	float: left;
-}
-#todo-list .done .todo-content {
-	text-decoration: line-through;
-}
-#todo-list .todo-destroy {
-	position: absolute;
-	right: 5px;
-	top: 14px;
-	display: none;
-	cursor: pointer;
-	width: 20px;
-	height: 20px;
-	background: url(../assets/images/destroy.png) no-repeat 0 0;
-}
-#todo-list li:hover .todo-destroy {
-	display: block;
-}
-#todo-list .todo-destroy:hover {
-	background-position: 0 -20px;
-}
 
 #todo-stats {
 	*zoom: 1;
@@ -733,7 +694,7 @@ textarea {
 	padding-right:10px;
 	text-align:center;
 	color: #4D926F;
-	font-size:16px;
+	font-size:18px;
 	
 }
 .hicell { 
@@ -749,10 +710,22 @@ textarea {
 .border {
 	border:1px solid black;
 }
+.borderCells td, .borderCells th {
+	border:1px solid black;
+}
+.borderCells .noBorder {
+	border:none;
+}
+.bold {
+	font-weight: bold;
+}
+.fontStrike {
+	text-decoration:line-through;
+}
 .cell { 
 	display:table-cell;
 	padding:5px;
-	text-align:center;
+	text-align:right;
 	font-weight:600;
 }
 .cell span.extra {
@@ -825,7 +798,7 @@ table.tablesorter {
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
 	background-color: #e6EEEE;
 	border: 1px solid #FFF;
-	font-size: 8pt;
+	font-size: 10pt;
 	padding: 4px;
 }
 table.tablesorter thead tr .header {
@@ -879,7 +852,9 @@ textarea:focus, input:focus {
 	margin-left: 25px;
 }
 
-
+.ui-icon{
+	display:inline-block;
+}
 
 /*
 IMPORTANT:
@@ -1413,4 +1388,11 @@ input.editor-checkbox {
   padding: 2px;
   text-decoration: underline;
   cursor: pointer;
+}
+.jqplot-highlighter-tooltip, .jqplot-canvasOverlay-tooltip {
+	z-index: 1000;
+	background: rgb(208,208,208);
+}
+.ui-front {
+	z-index: 5000;
 }

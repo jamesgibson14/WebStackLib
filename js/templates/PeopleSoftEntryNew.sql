@@ -3,20 +3,13 @@ SELECT
 	recordID = ProductionData.ParentRecordID,
 	runcount,  
 	dt2.pid,
-	ProductionDemandGroups.status,
 	dt2.opseq, 
 	ProductionData.machine, 
-	qtycompleted,
-	ADCcompleted = pdgr.Completed,
-	PScompleted = PeopleSoftData.CompletedQty,
-	expectedqty = ProductionQty, 
-	operator = right('00000' + dbo.Associates.[Employee Number],5),
+	qtycompleted, 
 	date = CONVERT(varchar, dbo.ProductionData.Date,101),
 	shift = dbo.ProductionData.Shift, 
 	eachescompleted, 
 	scrap = CASE WHEN dt2.scrap < 0 THEN 0 ELSE dt2.scrap END,
-	processscrap = pdgr.Scrap,
-	psscrap =PeopleSoftData.ScrapQty,
 	endscrap = ISNULL(endscrap,0),
 	enterendscrap = '', --CASE WHEN endscrap > 100 THEN 'true' ELSE '' END, 
 	runtime, 
@@ -45,10 +38,10 @@ FROM
 						(((((SUM([end]-[CStart]) * IOM.EachesPerDrop*1.0) --Eaches
 						/ ISNULL(dt1.UnitOfMeasure,1)) --convert to Package qty				
 						* dt1.Feedup) / --Feet of paper used
-						(CASE WHEN Machines.WorkCenter_ID=52202 THEN 9000 ELSE 22000 END) --22000 is a guess of the avg feet of paper on a roll for each roll change.
+						(CASE WHEN Machines.WorkCenter_ID=52202 THEN 8000 ELSE 22000 END) --22000 is a guess of the avg feet of paper on a roll for each roll change.
 						)--run Ceiling on number of rolls to always give an integer
 						)
-					,0)AS varchar)
+					,0) AS varchar)
 				) + ', "sc": ' + cast(CASE WHEN dt1.assortment=1 THEN dt1.Feedup * (SUM(dt2.Reject) / dt1.UnitOfMeasure)  ELSE 0 END AS varchar) + ', "pc": "' + PaperColor + '"}'  
               FROM   
 				dbo.ProductionData dt3 INNER JOIN
@@ -94,7 +87,7 @@ FROM
 			scrap = dbo.ProductionDataDetails.Reject/ISNULL(dbo.Items.PeopleSoftUOM,1),
 			
 			endscrap = (
-				ROUND(ItemsOnMachineCount.PaperScrap*
+				ROUND(ItemsOnMachineCount.PaperScrap * 
 					--CEILING  --converts the number to number of roll changes instead of a fraction
 					((((([end]-[CStart]) * dbo.ItemsOnMachineCount.EachesPerDrop) --Eaches
 					/ ISNULL(dbo.Items.PeopleSoftUOM,1)) --convert to Package qty				
@@ -113,20 +106,13 @@ FROM
 					chkBreak2,
 					chkLunch,
 					0
-				)-dbo.fnMachineRunTimeMinutes([Meter Stop],[Meter Start])
-				-(dbo.fnSetupMinutes(
-					ClockSetup, 
-					ClockRun, 
-					ReAssgnMinTotal,
-					chkBreak1,
-					chkBreak2,
-					chkLunch,
-					1
-				))
-				 + (chkBreak1*10) + (chkBreak2 * 10) + (chkLunch * 30)
+				)
+				-dbo.fnMachineRunTimeMinutes([Meter Stop],[Meter Start])
+				-(	CASE WHEN DateDiff("n", ClockSetup, ClockRun) < 0 THEN DateDiff("n", ClockSetup, ClockRun) + 1440 ELSE DateDiff("n", ClockSetup, ClockRun) END
+				)- ReAssgnMinTotal + (chkBreak1*10) + (chkBreak2 * 10) + (chkLunch * 30)
 			),
 			setuptime = (
-				dbo.fnSetupMinutes(
+				dbo.fnAssignedMinutes(
 					ClockSetup, 
 					ClockRun, 
 					ReAssgnMinTotal,
@@ -142,7 +128,7 @@ FROM
 				dbo.fnAssignedMinutes(
 					ClockSetup, 
 					ClockEnd, 
-					0,
+					ReAssgnMinTotal,
 					chkBreak1,
 					chkBreak2,
 					chkLunch,
@@ -172,45 +158,33 @@ FROM
 			AND	ProductionDataDetails.PID <>'DCP' 
 			And ProductionDataDetails.PID <> 'extra'  
 			AND ProductionData.Machine <> '52102'
-			--AND	ProductionDataDetails.PID IN ('PID1628304', 'PID162388')
+			AND	ProductionDataDetails.PID IN ('PID1622164', 'PID1622170', 'PID1622176', 'PID1622653')
 			AND ProductionData.chkCompleted = 1 
-			AND ProductionData.Date > '8/1/2012'
+			AND ProductionData.Date > '1/1/2013'
 		) AS dt1
 	GROUP BY pid, opseq, Item_ID, EachesPerDrop, UnitOfMeasure,PaperScrap, Feedup,assortment,PaperConverting,Cell_ID,ItemCode
 	HAVING MIN(CAST(PSoft as INT))=0
 	) as dt2	
 INNER JOIN dbo.ProductionData
-			 ON dt2.parentrecordID = dbo.ProductionData.ParentRecordID INNER JOIN
-	dbo.Associates on dbo.Associates.RecordID=dbo.ProductionData.[Employee #] LEFT JOIN
-	dbo.ProductionDemandGroups ON ProductionDemandGroups.PIDText=dt2.pid LEFT JOIN
-	dbo.ProductionDemandGroupsRouting pdgr ON dt2.pid = pdgr.PID AND dt2.opseq =  pdgr.opseq LEFT JOIN
-	dbo.PeopleSoftData ON PeopleSoftData.PID=dt2.pid AND PeopleSoftData.OpSeq=dt2.opseq
-
-UNION
+			 ON dt2.parentrecordID = dbo.ProductionData.ParentRecordID 
+UNION ALL
 
 SELECT
 	recordtype = 'm',
 	recordID = ProductionDataMultiprocess.ParentRecID,
 	runcount,  
-	dt2.pid,
-	ProductionDemandGroups.Status, 
+	dt2.pid, 
 	dt2.opseq, 
 	machine = CASE WHEN ProductionDataMultiProcess.txtWorkCenter='52004' THEN '4270' 
 				WHEN ProductionDataMultiProcess.txtWorkCenter='52203b' THEN '2105'
 				WHEN ProductionDataMultiProcess.txtWorkCenter='52203k' THEN '3757'
 				ELSE 'ERROR' END, 
 	qtycompleted = qtycompleted,
-	ADCcompleted = pdgr.Completed,
-	PScompleted = ps.CompletedQty,
-	expectedqty = ProductionQty, 
-	operator = CASE WHEN ProductionDataMultiProcess.txtWorkCenter='52004' THEN '' ELSE right('00000' + dbo.Associates.[Employee Number],5) END,
 	date =  CONVERT(varchar, dbo.ProductionDataMultiprocess.dtDate,101),
 	shift = dbo.ProductionDataMultiprocess.txtShift, 
 	eachescompleted, 
 	scrap = CASE WHEN dt2.scrap <> '52004' THEN 0 
 				ELSE dt2.scrap END,
-	processscrap = pdgr.Scrap,
-	psscrap =ps.ScrapQty, 
 	endscrap =0,
 	enterendscrap = '',
 	runtime, 
@@ -281,16 +255,12 @@ FROM
 			dbo.Items ON dbo.ProductionDataMultiprocessDetails.Item_ID = dbo.Items.ID
 		WHERE     
 			ProductionDataMultiprocessDetails.txtPID is not null 
-			--AND ProductionDataMultiprocessDetails.txtPID in ('PID1628339')
+			AND ProductionDataMultiprocessDetails.txtPID in ('PID1559095')
 			AND ProductionDataMultiprocess.chkCompleted = 1
-			AND ProductionDataMultiprocess.dtDate > '8/1/2012'
+			AND ProductionDataMultiprocess.dtDate > '1/1/2013'
 		) AS dt1
 	GROUP BY pid, opseq, Item_ID, EachesPerDrop, UnitOfMeasure,PaperScrap, Feedup,Paper_ID,Cell_ID,ItemCode
 	HAVING MIN(CAST(chkPSoft as INT))=0 AND MIN(CAST(chkConverted as INT))=1 AND MIN(CAST(chkCompleted as INT))=1
 	) as dt2
 INNER JOIN dbo.ProductionDataMultiProcess
-			 ON dt2.parentrecordID = dbo.ProductionDataMultiProcess.ParentRecID INNER JOIN
-	dbo.Associates on dbo.Associates.RecordID=dbo.ProductionDataMultiProcess.txtAssociate LEFT JOIN
-	dbo.ProductionDemandGroups ON ProductionDemandGroups.PIDText=dt2.pid Left JOIN
-	dbo.ProductionDemandGroupsRouting pdgr ON dt2.pid = pdgr.PID AND dt2.opseq =  pdgr.opseq LEFT JOIN
-	dbo.PeopleSoftData ps ON ProductionDemandGroups.PIDText=ps.PID AND dt2.opseq = ps.opseq
+			 ON dt2.parentrecordID = dbo.ProductionDataMultiProcess.ParentRecID 

@@ -6,9 +6,9 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
         tagName:  "div",
         className: 'ReportApp ofh',
         attributes: {style:'border:none;'},
-        model: Backbone.Model.extend({
-            sql: "Execute spGetLists 'operatorQualifications'",
-            store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false), }),
+        qualificationList: Backbone.Collection.extend({
+            sql: "SELECT id = AssociatesToQualifications.ID, label= [Name]+ '- Q' + [QualificationName], cell= ExprCell, qualification= [QualificationName] FROM dbo.Associates INNER JOIN dbo.AssociatesToQualifications ON dbo.Associates.RecordID = dbo.AssociatesToQualifications.Associate_ID INNER JOIN dbo.Qualifications q ON dbo.AssociatesToQualifications.Qualifications_ID = q.ID WHERE (ExprStatus <> N'Terminated') AND ExprStatus <> '' ORDER BY Name, QualificationName",
+            store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         modelStageTotals: Backbone.Model.extend({
             sql: "SELECT m.Code, m.Cell_ID, m.WorkCenter_ID, m.Stage5Target, m.Inactive, qa.Stage1Minutes, qa.Stage2Minutes, qa.Stage3Minutes, qa.Stage4Minutes, qa.Stage5Minutes, atq.CurrentStage,(SELECT MAX(ReviewDate) AS MaxOfReviewDate FROM dbo.MachineOperatorReviews mor WHERE (mor.QualID=atq.ID)) AS LastReviewDate FROM AssociatesToQualifications atq INNER JOIN Qualifications AS q ON atq.Qualifications_ID = q.ID INNER JOIN QualificationsToMachines ON q.ID = QualificationsToMachines.Qualifications_ID INNER JOIN Machines AS m ON QualificationsToMachines.Machines_ID = m.ID INNER JOIN QualificationsAttributes qa ON q.ID = qa.Qualifications_ID WHERE atq.ID = %s",
             sqlArgs: [430],
@@ -22,17 +22,16 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
         initialize: function() {
           this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','loadData','renderProcessRecord');
-            this.model = new this.model()
+            this.qualificationList = new this.qualificationList()
             this.modelStageTotals = new this.modelStageTotals();
-            this.model.fetch();
+            this.qualificationList.fetch();
             this.ProcessRecordView = new ProcessRecord()
             //this.collection.fetch();
         },
         loadData: function(){
            
             //E.loading(this.$el,that.collection.fetch,this.collection);
-            $.jqplot.config.enablePlugins = true;
-            var attrs = this.model.toJSON()
+            $.jqplot.config.enablePlugins = true;           
             if (this.plot)
                 this.plot.destroy();
             
@@ -100,15 +99,33 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 },
                 highlighter: {
                     show: true,
+                    showMarker:true,
+                    showTooltip:true,
                     sizeAdjust: 10,
                     tooltipLocation: 'se',
                     tooltipAxes: 'xy',
                     yvalues: 4,
                     formatString:'<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr><tr><td>Record #</td><td>%s</td></tr></table>',
-                    useAxesFormatters: true
+                    useAxesFormatters: true,
+                    tooltipContentEditor: function(str, seriesIndex, pointIndex, plot){
+                        debugger;
+                        var data = plot.series[seriesIndex].data[pointIndex]
+                        var format = [];
+                        format[0] = new Date(data[0]).format('mm/dd/yyyy');
+
+                        format[1] = new Number(data[1]).toFixed(1)
+                        if(plot.legend.labels[seriesIndex].indexOf('Target') > 1){
+                            str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>Stage:</td><td>%s</td></tr></table>'
+                        }
+                        else
+                            str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr><tr><td>Record #</td><td>%s</td></tr></table>'
+                        str = $.jqplot.sprintf.apply($.jqplot.sprintf, [str].concat(format));
+                        return str;
+                    }
                },
                cursor: {
                  show: true,
+                 showTooltip:false,
                  zoom: true
                }
             });
@@ -133,11 +150,13 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
             this.$('#plot').off('jqplotDataClick');
             this.$('#plot').on('jqplotDataClick',this.renderProcessRecord);             
                 
-            this.modelStageTotals.sqlArgs = new Array(this.associateToQualification_ID);
-            this.modelStageTotals.fetch()
+            var cd;
             var cs = this.collection.getCurrentStage()
-            var cd = new Date(this.modelStageTotals.get('LastReviewDate'))
-            if (!cd) cd = "n/a"
+            if(cs != 8){
+                this.modelStageTotals.sqlArgs = [this.associateToQualification_ID];
+                this.modelStageTotals.fetch({error:function(model, response, options){alert()}})
+                cd = this.modelStageTotals.get('LastReviewDate') ? new Date(this.modelStageTotals.get('LastReviewDate')) : 'n/a';
+            }
             var cm = (this.collection.getStageMinutes(cd)/440).toFixed(2);
             var ns = this.nextStage(cs);
             if(ns==5)
@@ -182,7 +201,7 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 }  
                 return valid              
             }  
-            var qualificationList = this.model.get('operatorQualifications');
+            //var qualificationList = this.model.get('operatorQualifications');
             var success = function(atq_id){
                 that.collection.sqlArgs = [atq_id], //= "EXECUTE dbo.spOperatorTracking @AssociateToQualification_ID = " + atq_id;
                 that.collection.fetch();
@@ -195,8 +214,10 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 that.loadData()
                 E.hideLoading();
             }
+            var source = this.qualificationList.toJSON()
+            
             this.$( "#iqualification" ).autocomplete({
-                source: qualificationList,
+                source: source,
                 autoFocus: true,
                 minLength: 0,
                 delay: 0,
@@ -207,7 +228,7 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                     that.$('#qualName').html( ui.item.qualification );
                     that.$('#scell').html( ui.item.cell );
                     that.$('#sAssociate').html( ui.item.label.split('-')[0] );
-                    if(removeIfInvalid( ui.item.label,qualificationList)) {
+                    if(removeIfInvalid( ui.item.label,source)) {
                         E.loading(that.$el, function() {success(ui.item.id );},that)
                     }
                     $(this).val('').blur();

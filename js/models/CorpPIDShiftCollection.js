@@ -26,11 +26,11 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             this.map(function(model){
                 var label = getLabel(model);
                 if (labels.indexOf(label) > -1){
-                    obj[label].push([new Date(model.get('StartDate')),model.get('PcsPerHour')]);
+                    obj[label].push([new Date(model.get('DateCompleted')),model.get('PcsPerHour')]);
                 }
                 else{
                     labels.push(label);
-                    obj[label] = [[new Date(model.get('StartDate')),model.get('PcsPerHour')]]
+                    obj[label] = [[new Date(model.get('DateCompleted')),model.get('PcsPerHour')]]
                 }                           
             });
             var group = {};
@@ -42,7 +42,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 if(!group[gKey]) 
                     group[gKey]=0;
 
-                series.push({color: model.get('branches')[gKey].colors[group[gKey]]})
+                series.push({color: model.get('branches')[gKey].colors[group[gKey]],markerOptions: model.get('branches')[gKey].markerOptions})
                 //alert(series[c].color)
                 group[gKey] += 1;
                 c++;

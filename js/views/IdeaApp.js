@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/IdeaApp', 'text!templates/IdeaApp.html', 'models/cellsuggestions','views/ideaList'], 
-function($, Backbone, E, Handlebars, Model, template, Collection, ideaList){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/IdeaApp', 'text!templates/IdeaApp.html', 'models/cellsuggestions','views/ideaList','views/cellsuggestion'], 
+function($, Backbone, E, Handlebars, Model, template, Collection, ideaList, CellSuggestion){
 
     var View = Backbone.View.extend({
 
@@ -7,6 +7,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, ideaList){
         className: 'IdeaApp',
         collection: new Collection(),
         model: new Model(),
+        cellSuggestion: new CellSuggestion(),
         filteredModels: [],
         filters: false,
         template: template,
@@ -14,32 +15,32 @@ function($, Backbone, E, Handlebars, Model, template, Collection, ideaList){
         attributes: {style:'overflow:hidden;'},
         events: {
             'blur .pid':'change',
-            'click .loadtable': 'loadData',
-            'click #btnCreate': 'timeDelay'        
+            'click #btnCreate': 'timeDelay',
+            'click #addTask': 'addTask'        
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','filter', 'newCellSuggestion', 'timeDelay');
+            _.bindAll(this, 'render', 'newCellSuggestion', 'timeDelay');
             //if (this.options.modelid)
                 //open to specific 
             this.model.fetch({wait:true});
         },
-        loadData: function(){
-            this.collection.fetch();
+        addTask: function(e){
+            $(e.target).prev().append('<li class="ui-state-disabled"><input placeholder="type task:" /><input type="checkbox" /></li>').find('input').placeholder()
         },
-        // Re-render the contents of the todo item.
         render: function() {
             var that = this;
-            
+            var view;
             var temp = this.template({});
-
+            
             
             this.$el.html( temp );
-
-            var view = new ideaList({collection: this.collection});
-
-            this.$("#tabs-1").append(view.render().el);
+            view = new ideaList({collection: this.collection});
+            this.$("#tabs-1").prepend(view.render().el); 
             
+            view = this.cellSuggestion 
+            this.$("#tabs-1  .content").append(view.render().el); 
+                       
             this.$inputs.iassociateID = this.$('#iassociateID');
             this.$inputs.iassociate = this.$('#iassociate');
             this.$inputs.idate = this.$('#idate');
@@ -56,6 +57,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, ideaList){
             this.$('input, textarea').placeholder();
             this.$('#idate').datepicker();
             this.$('#btnCreate').button();
+            this.$('#addTask').button();
             //var machines = this.model.get('machines'); [{id:35,code: 3555,cell: 520,workcenter:52004},{etc},{etc}]
             function removeIfInvalid(element) {                    
                 var $el = $( element )
@@ -130,45 +132,14 @@ function($, Backbone, E, Handlebars, Model, template, Collection, ideaList){
             this.$("#ialpha").combobox();
             this.$("#inumeric").combobox();
             this.$('#tabs').tabs();
+            
             return this;
         },
         change: function(){
             
             var newvalue = this.$el.find('.pid').val();
             this.model.set({pid: newvalue})
-        },
-        filter: function(){
-            //alert('filter and sort');
-            debugger;
-            //this.collection.sort({silent:true});
-            //alert('filters: ' + this.filters);
-            if(this.filters)
-                this.filteredModels = this.collection.filter(function(model){
-                    _.each(this.filters,function(filter){
-                        filter(model)
-                    })
-                });
-            else
-                this.filteredModels = this.collection.models
-            
-            this.addAll();
-        },
-        addAll: function() {
-            // create in memory element
-            var $el = this.$('#list').clone(true,true);
-            var header = $el.find('.header').clone(true,true);
-            // also get the `className`, `id`, `attributes` if you need them 
-            $el.empty();
-            $el.append(header);
-            // append everything to the in-memory element 
-            _.each(this.filteredModels, function(model){ 
-                var rowView = new subView({model: model}); 
-                $el.append(rowView.render().el); 
-            }); 
-            // replace the old view element with the new one, in the DOM 
-            this.$("#list").replaceWith($el);//.replaceWith($el);             
-        },
-        
+        },        
         newAttributes: function() {
           return {
             associateID: this.$inputs.iassociateID.val(),

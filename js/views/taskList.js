@@ -1,54 +1,34 @@
-define(['jquery', 'backbone', 'engine','handlebars', 'models/task', 'text!templates/taskList.html','models/tasks','text!templates/TodoStats.html','views/task'], 
-function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subView){
-    var View = Backbone.View.extend({
+define(['jquery', 'backbone', 'engine','handlebars', 'models/taskList', 'text!templates/taskList.html','text!templates/TodoStats.html','views/task', 'models/task','models/lists'], 
+function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
+    var View = E.BaseView.extend({
 
         tagName:  "div",
         className: 'PSApp',
-        collection: new collection(),
+        model: new Model(),
         filteredModels: [],
-
-        // Our template for the line of statistics at the bottom of the app.
         template: template,
         statsTemplate: statsTemp,
-    
-        // Delegated events for creating new items, and clearing completed ones.
         events: {
           "keypress #new-todo":  "createOnEnter",
           "keyup #new-todo":     "showTooltip",
           "click .todo-clear a": "clearCompleted",
-          "click .mark-all-done": "toggleAllComplete",
-          "click .filter-all-done": "filter",
-          'click #btnTest': 'test'
+          "click .print": "print"
         },
-    
-        // At initialization we bind to the relevant events on the `Todos`
-        // collection, when items are added or changed. Kick things off by
-        // loading any preexisting todos that might be saved in *localStorage*.
         initialize: function() {
-            _.bindAll(this, 'addOne', 'addAll', 'render', 'toggleAllComplete','renderStats','reOrder','filter');
-            this.collection.bind('reset',     this.filter);
-            this.collection.bind('add',     this.addOne);
-             
-            this.template = Handlebars.compile(this.template);
+            this.collection = this.model.tasks;
+            _.bindAll(this, 'addOne', 'addAll', 'render','renderStats','reOrder');
+            this.listenTo(this.collection,'reset',     this.addAll);
             this.statsTemplate = Handlebars.compile(this.statsTemplate);
-            var temp = this.template({});
-            this.$el.html( temp );
-             
+            subView = subView.extend({
+                associateCollection: E.lists.getList('associates'),
+                associateList: E.lists.getList('associates').renderForDataEntry()
+            })              
+        },
+        onRender: function(){
+            var that = this;
+            this.collection.fetch({reset:true});  
             this.input = this.$("#new-todo");
-
-            this.collection.fetch();
-           
-        },
-        test: function(e){
-            //for testing UI interactions
-            alert("Test Code");
-            
-        },
-    
-        // Re-rendering the App just means refreshing the statistics -- the rest
-        // of the app doesn't change.
-        render: function() {
-            return this;
+            this.renderNew();
         },
         renderStats: function() {
             var done = this.collection.done().length;
@@ -59,49 +39,50 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
                 done:       done,
                 remaining:  remaining
             }));
-            this.$(".mark-all-done")[0].checked = !remaining;
         },
-    
-        // Add a single todo item to the list by creating a view for it, and
-        // appending its element to the `<ul>`.
         addOne: function(model) {
             var view = new subView({model: model});
             this.$("#todo-list").append(view.render().el);
             this.renderStats();
         },
-        
-        filter: function() {
-            //alert('filter and sort');
-            debugger;
-            this.collection.sort({silent:true});
-            if(this.$(".filter-all-done")[0].checked)
-                this.filteredModels = this.collection.remaining();
-            else
-                this.filteredModels = this.collection.models
-        
-            this.addAll();
+        renderNew: function(){            
+            var that = this;
+            var view = new subView({model: null});
+            var obj = {}
+            view.model.collection = this.collection;
+            obj.Options = {LP:this.collection.length + 1}
+            if(this.options.Item_ID)
+                obj.Item_ID = this.options.Item_ID;
+            view.model.set(obj)
+            this.$("#todo-list").append(view.render().el);
+            this.renderStats();
+            view.model.once('sync',function(){
+                view.model.trigger('change');               
+                that.collection.add(view.model);           
+                that.renderNew();
+            })
         },
-        reOrder: function(event, ui) {
+        reOrder: function(e, ui) {
             //alert('pos: ' + ui.item.index() + ', ' + ui.placeholder.index());
             var now = new Date();
-            
+            var startAt = ui.item.index();
             var that = this;
-            this.$('div.todo').each(function(i){
-                
+            this.$('div.task').each(function(i){
                 var id = $(this).attr('data-id');
-                var model = that.collection.get(id); 
-                model.set({order: i + 1},{silent:true,queue:true});
+                if (!id)
+                    return;
+                var model = that.collection.get(id);
+                var obj = $.extend({},model.get('Options'),{LP:i + 1})
+                model.set({Options: obj});                
+                that.collection.sqlqueue += ';' + model.update({queue:true})
             });
             this.collection.saveQueued();
-            //alert(new Date()-now);
         },
-        
-        // Add all items in the **Todos** collection at once.
         addAll: function() {
-            // create in memory element
-            //this.$('#todo-list').sortable('destroy');
+            this.filteredModels = this.collection.models;
+            
+            // create element in memory 
             var $el = this.$('#todo-list').clone(true,true); 
-            // also get the `className`, `id`, `attributes` if you need them 
             $el.empty();
             // append everything to the in-memory element 
             _.each(this.filteredModels, function(model){ 
@@ -114,47 +95,6 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
             // replace the old view element with the new one, in the DOM 
             this.$("#todo-list").replaceWith($el);//.replaceWith($el); 
             this.renderStats();
-        },
-    
-        // Generate the attributes for a new Todo item.
-        newAttributes: function() {
-          return {
-            content: this.input.val(),
-            order:   this.collection.nextOrder(),
-            done:    false
-          };
-        },
-    
-        // If you hit return in the main input field, create new **Todo** model,
-        // persisting it to *localStorage*.
-        createOnEnter: function(e) {
-          if (e.keyCode != 13) return;
-          this.collection.create(this.newAttributes(),{wait:true});
-          this.input.val('');
-          e.preventDefault();
-        },
-    
-        // Clear all done todo items, destroying their models.
-        clearCompleted: function() {
-          _.each(this.collection.done(), function(todo){ todo.destroy(); });
-          return false;
-        },
-    
-        // Lazily show the tooltip that tells you to press `enter` to save
-        // a new todo item, after one second.
-        showTooltip: function(e) {
-          var tooltip = this.$(".ui-tooltip-top");
-          var val = this.input.val();
-          tooltip.fadeOut();
-          if (this.tooltipTimeout) clearTimeout(this.tooltipTimeout);
-          if (val == '' || val == this.input.attr('placeholder')) return;
-          var show = function(){ tooltip.show().fadeIn(); };
-          this.tooltipTimeout = _.delay(show, 1000);
-        },
-    
-        toggleAllComplete: function () {
-          var done = this.allCheckbox.checked;
-          this.collection.each(function (todo) { todo.set({'done': done}); });
         }
 
     });

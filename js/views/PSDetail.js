@@ -10,7 +10,8 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
     
         // The DOM events specific to an item.
         events: {
-          "click .check"              : "toggleFlag",
+          "click .check": "toggleFlag",
+          "click .checkIsReady": "toggleIsReady",
           'click .chkentered':'toggleEntered',
           'click .chkendscrap':'toggleEndscrap',
           //"click label.todo-content"  : "showOrder",
@@ -38,20 +39,20 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
     
             this.$el.html( temp );
             if(this.model.get('flag'))
-                this.$el.addClass('error');
+                this.$el.addClass('ui-state-error');
             else
-                this.$el.removeClass("error");
+                this.$el.removeClass("ui-state-error");
             if(this.model.get('entered'))
-                this.$el.addClass('entered');
+                this.$el.addClass('ui-state-active');
             else
-                this.$el.removeClass("entered");
+                this.$el.removeClass("ui-state-active");
             return this;
         },
         // Toggle the `"flag"` state of the model.
         toggleFlag: function() {
             var temp = {};
             if(this.$('.check').prop('checked')){
-                temp.flagreason = this.model.get('flagreason') +  prompt("Please enter the reason for flagging this PID?") + '<br />';
+                temp.flagreason = this.model.get('flagreason') +  "Flagged by " + E.user.get('Name')//prompt("Please enter the reason for flagging this PID?") + '<br />';
                 temp.flag = true;
             }
             else
@@ -73,9 +74,11 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
             temp.enterendscrap = !this.model.get('enterendscrap')
             this.model.set(temp);
         },
+        toggleIsReady: function() {
+            this.model.set({isReady: !this.model.get('isReady')});
+        },
         // Alert the Order of this todo.
         showOrder: function(e) {
-            //console.log(e);
           alert('you clicked me' + this.model.get("order"));
         },
         
@@ -87,16 +90,13 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
     
         // Close the `"editing"` mode, saving changes to the todo.
         close: function(input) {
-            
             this.model.set({pid: this.$(input).val()});
-            //$(this.el).removeClass("editing");
         },
     
         // If you hit `enter`, we're through editing the item.
         updateOnEnter: function(e) {
           
           if (e.keyCode == 13) {
-              debugger;
               e.preventDefault();
               this.close(e.currentTarget);              
           }
@@ -105,11 +105,11 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
             var $el = $(e.target)
             if($el.hasClass('ui-icon-plusthick')){
                 $el.removeClass('ui-icon-plusthick').addClass("ui-icon-minusthick")
-                this.$('span.extra').show(1000);
+                this.$('span.extra').show(500);
             }
             else{
                 $el.removeClass("ui-icon-minusthick").addClass('ui-icon-plusthick')
-                this.$('span.extra').hide(1000);
+                this.$('span.extra').hide(300);
             }
         },
         // Remove the item, destroy the model.

@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSApp.html', 'models/PSDetails','views/PSDetail'], 
+define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSApp.html', 'models/PSDetails','views/PSDetail','jquery.tablesorter.min'], 
 function($, Backbone, E, Handlebars, Model, template, Collection, subView){
 
     var View = Backbone.View.extend({
@@ -19,21 +19,48 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             'keypress .colfilter': 'filterList',
             'click #filterclear': 'filter',
             'keypress #pidSearch': 'scanPID',
-            'keypress #opSearch': 'scanPID',      
+            'keypress #opSearch': 'scanPID',
+            'click .playsound': 'playSound',
+            'click .btnTest': 'fnTest',
+            'click legend.ui-widget-header': 'toggleFilter'      
         },
         initialize: function() {
           this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','change','tester','filter');
+            _.bindAll(this, 'render','change','tester','filter','fnTest');
             this.collection.bind('reset',     this.filter);
             
+        },
+        fnTest: function(){
+            var fr = document.getElementById("autoentry").contentWindow.document;
+                    
+            var myObjs = fr.querySelectorAll('tr td:first-child'); // get element by tag name
+            alert(myObjs.length); // show number of items
+            
+            for (var i=0;i<myObjs.length; i++){
+                var html = myObjs[i].innerHTML+ '';
+                
+                if(html.indexOf('#ICRow')>=0 && html.indexOf(10)>=0 ){
+                    alert(myObjs[i].innerHTML)
+                    var index = html.indexOf('#ICRow');
+                    var row = html.slice(index,index +7);
+                    alert(row)
+                }
+                    
+            }
+        },
+        playSound: function(){
+            $('.soundIAmMad')[0].play();
+        },
+        toggleFilter: function(e){
+            $(e.target).next().toggle('blind',500)
         },
         loadData: function(){
             var that = this;
             var fetch = function(){
                 that.collection.fetch({reset:true})
             }
+            this.$('#scanError').html(' ')
             E.loading(this.$el,fetch,this.collection);
-            //this.collection.fetch();
         },
         scanPID: function(e){
             var $el = $(e.currentTarget);
@@ -52,22 +79,34 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
         searchAndMarkPID: function(fPID, fOp){
             var i=0;
             fPID = fPID.toUpperCase()
+            var flagged = false;
             _.each(this.filteredModels,function(model, index){
                 //alert(filter)
                 var pid = model.get('pid') + ''
                 var op = model.get('opseq') + ''
                 if (pid == fPID && op == fOp){
-                    model.set({flag:false});
-                    //find row and move to top 
-                    //or re-order by Ready
-                    //or nothing
+                    if(model.get('flag'))
+                        flagged = true;
+                    else
+                        model.set({isReady:true});
+                    //TODO: find row and move to top 
+                    //TODO:or re-order by Ready
+                    //TODO:or nothing
                     i++;
                 }
                 
             })
-            if(i<1) {
-                alert('not found')
-                //error checking why isnt PID&OP found
+            if(i<1 || flagged) {
+                var errMessage = '';
+                var sounds = this.$('.soundError')
+                sounds.get(0).play();
+                if (flagged)
+                    errMessage = '<br /><span class="scanError">PID: ' + fPID + " Opseq: " + fOp + ' has been flagged 999</span>' 
+                else
+                    errMessage = '<br /><span class="scanError">Could not find PID: ' + fPID + " Opseq: " + fOp + '</span>'
+                
+                this.$('#scanError').append(errMessage)
+                //TODO: error checking why isnt PID&OP found
             }
         },
         printPIDs: function(){
@@ -107,11 +146,11 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             }
             PageSetup_Default();
             
-            this.filter(false,'checkbox','flag');
+            this.filter(true,'checkbox','isReady');
             
             setTimeout(function(){
                 window.print();
-            },500);
+            },100);
         },
         // Re-render the contents of the todo item.
         render: function() {
@@ -129,10 +168,12 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             });   
             if((document.location + '').indexOf('.hta','.hta')>-1) 
                 this.$('#autoentry').attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
+            
+            this.$('#pidfilters .content').hide();    
+            
             return this;
         },
-        change: function(){
-            
+        change: function(){            
             var newvalue = this.$el.find('.pid').val();
             this.model.set({pid: newvalue})
         },
@@ -145,13 +186,19 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 
                 _.each(this.filteredModels,function(model, index){
                     //alert(filter)
-                    
-                    if (type == 'checkbox'){
-                        if(filter === model.get(attr)) 
-                            tempmods.push(model)
-                    }
-                    else if (model.get(attr) + ''.indexOf(filter)>=0){
-                        tempmods.push(model);
+                    switch(type){
+                        case "checkbox":
+                            if(filter === model.get(attr)) 
+                                tempmods.push(model)
+                        break;
+                        case "number":
+                            if(parseFloat(filter) === model.get(attr)) 
+                                tempmods.push(model)
+                        break;
+                        case "text":
+                            if (model.get(attr) + ''.indexOf(filter)>=0)
+                                tempmods.push(model);
+                        break;
                     }
                 })
                 
@@ -244,6 +291,20 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var _errors=false;
             var context = $('#autoentry');
             var debug = false;
+            var blockAlerts = function(){   
+                //alert('change ' + this.readyState);
+                if (this.readyState == 'interactive'){
+                    //alert('I am inside the interactive state');
+                    //unbind the function
+                    document.getElementById("autoentry").onreadystatechange = null;
+                    //block alert popups
+                    document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
+                    document.getElementById("autoentry").contentWindow.alert = function(){};
+                    
+                    //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
+                    //document.getElementById("autoentry").contentWindow.alert("Alert");
+                }                
+            };
             var map = {
                 step1: function(){
                     //alert('step1: wait for login screen then login.');
@@ -276,7 +337,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                   
                     //var contents = context.contents();                   
                     _model = _collection[_currentModel].toJSON();                                      
-                    if(_model.flag || _model.entered){
+                    if(_model.flag || _model.entered || !_model.isReady){
                          _errors = true;
                          _step = 'step10';
                         nextStep();
@@ -346,12 +407,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     _model.prevscrap = parseFloat(fr.getElementById('SM_SF_SHIFT_RPT_SCRAP_QTY$0').value)+0;
                     
                     //alert("step 4.2")
-                    alert(chkOpDone.checked);
+                    
                     if(chkOpDone.checked) {                    
                         //---ajust scrap that needs to be entered-----
-                        //_model.scrap -= _model.prevscrap;
-                        alert('scrap - prevscrap: ' + (_model.scrap ));
-                        //---------------------------------------------
+                        
                         
                         // uncheck and overwrite the data with the new data
                         //this will combine multiple shifts worth of data on the same PID-opseq combination
@@ -434,6 +493,8 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     
                     frm.ICAction.value="SF_PB_WRK_RFR_PRDN_COMPL_PB";
                     frm.submit();
+                    //opScrap is for step 8 and 8_1
+                    _model.opScrap = false;
                     _step = 'step8';
                     context.one('load', function(){
                         nextStep();       
@@ -441,47 +502,83 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 },
                 step8: function(){
                     //alert('step8: Add scrap, recurse, add machine number, if endscrap, go to step9, else go to next pid');
-                    //var contents = context.contents();
+                    
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     var txtMachine = fr.getElementById('SM_SFRPTLINK_WK_MACHINE_CODE$0')
                     var op = fr.getElementById('SF_COMPL_WRK_COMPL_OP_SEQ$0');  
                     var txtScrapQty = fr.getElementById('SF_COMPL_WRK_SCRAPPED_QTY$0')
                     //alert(_model.scrap);
-                    if (parseInt(op.value) != _model.opseq){
-                        //Enter Process Scrap
-                        txtScrapQty.value = _model.scrap; 
+                    //alert(parseInt(txtScrapQty.value) == _model.scrap)
+                    if (!_model.step8_1){                      
+                        //alert('1')
                         var frm = fr.forms[1];
                         frm.ICAction.value = "SF_COMPL_WRK_COMPL_OP_SEQ$prompt$0";
                         frm.submit();
                         _step = 'step8_1';
+                        document.getElementById("autoentry").onreadystatechange = blockAlerts;
                         context.one('load', function(){
                             nextStep();       
                         }); 
                     }
-                    else {
-                        txtScrapQty.value = _model.scrap;  
+                    else if (txtMachine && parseInt(txtScrapQty.value) == _model.scrap){
+                        //alert('2')
                         txtMachine.value = _model.machine;
-                        //alert('doublecheck values');         
-                        
-                        _step = 'stepSaveScrap';                        
-                        nextStep();       
+                        _step = 'stepSaveScrap'; 
+                        nextStep();                         
+                    }
+                    else if(parseInt(txtScrapQty.value) == _model.scrap) {
+                        //alert('3')
+                        op.value = _model.opseq;
+                        op.onchange();
+                        _step = 'step8';
+                        document.getElementById("autoentry").onreadystatechange = blockAlerts;                       
+                        context.one('load', function(){
+                            nextStep();       
+                        }); 
+                    }
+                    
+                    else {
+                        //alert('4')
+                        txtScrapQty.focus()
+                        txtScrapQty.value = _model.scrap;
+                        txtScrapQty.onchange()          
+                        document.getElementById("autoentry").onreadystatechange = blockAlerts;
+                        _step = 'step8';                        
+                        context.one('load', function(){
+                            nextStep();       
+                        });      
                          
                     }
                 },
                 step8_1: function(){
-                    var contents = context.contents();
+                    //alert("step8_1")
                     var fr = document.getElementById("autoentry").contentWindow.document;
-                    var table = contents.find('tr td:first-child :contains(' + _model.opseq + ')')
-                    //alert(table.parent().html());
-                    var index = (table.attr('href')+'').indexOf('#');
-                    //alert(index);
-                    var row = (table.attr('href')+'').slice(index,index +7);
-                    var scrap = table.parent().next().next().next().next().next().next().children().first();
-                    
-                    scrap = parseInt(scrap.html());
+                    var scrap;
+                    var myObjs = fr.querySelectorAll('tr td:first-child'); // get element by tag name 
+                    var index;
+                    var row;
+                    // Search DOM for table row of current opseq
+                    for (var i=0;i<myObjs.length; i++){
+                        var html = myObjs[i].innerHTML+ '';                        
+                        if(html.indexOf('#ICRow')>=0 && html.indexOf(_model.opseq)>=0 ){
+                            index = html.indexOf('#ICRow');
+                            row = html.slice(index,index +7);
+                           
+                        }
+                            
+                    }
+                    // Find the scrap value by it's column
+                    var myObjs = fr.querySelectorAll('tr td:nth-of-type(7) a'); // get element by tag name 
+                    for (var i=0;i<myObjs.length; i++){
+                        var html = myObjs[i]+ '';
+                        if(html.indexOf(row)>=0){
+                            scrap = parseInt(myObjs[i].innerHTML);                            
+                        }
+                            
+                    }
                     if (scrap > 0)
                         _model.endscrap = 0;
-                    
+
                     _model.scrap -= scrap;
                     if (_model.scrap<0){
                         _model.scrap = 0;
@@ -490,7 +587,13 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     _model.step8_1=true;
                     frm.ICAction.value=row;
                     frm.submit();
-                    _step = 'step8';
+                    _model.opScrap = true
+                    if(_model.scrap == 0)
+                        _step = 'stepSaveScrap'
+                    else
+                        _step = 'step8';
+                    
+                    document.getElementById("autoentry").onreadystatechange = blockAlerts;
                     context.one('load', function(){
                         nextStep();       
                     }); 
@@ -534,51 +637,20 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //alert('stepSaveScrap: Save scrap entry');
                     var fr = document.getElementById("autoentry").contentWindow.document;
                     //alert('endscrap: ' +_model.endscrap )
-                    if (_model.endscrap <= 0){
+                    if (_model.endscrap <= 0 || !_model.enterendscrap){
                         //save page here
                         if (_model.scrap == 0){
                             _step = 'step10';
                             nextStep();
                             return;
                         }
-                        /*
-                        if(!confirm('save scrap entries ')){
-                            var temp = {}
-                            temp.flag = _errors = true;
-                            temp.flagreason = 'AutoEntry: ProcessScrap/EndScrap not entered';
-                            _collection[_currentModel].set(temp);
-                            _step = 'step10';
-                            nextStep(); 
-                        }
-                        else {
-                            var frm = fr.forms[1];
-                            frm.ICAction.value = "#ICSave";
-                            frm.submit();
-                            _step = 'step10';
-                            context.one('load', function(){
-                                nextStep();       
-                            });
-                        }
-                        */
-                        var frm = fr.forms[1];
-                        frm.ICAction.value = "#ICSave";
-                        frm.submit();
+
+                        var btnS = fr.getElementsByName('#ICSave')
+                        //alert(btnS[0]);
+                        btnS[0].click();
                         _step = 'step10';
                         
-                        document.getElementById("autoentry").onreadystatechange = function(){   
-                            //alert('change ' + this.readyState);
-                            if (this.readyState == 'interactive'){
-                                //alert('I am inside the interactive state');
-                                //unbind the function
-                                document.getElementById("autoentry").onreadystatechange = null;
-                                //block alert popups
-                                //document.getElementById("autoentry").contentWindow.oldAlert = document.getElementById("autoentry").contentWindow.alert
-                                //document.getElementById("autoentry").contentWindow.alert = function(){};
-                                
-                                //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
-                                //document.getElementById("autoentry").contentWindow.alert("Alert");
-                            }
-                        }
+                        document.getElementById("autoentry").onreadystatechange = blockAlerts;
                         
                         context.one('load', function(){
                             nextStep();       

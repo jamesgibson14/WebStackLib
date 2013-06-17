@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+
+<body>
+<style>
+	body { 
+		font-family: Arial; 
+		font-size: 12px;
+	}
+	.bold {
+		font-weight: bold; 
+	}
+	.tab {
+		margin-left: 20px;
+	}
+	.italic {
+		font-style: italic;
+	}
+	.right {
+		float: right;	
+	}
+	.left {
+		float: left;
+	}
+	.orderedList1 li
+	{
+		clear: both;
+	}
+	.border {
+		border: 1px solid black;
+	}
+</style>	
+	<P>Score (circle): 1 / 0 </P>
+	<P><strong>Final Quality Inspection</strong></P>
+	<label>Machine:</label><input type="text" />
+
+<label>Shift:</label>
+<label>F</label><input type="radio" name="ShiftRadio" /><label>G</label><input type="radio" name="ShiftRadio" /><label>E</label><input type="radio" name="ShiftRadio" />
+<br />
+<br />
+<label>Product:</label><input type="text" />
+<label>Brand:</label><input type="text" />
+<br />
+<br />
+<label>PID Run Date:</label><input type="text" />
+<label>Inspection Date:</label><input type="text" />
+
+<P>Part of run inspected: <select> 
+	<option>Beginning</option>
+	<option>middle</option>
+	<option>end</option>
+	<option>warehouse</option></select>
+
+<ol class ="orderedList1" style="max-width: 400px">
+	
+	<li><span  class="bold">Carton condition and bar code correct: </span><div class="right"><input type="checkbox"name="r11" /></div></li>
+	<li><span  class="bold">Date Stamp Correct: </span><div class="right"><input type="checkbox"name="r12" /></div></li>
+	<li><span  class="bold">Carton, Box, Imprint correct: </span><div class="right"><input type="checkbox"name="r13" /></div></li>
+	<li><span  class="bold">Imprint Standard correct: </span><div class="right"><input type="checkbox"name="r14" /></div></li>
+	<li><span  class="bold">Count Correct: </span><div class="right"><input type="checkbox"name="r15" /></div></li>
+	<li><span  class="bold">Box bottom/cover or Shrink Wrap: </span><div class="right"><input type="checkbox"name="r16" /></div></li>
+	<li><span  class="bold">Product Meets Quality Standards:</span><div class="right"><input type="checkbox"name="r17" /></div><br />
+		<span class="tab bold italic">If no, is a destructive test needed?: </span><div class="right"><input type="checkbox"name="r18" /></div></li>
+	<li> <span class="bold"> Scrap Pieces and angel hair are minimal: </span><div class="right"><input type="checkbox"name="r19" /></div></li>
+	<li><span  class="bold">Product build to specifications:</span><div class="right"><input type="checkbox"name="r20" /></div></li>
+	<li><span>"1st piece" from this run inspected:</span><div class="right"><input type="checkbox"name="r11" /></div></li>
+	<li><span>The paper is the correct color, thickness, <br /> and recycled content: </span><div class="right"><input type="checkbox"name="r21" /></div></li>
+	<li><span>Box cover color is correct:</span><div class="right"><input type="checkbox"name="r22" /></div></li>
+	<li><span>The tabs are in the correct position:</span><div class="right"><input type="checkbox"name="r23" /></div></li>
+	<li><span>Carton is taped correctly:</span><div class="right"><input type="checkbox"name="r25" /></div></li>
+	<li><span>Marsh printer is in correct format:</span><div class="right"><input type="checkbox"name="r25" /></div></li>
+</ol>
+	<p>Acceptable format: <span class=bold>0427121425CED</span></p>
+	<div><Input type="checkbox" class= "left" name = "deviations"/><label class="tab">Are there any deviations from the standard?</label></div>
+	<span class="tab">If yes, note the deviation, reason, and next steps.</span>
+	<div><Input type="checkbox" class= "left" name = "standardclarity"/><label class="tab">Is the standard easy to understand and follow?</label></div>
+<br />	
+<label>How can the process be improved? / Notes:</label>
+<div><textarea cols="25" rows="10"></textarea></div>
+<br />
+<div>Audit should cover:</div>
+<div></div>
+	<div><input  type="radio" name= "auditinfo"/><label>More Information</label></div>
+	<div><input  type="radio" name= "auditinfo"/><label>Same</label><span class= "tab bold">(Should last 9 minutes)</span></div>
+	<div><input  type="radio" name= "auditinfo"/><label>Less Information</label></div>
+<br />
+<div>Audit should cover:</div>
+
+<div>
+	<div><input  type="radio" name= "auditfrequency" /><label>More Often</label></div>
+	<div><input  type="radio" name= "auditfrequency"/><label>Same</label><span class=" tab bold">(daily)</span></div>
+	<div><input  type="radio" name= "auditfrequency" /><label>Less often</label></div>
+</div>
+<br />
+<label>How can the audit be improved? / Notes:</label>
+<div><textarea cols="25" rows="10"></textarea></div>
+<br />
+<div><label>Operator reviewed with: (Employee #)</label><input type="text" /></div>
+<div><label>Audited by: (Employee #)</label><input type="text" /></div>
+<div><label>Date:</label><input type="text" /></div>
+
+	
+	
+</body>

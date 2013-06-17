@@ -31,9 +31,7 @@ define([
             params = [],
             success = function(sql){return;},error = function(sql){alert('error on: ' + sql);};
 
-            this.db.transaction(function(db) {
-                return db.executeSql(sql, params, success, error);
-            });  
+            this.db.executeSql(sql, params, success, error);
         }    
 
     });

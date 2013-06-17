@@ -7,7 +7,7 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
         className: 'SlickGrid',
         collection: new Collection(),
         template: template,
-        groupingOn: true,
+        groupingOn: false,
         events: {
             'click .test': 'groupOnOff'
         },
@@ -87,8 +87,10 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
                 that.grid.invalidateRows(args.rows);
                 that.grid.render();
             });
-            
-            this.collection.reset({'id':1,'PIDText':'test', 'Opseq':20, 'Status':'30', 'ParentRecord_ID':'999999', 'Code':'item', 'Description':'description', 'TaskCode':'taskcode', 'WorkCenter_ID':'99999', 'Scrap':'50', 'Date':'10/10/2012', 'Shift':'F', 'NetQtyProduced':'5000'});
+            if(options.sql)
+                this.collection.fetch({reset:true,add_id:true})
+            else
+                this.collection.reset({'id':1,'PIDText':'test', 'Opseq':20, 'Status':'30', 'ParentRecord_ID':'999999', 'Code':'item', 'Description':'description', 'TaskCode':'taskcode', 'WorkCenter_ID':'99999', 'Scrap':'50', 'Date':'10/10/2012', 'Shift':'F', 'NetQtyProduced':'5000'});
             this.$el.html( html );
             setTimeout(this.postRender,100)
             return this;
@@ -96,6 +98,7 @@ function($, Backbone, E, Handlebars, template, Collection, slickgrid){
         postRender: function(){
             this.$el.append(this.myGrid)
             this.grid.init();
+            E.hideLoading();     
         },
         temp: function(e){
             alert(this.collection.getColumns());  

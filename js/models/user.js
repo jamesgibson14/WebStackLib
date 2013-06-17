@@ -1,11 +1,11 @@
-define(['jquery', 'backbone','engine'], function($, Backbone,E) {
+define(['jquery', 'backbone', 'engine', 'models/BaseADODBModel'], function($, Backbone,E, BaseADODBModel) {
 
-    var Model = Backbone.Model.extend({
+    var Model = BaseADODBModel.extend({
 
             defaults: {
 	            username: 'tempuser'
             },
-
+            rootUrl: '/Users',
             // Model Constructor
             initialize: function() {
                 var dt = new Date().format("isoDateTime");
@@ -13,10 +13,13 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 
                 details = JSON.stringify(details)
                 this.sql = "Execute spGetUserInfoWeb @username = '" + this.get("username") + "', @now = '" + dt + "', @details = '" + details + "'";
-                this.store =  new WebSQLStore(E.sqlProd2,'todos',false,false);
+                this.db =  E.sqlProd2;
             },
-            sql: '',
-            store: null           
+            closeSession: function(){
+                var dt = new Date().format("isoDateTime");
+                this.sql = "UPDATE User_Sessions SET RenewedAt= '" + dt + "' WHERE ID= " + this.get("Session_ID")
+                this.update();
+            }           
 
     });
     // Returns the Model class

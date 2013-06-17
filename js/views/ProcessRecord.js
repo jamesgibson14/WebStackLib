@@ -4,21 +4,23 @@ function($, Backbone, E, Handlebars, template, Collection){
     var View = Backbone.View.extend({
 
         tagName:  "div",
-        className: 'ProcessRecord',
+        className: 'ProcessRecord ofh',
         collection: new Collection(),
         template: template,
         initialize: function() {
             _.bindAll(this, 'render');   
         },
         render: function(Record_ID) {
-            this.collection.sqlArgs = [Record_ID]
+            var that = this;
+            this.collection.sqlArgs = [Record_ID || 48285]
             this.collection.fetch();
             var html;
-            if(this.collection.length>0){
+            if(this.collection.length >0){
                 var ctemp = Handlebars.compile(this.template);
                 var context = {};
                 var model = this.collection.at(0)
                 context = $.extend(context,model.toJSON());
+                context.Date =  new Date(context.Date).format('mm/dd/yyyy')
                 context.details = this.collection.dataRender();
                 html = ctemp(context);
             }
@@ -27,7 +29,8 @@ function($, Backbone, E, Handlebars, template, Collection){
             }       
                 
             this.$el.html( html );
-
+         
+            
             return this;
         }
     });

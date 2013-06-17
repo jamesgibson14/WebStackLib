@@ -25,10 +25,8 @@ var WebSQLStore = function (db, tableName, createTable, isJSON, initSuccessCallb
     	error = function (tx,error) {
     		if (initErrorCallback) initErrorCallback();
     	};
-    	db.transaction (function(db) {
-    		return db.executeSql("CREATE TABLE " + tableName + "(ID VARCHAR(100) PRIMARY KEY, [value] MEMO)",[],success, error);
+    	db.executeSql("CREATE TABLE " + tableName + "(ID VARCHAR(100) PRIMARY KEY, [value] MEMO)",[],success, error);
     		//CREATE TABLE Employees("EmployeeId INTEGER NOT NULL, LastName   VARCHAR(40)  NOT NULL, FirstName  VARCHAR(40)  NOT NULL)"
-    	});
 	}
 };
 
@@ -43,7 +41,12 @@ _.extend(WebSQLStore.prototype,{
 		else {
 			model.id = model.attributes.id = guid();
 		}
-		this._executeSql("INSERT INTO " + this.tableName + " VALUES ('%s','%s')",[model.id, JSON.stringify(model.toJSON())], success, error);
+		if(model.sql){
+		  this._executeSql(model.sql,model.sqlArgs || null);
+		  this._executeSql('Select id= SCOPE_IDENTITY();',null,success)
+        }
+		else
+		  this._executeSql("INSERT INTO " + this.tableName + " VALUES ('%s','%s')",[model.id, JSON.stringify(model.toJSON())], success, error);
 	},
 	
 	destroy: function (model, success, error) {
@@ -103,7 +106,7 @@ _.extend(WebSQLStore.prototype,{
 		});
 	},
 	
-	_executeSql: function (SQL, params, successCallback, errorCallback) {
+	_executeSql: function (SQL, params, successCallback, errorCallback,options) {
 		var success = function(sql,result) {
 			//console.log(sql + " - finished");
 			if(successCallback) successCallback(sql,result);
@@ -116,9 +119,7 @@ _.extend(WebSQLStore.prototype,{
           SQL = vsprintf(SQL,params);
         if(this.debug)
             alert(SQL);
-		this.db.transaction(function(db) {
-			return db.executeSql(SQL, success, error,true);
-		});
+		this.db.executeSql(SQL, success, error);
 	},
 	_parseUpdateString: function(attrs, attrMap){
 	    var string = '';
@@ -158,7 +159,7 @@ Backbone.sync = function (method, model, options) {
     var dtime;
     if (options.now) dtime = options.now
 	 debugger;
-	success = function (tx, rs) {	   
+	success = function (sql,rs,conn) {	   
 	    if (options.now){
 	        alert('data from server in: ' + (dtime = (new Date() - dtime)))
 	        dtime = new Date()
@@ -227,16 +228,18 @@ Backbone.sync = function (method, model, options) {
 	       alert('data from server parsed in: ' + (dtime = (new Date() - dtime)))
 	       dtime = new Date()
         }
+       
+       rs.DataSource.ActiveConnection.CommitTrans();
 	   options.success(result);
 	   if (options.now){ 
            alert('Backbone ready: ' + (dtime = (new Date() - dtime)))
            dtime = new Date()
         }
 	};
-	error = function (tx,error) {
-		//console.log("sql error");
-		//console.log(error);
-		//console.log(tx);
+	var createCallback = function(sql,rs){
+	    model.id = rs.Fields(0).value;
+	}
+	error = function (sql,error) {
 		if (options.error)
 		  options.error(error);
 	};
@@ -244,7 +247,7 @@ Backbone.sync = function (method, model, options) {
 	switch(method) {
 		case "read":	(model.id ? store.find(model,success,error) : store.findAll(model, success, error)); 
 			break;
-		case "create":	store.create(model,success,error);
+		case "create":	store.create(model,createCallback,error);
 			break;
 		case "update":	 store.update(model,success,error,queue);
 			break;
