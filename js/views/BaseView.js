@@ -181,7 +181,7 @@ function($, Backbone, E, Handlebars){
             };
             
             var applyValue = function () {
-              model.set(attr, $input.val(),options);
+              model.set(attr, new Date($input.val()),options);
               destroy();
               that.trigger('edit:success');              
             };

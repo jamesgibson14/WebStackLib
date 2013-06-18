@@ -4,7 +4,10 @@ define(['jquery', 'backbone','engine', 'models/BaseADODBModel'], function($, Bac
         sql: '',
         sqlArgs: [],
         store: new WebSQLStore(E.sqlTest2,'Tasks',false,false),
-        urlRoot: '/Ideas',   
+        urlRoot: '/Ideas',
+        detailsMap:[
+            'Gain','alpha','numeric','estimate','actual'
+        ],   
         validate: function  (attrs) {
             var err = {};
             if(!attrs.Idea)

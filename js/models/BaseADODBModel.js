@@ -62,7 +62,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         },
         update: function(options){
             var that = this;
-            var sql = this.sql || ''
+            var sql = this.sql || '';
+            var sqlDetails = this.sqlDetails || ''
             if (!this.hasChanged())
                 return sql;
             var that = this;
