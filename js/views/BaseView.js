@@ -81,7 +81,7 @@ function($, Backbone, E, Handlebars){
             
             var destroy = function () {
                 $input.remove();
-                model.trigger('change')
+                that.trigger('edit:success')
             };
             
             var loadValue = function () {
@@ -95,7 +95,7 @@ function($, Backbone, E, Handlebars){
                 var obj = {}
                 obj[attr] = $input.val();
                 model.set(obj,options);
-                that.trigger('edit:success')
+                destroy();
             };
             $input = $("<INPUT type=text />")                
                 .on("keydown", function (e) {
@@ -122,7 +122,7 @@ function($, Backbone, E, Handlebars){
            
             var destroy = function () {
               $input.remove();
-              model.trigger('change')
+              that.trigger('edit:success')
             };
             
             var loadValue = function () {
@@ -137,8 +137,7 @@ function($, Backbone, E, Handlebars){
             
             var applyValue = function (e, ui) {
                 model.set(attr, ui.item.id,options);                
-                destroy();
-                that.trigger('edit:success')
+                destroy();                
             };
             var keyHandler = function(e){
                 if(e.key !== 'Esc')
@@ -170,7 +169,7 @@ function($, Backbone, E, Handlebars){
            
             var destroy = function () {
                 $input.remove();
-                model.trigger('change')
+                that.trigger('edit:success');
             };
             
             var loadValue = function () {
@@ -181,9 +180,8 @@ function($, Backbone, E, Handlebars){
             };
             
             var applyValue = function () {
-              model.set(attr, $input.val(),options);
-              destroy();
-              that.trigger('edit:success');              
+              model.set(attr, new Date($input.val()),options);
+              destroy();                            
             };
             
              $input = $("<INPUT type=text />")
@@ -224,7 +222,7 @@ function($, Backbone, E, Handlebars){
         
             var destroy = function () {
                 $wrapper.remove();
-                model.trigger('change');
+                that.trigger('edit:success')
             };
 
             var loadValue = function (item) {
@@ -239,7 +237,6 @@ function($, Backbone, E, Handlebars){
                 obj[attr] = $input.val();
                 model.set(obj,options);                
                 destroy();
-                that.trigger('edit:success')
             };
 
             if(options.popup){

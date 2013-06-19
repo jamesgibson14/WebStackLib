@@ -62,7 +62,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
         },
         update: function(options){
             var that = this;
-            var sql = this.sql || ''
+            var sql = this.sql || '';
+            this.sqlDetails = '';
             if (!this.hasChanged())
                 return sql;
             var that = this;
@@ -74,12 +75,18 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 sql = "UPDATE " + params[0] + ' SET '; 
                 
                 $.each(this.changed,function(key, value){
-                    values += key + " = " + that._parseValue(value) + ", ";
+                    if(key.indexOf('Details')>=0)
+                        that.parseSqlDetails(key,value,params[1]);
+                    else
+                        values += key + " = " + that._parseValue(value) + ", ";
                 })
                 sql += values.slice(0,-2);
-                sql += " WHERE ID = " + params[1]
+                sql += " WHERE ID = " + params[1] + ';'
+                if(values.length<1)
+                    sql = ';';
             }
-            
+            if(this.sqlDetails !=='')
+                sql += this.sqlDetails;
             if(!queue)
                 var rs = this._executeSql(sql,success)
             
@@ -129,6 +136,11 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 values = values + this._parseValue(attrs[attr]) + ", ";
             }
             return " (" + columns.slice(0,-2) + ") VALUES (" + values.slice(0,-2) + ") ";
+        },
+        parseSqlDetails: function(key, value, id){
+            var sql = "DELETE FROM " + this.urlDetails + " WHERE Idea_ID = " + id + " AND [Key] = '" +  key.split('-')[1] + "';";
+            sql += "INSERT INTO " + this.urlDetails + " (Idea_ID, [Key], Value) VALUES (" + id + ", '" + key.split('-')[1] + "', " + this._parseValue(value) + ")";
+            this.sqlDetails += sql;
         }
         
     });

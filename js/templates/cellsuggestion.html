@@ -1,46 +1,35 @@
 <div class="defaultForm border ofh left">
   		
   	<div class="left">
-  		<input id="iassociateID" type="hidden" />
-		  <label data-attr="Associate_ID" class="editable associateList" placeholder="search by name or number" type="text">{{Name}}</label>
-  		<br /><label class="editable" data-attr="Idea">{{ Idea }}</label><br />
+  		{{#if isNew}}
+	  		<label>Associate:</label>
+		 	<input data-attr="Associate_ID" class="editable associateList newIdea" placeholder="search by name or number" type="text" value="{{Name}}" /><br />
+			<label>Idea:</label><input class="editable newIdea" data-attr="Idea" type="text" value="{{Idea}}" placeholder="click here to add idea" /><br />
+  		{{else}}
+  			<label>Associate:</label>
+		  	<span data-attr="Associate_ID" class="editable associateList newIdea" placeholder="search by name or number" >{{Name}}</span><br />
+  			<label>Idea: </label><span class="editable newIdea" data-attr="Idea">{{ Idea }}</span><br />
+  		{{/if}}
 		{{#unless isNew}}
+		
 		<label for="Suggestion">Gains</label><br />  
-		<textarea data-attr="Gain" class="editable" placeholder="How will this improve the process (Gains)?" cols="40" rows="5"></textarea><br />
+		<input data-attr="Details-Gain" class="editable" placeholder="How will this improve the process (Gains)?" value="{{Details-Gain}}" /><br />
 		<label for="Machine">Machines</label>
-		<input  data-attr="Associate_ID" class="editable " placeholder="Machines:" type="text" size="6" /><br />
-  		<label for="alpha">Alpha </label>
-  		<select data-attr="alpha" class="editable" placeholder="Numeric:">        
-	  		<option value="">Select Alpha...</option>
-	  		<option value="a">A	Items that STOP production (Downtime)</option>
-	  		<option value="b">B	Items that SLOW production ( less than 100% run Speed)</option>
-	  		<option value="c">C	Ergonomic Related Items and/or Preventative measures</option>
-	  		<option value="d">D	Nice-to-Have/Wants/Just-in-Case Items</option>
-	  		<option value="e">E	Preference Type suggestions</option>
-	  		<option value="n/a">N/A	Doesn't apply to Cell Suggestion</option>
-	  		<option value="z">Z	C.I. Support Items</option>
-  		</select>
+		<input  data-attr="" class="editable " placeholder="Machines:" type="text" size="6" /><br />
+  		<label for="Details.alpha">Alpha </label>
+  		<input type="text" data-attr="alpha" class="editable" placeholder="Numeric:"/>
   		<br />
-	  	<label for="numeric">Numeric </label>
-	  	<select data-attr="numeric" class="editable">        
-	  		<option value="">Select Numeric...</option>
-	  		<option value="1">1	$ 0 to $ 100</option>
-	  		<option value="2">2	$ 101 to $ 500</option>
-	  		<option value="3">3	$ 501 to $ 1000</option>
-	  		<option value="4">4	$ 1001 to $ 2500</option>
-	  		<option value="5">5	$ 2501 to $ 4999</option>
-	  		<option value="6">6	$ 5000+ Expense</option>
-	  		<option value="7">7	$5000+ Capital</option>
-	  		<option value="n/a">N/A	Doesn't apply to Cell Suggestion</option>
-	  	</select><br />
+	  	<label for="Details.numeric">Numeric </label>
+	  	<input data-attr="numeric" class="editable" /><br />
 	  	<label for="iestimate">Estimate </label>
-		  <input data-attr="estimate" class="editable" placeholder="$0.00" type="text" size="6" /><br />
+		  <input data-attr="Details.estimate" class="editable" placeholder="$0.00" type="text" size="6" /><br />
 		<label for="iactual">Actual </label>
-		  <input data-attr="actual" class="editable" placeholder="$0.00" type="text" size="6" />
+		  <input data-attr="Details.actual" class="editable" placeholder="$0.00" type="text" size="6" />
 		{{/unless}}
   	</div>
   	{{#unless isNew}}
-  	<div id="tasksList" class="border left" style="width: 500px">
+  	Tasks:
+  	<div id="tasksList" class="left">
 	  	
 	</div>
 	{{/unless}}
