@@ -1,26 +1,187 @@
-	<h1 class="tabletitle">PeopleSoft Entry</h1>
-	<button class='loadtable'>Load PIDs</button><br /><span>Filters <input type="checkbox" id="filters" /></span>
-	<ul id="pidList" class="tbody">
-	<div class='row'>
-	<span class="hcell">pid</span>
-	<span class="hcell">opseq</span>
-	<span class="hcell">machine</span>
-	<span class="hcell">shift</span>
-	<span class="hcell">scrap</span>
-	<span class="hcell">endscrap</span>
-	<span class="hcell">qtycompleted</span>
-	<span class="hcell">setuptime</span>
-	<span class="hcell">runtime</span>
-	<span class="hcell">downtime</span>
-	<span class="hcell">operator</span>
-	<span class="hcell">date</span>
-	<span class="hcell">componentcode</span>
-	<span class="hcell">999 Flag<br /><input type="checkbox" id="flag" class="filter" /></span>
-	<span class="hcell">Entered</span>
+	<style>
+
+		.pForm fieldset div {
+			margin:0.3em 0;
+			clear:both;
+		}
+		form.pForm {
+			margin:1em;
+			width:20em;
+		}
+		.pForm label {
+			float:left;
+			width:7em;
+			text-align:right;
+			margin-right:1em;
+		}
+		.pForm legend {
+			color:#0b77b7;
+			font-size:1.2em;
+		}
+		.pForm legend span {
+			width:7em;
+			text-align:right;
+		}
+		.pForm legend.ui-widget-header {
+			border-radius: 3px;
+			padding-left: 4px;
+			padding-right: 4px;
+			cursor: pointer;
+		}
+		.pForm input {
+			padding:0.15em;
+			width:10em;
+			border:1px solid #ddd;
+			background:#fafafa;
+			font:bold 0.95em arial, sans-serif;
+			-moz-border-radius:0.4em;
+			-khtml-border-radius:0.4em;
+		}
+		.pForm input:hover, input:focus {
+			border-color:#c5c5c5;
+			background:#f6f6f6;
+		} 
+		.pForm fieldset {
+			border:1px solid #ddd;
+			padding:0 0.5em 0.5em;
+		}
+		.date input {
+			background-image:url(../gfx/calendar-small.gif);
+			background-repeat:no-repeat;
+			background-position:100% 50%;
+		}
+		
+		.date fieldset label {
+			float:none;
+			display:block;
+			text-align:left;
+			width:auto;
+		}
+		.date fieldset div {
+			float:left;
+			clear:none;
+			margin-right:0.2em;
+		}
+		.pForm .radio {
+			position:relative;
+		}
+		.radio fieldset {
+			border:none;
+			width:auto;
+			padding:1px 0 0 11em;
+		}
+		.pForm .radio legend {
+			font-size:1em;
+			color:#000;
+		}
+		.pForm .radio legend span {
+			position:absolute;
+			left:0;
+			top:0.3em;
+			width:7em;
+			display:inline;
+		}
+		.pForm .radio label, .pForm .radio input {
+			vertical-align:middle;
+			display:inline;
+			float:none;
+			width:auto;
+			background:none;
+			border:none;			
+		}
+		.pForm .radio div {
+			position: relative;
+			display: block;
+			float:left;
+		}		
+		.email {
+			width:14em;
+		}
+	</style>
+	<h1 class="ui-widget-header title"><span class="">PeopleSoft Entry</span></h1>
+	<div class="noprint">
+		<button type="button" class='loadtable'>Load PIDs</button>
+		<button type="button" class='printPIDs'>Print</button>
+		<button type="button" class='playsound'>I'm going crazy!!</button>
+		<form id="pidfilters" class="noprint pForm">
+			<fieldset>
+				<legend class="ui-widget-header">Filters</legend>
+				<div class="content">
+				<div>
+					<label >PID</label></lablel><input class="colfilter" filteron="pid" type="text" />
+				</div>
+				<div>
+					<label>Status</label><input class="colfilter" filteron="status" type="number" />
+				</div>
+				<div>
+					<label>Machine</label><input class="colfilter" filteron="machine" type="text" />
+				</div>
+				<div>
+					<label>Cell</label><input class="colfilter" filteron="cell" type="text" />
+				</div>
+				<div class="radio">
+					<fieldset>
+						<legend><span>Shift</span></legend>
+						<div>
+							<input class="filter" filteron="shift" type="radio" name="rShift" value="F" /><label>Day</label>
+						</div>
+						<div>
+							<input class="filter" filteron="shift" type="radio" name="rShift" value="G" /><label>Swing</label>
+						</div>
+					</fieldset>
+				</div>
+				<div>
+					<label >999 flaged</label ><input class="filter" filteron="flag" type="checkbox" name="rFlag" />
+				</div>
+				<button type="button" id="filterclear">Clear Filters</button>
+				</div>
+			</fieldset>		
+					
+		</form>
 	</div>
+	<audio class="soundIAmMad" >
+	  	<source src="assets/sounds/luke_piece_o_junk.mp3" type="audio/mpeg">
+		Your browser does not support the audio element.
+	</audio>
+	<audio class="soundError" >
+	  	<source src="assets/sounds/Error.mp3" type="audio/mpeg">
+		Your browser does not support the audio element.
+	</audio>
+
+	<div class="defaultForm noprint" style="width: 100%; padding-left: 30%">
+		<label>PID</label> <input type="text" id="pidSearch" /> 
+		<label>OP</label> <input type="text" id="opSearch" />
+		
+	</div>
+	<span id="scanError" class="ui-state-error" style="margin-left: 20px">This is where any errors will go.</span> 	
+	<table id="pidList" class="psEntryTable tablesorter" style="max-width: 80%">
+	<thead class='row header'><tr>
+		<th class="hcell">Ready</th>
+		<th class="hcell">PID</th>
+		<th class="hcell">OpSeq</th>
+		<th class="hcell">Machine</th>
+		<th class="hcell">Shift</th>
+		<th class="hcell">Qty Completed</th>
+		<th class="hcell">Scrap</th>
+		<th class="hcell">EndScrap</th>
+		<th class="hcell">Setuptime</th>
+		<th class="hcell">Runtime</th>
+		<th class="hcell">Downtime</th>
+		<th class="hcell">Date</th>
+		<th class="hcell">Paper</th>
+		<th class="hcell" style="max-width: 10%">999 Flag</th>
+		<th class="hcell">Entered</th>
+		</tr>
+	</thead>
 	
-	<!-- Here is where I need to add a list of PID Module views instead of the following-->
+	<tbody id="pidlisttbody" class="tablebody">
+		
+	</tbody>
+
+	<!-- Individual PID Module views are inserted here-->
 	
-	</ul>
-	<button class="btnRun">Run Process</button><br />
-	<iframe id='autoentry' src="http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login" >Error! An Iframe in not showing.</iframe>
+	</table>
+	<div id="collection-stats"> </div>
+	<button type="button" class="btnRun">Run Process</button><button type="button" class="btnTest">Test Code</button><br />
+	<iframe id='autoentry' src="" >Error! An Iframe in not showing.</iframe>
+	

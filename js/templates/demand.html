@@ -1,0 +1,44 @@
+ <style>
+    .cell-title {
+      font-weight: bold;
+    }
+
+    .cell-effort-driven {
+      text-align: center;
+    }
+	.cell-title {
+      font-weight: bold;
+    }
+
+    #contextMenu {
+      background: #e1efc7;
+      border: 1px solid gray;
+      padding: 2px;
+      display: inline-block;
+      min-width: 100px;
+      -moz-box-shadow: 2px 2px 2px silver;
+      -webkit-box-shadow: 2px 2px 2px silver;
+      z-index: 99999;
+    }
+
+    #contextMenu li {
+      padding: 4px 4px 4px 14px;
+      list-style: none;
+      cursor: pointer;
+      background: url("../images/arrow_right_peppermint.png") no-repeat center left;
+    }
+
+    #contextMenu li:hover {
+      background-color: white;
+    }
+  </style>
+<ul id="contextMenu" style="display:none;position:fixed">
+  <b>Set priority:</b>
+  <li data="Low">Low</li>
+  <li data="Medium">Medium</li>
+  <li data="High">High</li>
+</ul>
+<div>
+	Days: <input id='days' type="text" size="2" value="{{days}}" /><br />
+	Start Date: <input id="startDate" class="date" type="text" value="{{startdate}}"/> End Date: <input id='endDate' class="date" type="text" value="{{enddate}}" />
+</div>

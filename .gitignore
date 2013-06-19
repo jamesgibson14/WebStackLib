@@ -1,4 +1,8 @@
 *.class
 *.pyc
 *.pyo
-
+assets/
+*.project
+.settings/
+jquery.1.4.2.sdocml
+TestCSS.html

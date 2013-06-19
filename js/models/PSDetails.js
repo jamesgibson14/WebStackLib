@@ -2,17 +2,19 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'models/PSDetail'
-], function($, _, Backbone, Model){
+  'models/PSDetail',
+  'text!templates/PrepareDataForPeopleSoftEntry.sql'
+], function($, _, Backbone, Model,SQL){
     var collection = Backbone.Collection.extend({
         // Reference to this collection's model.
         model: Model,
         filters: {},
-        sql: 'Execute dbo.spGetDataForPeopleSoftEntry',
+        sql: SQL,
         modelsToSave: [],
         sqlToExecute: null,
-        store: new WebSQLStore(new E.ADODB(),'dbo.spGetDataForPeopleSoftEntry',false),
-        db: new E.ADODB({type: 'access'}),
+        store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false),
+        sqldb: E.sqlProd2,
+        accessdb: E.accessdb,
         save: function(){
             if(modelsToSave.length>0){
                 _.each(modelsToSave, function(modelid){
@@ -27,14 +29,10 @@ define([
             
         },
         syncServer: function(){
-            var sql = "",
-            params = [temp,this.get('pid'),this.get('opseq'),this.get('Paper_ID')],
-            success = function(sql){alert('sucess Psoft updated: ' + sql);},error = function(sql){alert('error on: ' + sql);};
-            if (this.get('Paper_ID')) 
-                sql += 'AND Paper_ID = %s;';
-            this.db.transaction(function(db) {
-                return db.executeSql(sql, params, success, error);
-            });  
+            var sql = "UPDATE dbo_ProductionDataDetails INNER JOIN tblData2 ON dbo_ProductionDataDetails.RecordID = tblData2.RecordID SET dbo_ProductionDataDetails.PSoft = [tblData2].[PSoft] WHERE (((([dbo_ProductionDataDetails].[PSoft]))<>([tblData2].[PSoft])));",
+            success = function(sql){return;},error = function(sql){alert('error on: ' + sql);};
+
+            this.db.executeSql(sql, success, error);
         }    
 
     });

@@ -1,15 +1,36 @@
-<span class='cell'>{{pid}}</span>
-<span class='cell'>{{opseq}}</span>
-<span class='cell'>{{machine}}<br />UOM: {{UnitOfMeasure}}</span>
-<span class='cell'>{{shift}}</span>
-<span class='cell'>{{scrap}}<br />{{scrappercent}} %</span>
-<span class='cell'>{{endscrap}}</span>
-<span class='cell'>actual: {{qtycompleted}}<br />target: {{expectedqty}}</span>
-<span class='cell'>{{setuptime}}</span>
-<span class='cell'>{{runtime}}</span>
-<span class='cell'>{{downtime}}</span>
-<span class='cell'>{{operator}}</span>
-<span class='cell'>{{date}}</span>
-<span class='cell'>{{componentcode}}<br />F: {{feedup}}</span>
-<span class='cell'><input type="checkbox" class="check" {{#if flag}}checked="checked"{{/if}}  /><br />{{{flagreason}}}</span>
-<span class='cell'><input type="checkbox" class="chkentered" {{#if entered}}checked="checked"{{/if}}  /><br />{{dateentered}}</span>
+<td class='cell border'><input type="checkbox" class="checkIsReady" {{#if isReady}}checked="checked"{{/if}}  /></td>
+<td class='cell border'>{{pid}}<br />{{ItemCode}}<br /><span class="displayExtra ui-icon ui-icon-plusthick"></span></td>
+<td class='cell border'>op:&nbsp;{{opseq}}</td>
+<td class='cell border'>
+	{{machine}}<br />cell: {{cell}}
+	<span class="extra" style="text-align: right"><br />pkqty:&nbsp;{{UnitOfMeasure}}<br />Status:&nbsp;{{status}}<br />Rec:&nbsp;{{recordID}}<br />Emp#:&nbsp;{{operator}}</span>
+</td>
+<td class='cell border'>{{shift}}</td>
+<td class='cell border' style="text-align: right">
+	CEDProd:&nbsp;{{qtycompleted}}
+	<br />target:&nbsp;{{expectedqty}}
+	<br />ADC:&nbsp;{{ADCcompleted}}
+</td>
+<td class='cell border'>scrap:&nbsp;{{scrap}}
+	<br />{{scrappercent}}&nbsp;%
+	<br /><span >ADC:&nbsp;{{processscrap}}</span>
+</td>
+<td class='cell border'>ES:&nbsp;{{endscrap}} <input type="checkbox" class="chkendscrap" {{#if enterendscrap}}checked="checked"{{/if}} /></td>
+<td class='cell border'>ST:&nbsp;{{setuptime}}</td>
+<td class='cell border'>RT:&nbsp;{{runtime}}</td>
+<td class='cell border'>DT:&nbsp;{{downtime}}</td>
+<td class='cell border'>{{date}}</td>
+<td class='cell border'>
+{{#each componentcode}}
+  {{this.pc}}<br />
+{{/each}}
+<span class="extra">
+{{#each componentcode}}
+  {{this.cc}}<br />
+{{/each}}
+</span>
+{{#if PaperConverting}}<span class="extra">F:&nbsp;{{feedup}}</span>{{/if}}
+</td>
+<td class='cell border'><input type="checkbox" class="check" {{#if flag}}checked="checked"{{/if}}  /><br />{{{flagreason}}}</td>
+<td class='cell border'><input type="checkbox" class="chkentered" {{#if entered}}checked="checked"{{/if}}  /><br />{{dateentered}}</td>
+

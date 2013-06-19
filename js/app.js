@@ -13,18 +13,25 @@ require.config({
         templates: '../templates',
         models: '../models',
         modernizr: "modernizr-2.5.3",
-      	jquery: "jquery-1.7.2.min",
-      	jqueryUI: 'jquery-ui-1.8.22.custom.min',
-	handlebars: 'handlebars-1.0.0.beta.6',
-      	underscore: "lodash-0.4.2",
+      	jquery: "jquery-1.9.1",
+      	jqueryUI: 'jquery-ui-1.10.2.custom.min',
+      	underscore: "lodash-1.1.1",
       	engine: '../app/engine',
       	database: '../app/database',
       	backboneADO: '../app/backbone.ado',
-      	backbone: "backbone-0.9.2",
+      	backbone: "backbone-1.0.0",
+      	handlebars:"handlebars-1.0.rc.1.min",
 		ieconfig: 'ieconfig',
+		jqpall: 'jqplotAllPlugins',
+		jq: 'jqplot/',
+		jqp: 'jqplot/jquery.jqplot',
+		jqpp: "jqplot/plugins",
+		raphael: 'raphael-2.1.0.min',
       	// Require.js Plugins
-      	text: "text-2.0.0"
+      	sg: 'SlickGrid-2.02',
+      	text: "plugins/text-2.0.0"
     },
+    //packages: ["SlickGrid-2.02"],
     shim: {
         'backbone': {
             //These script dependencies should be loaded before loading
@@ -41,16 +48,24 @@ require.config({
         'jqueryUI': ['jquery'],
         'database': ['engine'],
         'backbone.iosync': ['backbone'],
-        'backbone.iobind': ['backbone.iosync']
+        'backbone.iobind': ['backbone.iosync'],
+        'backboneADO': ['backbone'],
+        'jquery.ui.widgets': ['jqueryUI'],
+        'jquery.placeholder.min': ['jquery'],
+        'jquery.cookie': ['jquery']
     }
 
 });
 
+var router = 'appRouter';
+if(document.location.host == 'localhost')
+    router = 'mobileRouter';
+
 // Start the main app logic.
-require(['routers/appRouter'],
+require(['routers/' + router],
 function   (App) {
-    //jQuery, canvas and the app/sub module are all
-    //loaded and can be used here now.
+    //main app title
+    document.title = 'SmeadAnalytics'
     
   	// Instantiates a new Router
     this.router = new App();

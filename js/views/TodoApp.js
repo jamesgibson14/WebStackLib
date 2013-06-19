@@ -27,20 +27,19 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
         initialize: function() {
             _.bindAll(this, 'addOne', 'addAll', 'render', 'toggleAllComplete','renderStats','reOrder','filter');
             this.collection.bind('reset',     this.filter);
-             this.collection.bind('add',     this.addOne);
+            this.collection.bind('add',     this.addOne);
              
             this.template = Handlebars.compile(this.template);
             this.statsTemplate = Handlebars.compile(this.statsTemplate);
             var temp = this.template({});
             this.$el.html( temp );
-            debugger;
              
             this.input = this.$("#new-todo");
-            this.renderStats();
+
             this.collection.fetch();
            
         },
-        test: function(){
+        test: function(e){
             //for testing UI interactions
             alert("Test Code");
             
@@ -68,6 +67,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
         addOne: function(model) {
             var view = new subView({model: model});
             this.$("#todo-list").append(view.render().el);
+            this.renderStats();
         },
         
         filter: function() {
@@ -90,15 +90,16 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
                 
                 var id = $(this).attr('data-id');
                 var model = that.collection.get(id); 
-                model.save({order: i + 1},{silent:true});
+                model.save({order: i + 1},{silent:true,queue:true});
             });
-            alert(new Date()-now);
+            this.collection.saveQueued();
+            //alert(new Date()-now);
         },
         
         // Add all items in the **Todos** collection at once.
         addAll: function() {
             // create in memory element
-            this.$('#todo-list').sortable('destroy');
+            //this.$('#todo-list').sortable('destroy');
             var $el = this.$('#todo-list').clone(true,true); 
             // also get the `className`, `id`, `attributes` if you need them 
             $el.empty();
@@ -112,7 +113,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
             });
             // replace the old view element with the new one, in the DOM 
             this.$("#todo-list").replaceWith($el);//.replaceWith($el); 
-            
+            this.renderStats();
         },
     
         // Generate the attributes for a new Todo item.
@@ -130,6 +131,7 @@ function($, Backbone, E, Handlebars, Model, template, collection,statsTemp,subVi
           if (e.keyCode != 13) return;
           this.collection.create(this.newAttributes(),{wait:true});
           this.input.val('');
+          e.preventDefault();
         },
     
         // Clear all done todo items, destroying their models.

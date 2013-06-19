@@ -1,0 +1,35 @@
+define(['jquery', 'backbone','engine',
+    'jqpp/jqplot.barRenderer.min',
+    'jqpp/jqplot.blockRenderer.min',
+    'jqpp/jqplot.bubbleRenderer.min',
+    'jqpp/jqplot.canvasAxisLabelRenderer.min',
+    'jqpp/jqplot.canvasAxisTickRenderer.min',
+    'jqpp/jqplot.canvasOverlay.min',
+    'jqpp/jqplot.canvasTextRenderer.min',
+    'jqpp/jqplot.categoryAxisRenderer.min',
+    'jqpp/jqplot.ciParser.min',
+    'jqpp/jqplot.cursor.min',
+    'jqpp/jqplot.dateAxisRenderer.min',
+    'jqpp/jqplot.donutRenderer.min',
+    'jqpp/jqplot.dragable.min',
+    'jqpp/jqplot.enhancedLegendRenderer.min',
+    'jqpp/jqplot.funnelRenderer.min',
+    'jqpp/jqplot.highlighter.min',
+    'jqpp/jqplot.logAxisRenderer.min',
+    //'jqpp/jqplot.mekkoAxisRenderer.min',
+    //'jqpp/jqplot.mekkoRenderer.min',
+    //'jqpp/jqplot.meterGaugeRenderer.min',
+    //'jqpp/jqplot.mobile.min',
+    //'jqpp/jqplot.ohlcRenderer.min',
+    'jqpp/jqplot.pieRenderer.min',
+    'jqpp/jqplot.pointLabels.min',
+    'jqpp/jqplot.pyramidAxisRenderer.min',
+    'jqpp/jqplot.pyramidGridRenderer.min',
+    'jqpp/jqplot.pyramidRenderer.min',
+    'jqpp/jqplot.trendline.min'
+    
+    ], 
+function($, Backbone,E) {
+
+
+});
