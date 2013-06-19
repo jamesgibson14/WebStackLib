@@ -7,8 +7,8 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
         serializeData:function(){
             var obj = this.model.toJSON();            
             obj.isNew = this.model.isNew();
-            obj.Name = (obj.Associate_ID) ? this.associateCollection.get(obj.Associate_ID).get('Name') : "N/A";
-            obj.Idea || (obj.Idea = 'Double click to add new idea');
+            obj.Name = (obj.Associate_ID) ? this.associateCollection.get(obj.Associate_ID).get('Name') : "";
+            
                
             return obj;
         },
@@ -25,8 +25,8 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
             this.on('edit:success', this.editSuccess);
         },
         onRender: function(){
-            
-            if(!this.model.isNew())
+            $('input').placeholder();
+            if(!this.model.isNew() && this.taskList.collection.length < 1)
                 this.$('#tasksList').html(this.taskList.render().el);                       
         },
         edit: function(e){
@@ -49,7 +49,7 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
                     options.source = this.associateCollection.renderForDataEntry()
                     $input = this.editAutoComplete(e,options);
                 break;
-                case 'alpha':
+                case 'Details.alpha':
                     options.source = [
                         {id:'a',label:"A Items that STOP production (Downtime)"},
                         {id:'b',label:"B Items that SLOW production ( less than 100% run Speed)"},
@@ -61,7 +61,7 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
                     ];
                     $input = this.editAutoComplete(e,options);
                 break;
-                case 'numeric':
+                case 'Details.numeric':
                     options.source = [
                         {id:'1',label:"1- $ 0 to $ 100"},
                         {id:'2',label:"2- $ 101 to $ 500"},
@@ -74,7 +74,7 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
                     ];
                     $input = this.editAutoComplete(e,options);
                 break;
-                case 'Gain': $input = this.longTextEditor(e,options);
+                case 'Details-Gain': $input = this.longTextEditor(e,options);
                 break;
                 case "Clear": this.model.destroy();
                 break;

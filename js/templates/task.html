@@ -15,16 +15,25 @@
 	.task:hover .task-info {
 		display: block;
 	}
+	.task .content {
+		margin-right: 10px;
+	}
 </style>
 <div class="task{{#if done}} done ui-state-disabled{{/if}} border" data-id="{{ ID }}" style="width: 250px">
-      {{#unless isNew}}<input class="check" data-attr="Completed" type="checkbox" title="{{Completed}}" {{#if done}}checked="checked"{{/if}} />{{/unless}}
-      <label class="content" data-attr="Task">{{ Task }}</label>
+      
       {{#unless isNew}}
       <span class="task-destroy ui-icon ui-icon-circle-close" data-attr="Clear" title="Delete this task"></span>
+      <input class="check" data-attr="Completed" type="checkbox" title="{{Completed}}" {{#if done}}checked="checked"{{/if}} />
+      {{/unless}}
+      <label class="content" data-attr="Task">{{ Task }}</label>
+      {{#unless isNew}}
+      
       <div style="display: block">
-      	<span  title="Created by {{CreatedByName}} on {{Created}}" class="task-info ui-icon ui-icon-info"></span>
+      	
       	<label class="todo-assigned">to: </label><span data-attr="AssignedTo" class="AssignedTo">{{ Name }}</span>
       	<span class="dueAt" data-attr="DueAt"><label>- by: {{ DueAt }}</label></span>
-	  </div>	      
+	  	<span  title="Created by {{CreatedByName}} on {{Created}}" class="task-info ui-icon ui-icon-info"></span>	
+	  </div>
+	        
       {{/unless}} 
 </div>

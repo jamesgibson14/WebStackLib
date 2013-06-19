@@ -5,6 +5,7 @@ define(['jquery', 'backbone','engine', 'models/BaseADODBModel'], function($, Bac
         sqlArgs: [],
         store: new WebSQLStore(E.sqlTest2,'Tasks',false,false),
         urlRoot: '/Ideas',
+        urlDetails: 'IdeaDetails',
         detailsMap:[
             'Gain','alpha','numeric','estimate','actual'
         ],   

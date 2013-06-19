@@ -4,26 +4,27 @@
   		{{#if isNew}}
 	  		<label>Associate:</label>
 		 	<input data-attr="Associate_ID" class="editable associateList newIdea" placeholder="search by name or number" type="text" value="{{Name}}" /><br />
-			<label>Idea:</label><input class="editable newIdea" data-attr="Idea" type="text" value="{{Idea}}" /><br />
+			<label>Idea:</label><input class="editable newIdea" data-attr="Idea" type="text" value="{{Idea}}" placeholder="click here to add idea" /><br />
   		{{else}}
   			<label>Associate:</label>
 		  	<span data-attr="Associate_ID" class="editable associateList newIdea" placeholder="search by name or number" >{{Name}}</span><br />
   			<label>Idea: </label><span class="editable newIdea" data-attr="Idea">{{ Idea }}</span><br />
   		{{/if}}
 		{{#unless isNew}}
+		
 		<label for="Suggestion">Gains</label><br />  
-		<input data-attr="Gain" class="editable" placeholder="How will this improve the process (Gains)?" /><br />
+		<input data-attr="Details-Gain" class="editable" placeholder="How will this improve the process (Gains)?" value="{{Details-Gain}}" /><br />
 		<label for="Machine">Machines</label>
 		<input  data-attr="" class="editable " placeholder="Machines:" type="text" size="6" /><br />
-  		<label for="alpha">Alpha </label>
+  		<label for="Details.alpha">Alpha </label>
   		<input type="text" data-attr="alpha" class="editable" placeholder="Numeric:"/>
   		<br />
-	  	<label for="numeric">Numeric </label>
+	  	<label for="Details.numeric">Numeric </label>
 	  	<input data-attr="numeric" class="editable" /><br />
 	  	<label for="iestimate">Estimate </label>
-		  <input data-attr="estimate" class="editable" placeholder="$0.00" type="text" size="6" /><br />
+		  <input data-attr="Details.estimate" class="editable" placeholder="$0.00" type="text" size="6" /><br />
 		<label for="iactual">Actual </label>
-		  <input data-attr="actual" class="editable" placeholder="$0.00" type="text" size="6" />
+		  <input data-attr="Details.actual" class="editable" placeholder="$0.00" type="text" size="6" />
 		{{/unless}}
   	</div>
   	{{#unless isNew}}
