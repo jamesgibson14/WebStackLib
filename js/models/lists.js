@@ -17,7 +17,16 @@ define(['jquery', 'backbone','engine','models/BaseCollection'], function($, Back
 	                }
 	            }),
 	            users: new BaseCollection(),
-	            items: new BaseCollection(),
+	            items: BaseCollection.extend({
+	                sql:"SELECT ID, Code, Description From Items Order by Code",
+	                db: E.sqlProd2,
+	                url: '/Items',
+	                renderForDataEntry: function(){
+	                    return this.map(function(model){
+	                        return {id:model.id, label: model.get('Code'), title: model.get('Description')}
+	                    })
+	                }
+	            }),
 	            
             },
             getList: function(listAttr){

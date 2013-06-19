@@ -2,15 +2,18 @@
 	.defaultForm input{
 		margin-left: 50px;
 		}
-	.defaultForm label {
-		float: left;
-	}	
+	
+		
 </style>
 <div class="defaultForm">
 		<div>
 		<label>Error found by</label><input class="editable" data-attr="UserName" type="text" /></div>
 		<div>
-		<label>Item</label><input data-attr="Item" type="text" />
+		<label>Item</label><select data-attr="Item">
+				{{#each itemList}}
+				<option>{{this.label}}</option>
+				{{/each}}
+		</select>
 		</div>
 		<label>Inventory Status</label><input data-attr="InventoryStatus" type="text" />
 		<br>

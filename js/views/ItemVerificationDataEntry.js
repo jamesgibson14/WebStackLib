@@ -12,7 +12,9 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/ItemVerifi
             var obj ={}
             if (!this.model)
                 this.model = new Model(obj);
-            this.associateCollection = E.lists.getList('associates');    
+            this.associateCollection = E.lists.getList('associates');  
+            this.itemCollection = E.lists.getList('items');
+            this.itemList = this.itemCollection.renderForDataEntry();  
             this.listenTo(this.model,'change', this.render);
             this.listenTo(this.model,'destroy', this.remove,this);                        
         },
@@ -22,11 +24,11 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/ItemVerifi
         },     
         serializeData: function(){
             var obj = this.model.toJSON();
+            obj.itemList = this.itemList
             
             return obj;
         },
         edit: function(e){
-            alert ("edit")
             var that = this;
             var $container = $(e.currentTarget)
             var attr = $container.attr('data-attr')
@@ -44,9 +46,9 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/ItemVerifi
                     options.source = this.associateCollection.renderForDataEntry()
                     $input = this.editAutoComplete(e,options);
                 break;
-                case "Task": 
-                    options.popup = false;
-                    $input = this.longTextEditor(e, options);                    
+                case "Item": 
+                    options.source = this.itemList
+                    $input = this.editAutoComplete(e,options);                   
                 break;
                 case "AssignedTo": 
                     options.source = this.associateList;
