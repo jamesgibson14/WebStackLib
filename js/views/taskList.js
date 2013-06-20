@@ -22,11 +22,15 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
             subView = subView.extend({
                 associateCollection: E.lists.getList('associates'),
                 associateList: E.lists.getList('associates').renderForDataEntry()
-            })              
+            });
+            if(this.options.isNew)
+                this.collection.reset(this['defaultTasks' + this.options.IdeaType])
+            else
+                this.collection.fetch({reset:true});             
         },
         onRender: function(){
             var that = this;
-            this.collection.fetch({reset:true});  
+              
             this.input = this.$("#new-todo");
             this.renderNew();
         },
@@ -95,7 +99,21 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
             // replace the old view element with the new one, in the DOM 
             this.$("#todo-list").replaceWith($el);//.replaceWith($el); 
             this.renderStats();
-        }
+        },
+        defaultTasksCell: [
+            {Task: 'Approval', Options:{LP:1}},
+            {Task: 'Design', Options:{LP:2}},
+            {Task: 'Planning', Options:{LP:3}},
+            {Task: 'Fabrication', Options:{LP:4}},
+            {Task: 'Installation', Options:{LP:5}}
+        ],
+        defaultTasksApp: [
+            {Task: 'Prioritize'},
+            {Task: 'Backend'},
+            {Task: 'Frontend'},
+            {Task: 'Fabrication'},
+            {Task: 'Installation'}
+        ]
 
     });
 	

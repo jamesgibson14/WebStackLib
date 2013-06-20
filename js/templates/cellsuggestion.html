@@ -1,30 +1,46 @@
+<style>
+	.defaultForm div.editable {
+		padding: 2px 4px 2px 4px;
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+		border: 1px solid #fbeed5;
+		color: #3a87ad;
+		background-color: #d9edf7;
+		border-color: #bce8f1;
+		display:inline-block;
+	}
+</style>
 <div class="defaultForm border ofh left">
   		
   	<div class="left">
   		{{#if isNew}}
 	  		<label>Associate:</label>
-		 	<input data-attr="Associate_ID" class="editable associateList newIdea" placeholder="search by name or number" type="text" value="{{Name}}" /><br />
-			<label>Idea:</label><input class="editable newIdea" data-attr="Idea" type="text" value="{{Idea}}" placeholder="click here to add idea" /><br />
+		 	<input data-attr="Associate_ID" class="editable associateList" placeholder="search by name or number" type="text" value="{{Name}}" /><br />
+			<label>Idea:</label><input class="editable" data-attr="Idea" type="text" value="{{Idea}}" placeholder="click here to add idea" /><br />
+			<label for="Suggestion">Gains</label><br />  
+			<input data-attr="Details-Gain" class="editable" placeholder="How will this improve the process (Gains)?" value="{{Details-Gain}}" /><br />
+			<label>Machines</label>
+			<input  data-attr="Details-Machines" class="editable " placeholder="Machines:" type="text" size="6" /><br />
+  			<label>Urgency </label>
+  			<input type="text" data-attr="Details-Urgency" class="editable" placeholder="Numeric:"/>
+  			<br />
+	  		<label>Estimate $</label>
+		  	<input data-attr="Details-EstimateCost" class="editable" placeholder="$0.00" type="text" size="6" /><br />
+			<label for="iactual">Actual $</label>
+		  	<input data-attr="Details-ActualCost" class="editable" placeholder="$0.00" type="text" size="6" />
   		{{else}}
-  			<label>Associate:</label>
-		  	<span data-attr="Associate_ID" class="editable associateList newIdea" placeholder="search by name or number" >{{Name}}</span><br />
-  			<label>Idea: </label><span class="editable newIdea" data-attr="Idea">{{ Idea }}</span><br />
+  			<div><label>Associate:</label>
+		  	<div data-attr="Associate_ID" class="editable associateList" placeholder="search by name or number" >{{Name}}</div></div>
+  			
+  			<div><label>Idea: </label><div class="editable" data-attr="Idea">{{ Idea }}</div></div>
+  			<div><label>Gain: </label><div class="editable" data-attr="Details-Gain">{{ Details-Gain }}</div></div>
+  			<div><label>Machines: </label><div class="editable" data-attr="Details-Machines">{{ Details-Machines }}</div></div>
+  			<div><label>Urgency: </label><div class="editable" data-attr="Details-Urgency">{{ Details-Urgency }}</div></div>
+  			<div><label>EstimateCost: </label><div class="editable" data-attr="Details-EstimateCost">{{ Details-EstimateCost }}</div></div>
+  			<div><label>ActualCost: </label><div class="editable" data-attr="Details-ActualCost">{{ Details-ActualCost }}</div></div>
   		{{/if}}
 		{{#unless isNew}}
 		
-		<label for="Suggestion">Gains</label><br />  
-		<input data-attr="Details-Gain" class="editable" placeholder="How will this improve the process (Gains)?" value="{{Details-Gain}}" /><br />
-		<label for="Machine">Machines</label>
-		<input  data-attr="" class="editable " placeholder="Machines:" type="text" size="6" /><br />
-  		<label for="Details.alpha">Alpha </label>
-  		<input type="text" data-attr="alpha" class="editable" placeholder="Numeric:"/>
-  		<br />
-	  	<label for="Details.numeric">Numeric </label>
-	  	<input data-attr="numeric" class="editable" /><br />
-	  	<label for="iestimate">Estimate </label>
-		  <input data-attr="Details.estimate" class="editable" placeholder="$0.00" type="text" size="6" /><br />
-		<label for="iactual">Actual </label>
-		  <input data-attr="Details.actual" class="editable" placeholder="$0.00" type="text" size="6" />
+		
 		{{/unless}}
   	</div>
   	{{#unless isNew}}

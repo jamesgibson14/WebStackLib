@@ -20,7 +20,7 @@
 	}
 </style>
 <div class="task{{#if done}} done ui-state-disabled{{/if}} border" data-id="{{ ID }}" style="width: 250px">
-      
+      <div>Task here</div>
       {{#unless isNew}}
       <span class="task-destroy ui-icon ui-icon-circle-close" data-attr="Clear" title="Delete this task"></span>
       <input class="check" data-attr="Completed" type="checkbox" title="{{Completed}}" {{#if done}}checked="checked"{{/if}} />

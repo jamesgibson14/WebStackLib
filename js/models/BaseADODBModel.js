@@ -41,6 +41,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             var that = this;
             var columns;
             var values;
+            this.sqlDetails = '';
             var params = this.router._extractParameters(this.router._routeToRegExp('/:table'),this.url())
             var sql = 'INSERT INTO ' + params[0];
             sql += this._parseInsertString()
@@ -56,8 +57,21 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     return false;
                 }
                 that.id = rs.Fields(0).value;
+                if(that.sqlDetails !==''){
+                    sql = that.sqlDetails.replace(/%s/g,that.id)
+                    try{           
+                        rs = conn.Execute(sql);
+                    }
+                    catch(err){
+                        alert('Error: ' + err.message + ', sql: ' + sql);
+                        err.sql = sql
+                        conn.RollbackTrans();
+                        return false;
+                    }
+                }
                 that.trigger('sync')
             };
+            
             this._executeSql(sql,success,null);
         },
         update: function(options){
@@ -132,10 +146,14 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             var attr;
             attrs || (attrs = this.attributes);
             for (attr in attrs){
-                columns = columns + " " + attr + ", ";
-                values = values + this._parseValue(attrs[attr]) + ", ";
+                if(attr.indexOf('Details')>=0)
+                    this.parseSqlDetails(attr,attrs[attr],'%s');
+                else{                    
+                    columns = columns + " " + attr + ", ";
+                    values = values + this._parseValue(attrs[attr]) + ", ";
+                }
             }
-            return " (" + columns.slice(0,-2) + ") VALUES (" + values.slice(0,-2) + ") ";
+            return " (" + columns.slice(0,-2) + ") VALUES (" + values.slice(0,-2) + "); ";
         },
         parseSqlDetails: function(key, value, id){
             var sql = "DELETE FROM " + this.urlDetails + " WHERE Idea_ID = " + id + " AND [Key] = '" +  key.split('-')[1] + "';";
