@@ -14,45 +14,46 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/ItemVerifi
                 this.model = new Model(obj);
             this.associateCollection = E.lists.getList('associates');  
             this.itemCollection = E.lists.getList('items');
-            this.itemList = this.itemCollection.renderForDataEntry();  
             this.listenTo(this.model,'change', this.render);
             this.listenTo(this.model,'destroy', this.remove,this);                        
         },
         temp: function(){
-            this.model.set({ID:30})
-            this.model.trigger('sync')  
+            this.model.set({ID:30});
+            this.model.trigger('sync'); 
         },     
         serializeData: function(){
             var obj = this.model.toJSON();
-            obj.itemList = this.itemList
+            //obj.itemList = this.itemList
             
             return obj;
         },
         edit: function(e){
             var that = this;
-            var $container = $(e.currentTarget)
-            var attr = $container.attr('data-attr')
+            var $container = $(e.currentTarget);
+            var attr = $container.attr('data-attr');
             var $input;
             var success = function(){
                 that.model.save();
                 that.model.trigger('change');
             };
             var options = {
-                silent:true
+                silent:true,
+                $input: ($container.is('input')) ? $container : false
             }
             this.on('edit:success', success);
             switch(attr){
                 case "UserName": 
-                    options.source = this.associateCollection.renderForDataEntry()
+                    options.source = this.associateCollection.renderForDataEntry();
                     $input = this.editAutoComplete(e,options);
                 break;
-                case "Item": 
-                    options.source = this.itemList
+                case "Item":
+                    options.minLength = 0;
+                    options.delay = 0; 
+                    options.collection = this.itemCollection;
                     $input = this.editAutoComplete(e,options);                   
                 break;
-                case "AssignedTo": 
-                    options.source = this.associateList;
-                    $input = this.editAutoComplete(e,options);
+                case "ErrorType": 
+                    $input = this.longTextEditor(e,options);
                 break;
                 case "Completed": this.model.toggle();
                 break;

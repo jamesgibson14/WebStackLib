@@ -97,15 +97,15 @@ function($, Backbone, E, Handlebars){
                 model.set(obj,options);
                 destroy();
             };
-            $input = $("<INPUT type=text />")                
-                .on("keydown", function (e) {
-                    if (e.key === 'Enter') {
-                      applyValue()
-                      destroy()
-                    }
-                })
-                .focus()
-                .select();
+            $input = options.$container ||$("<INPUT type=text />");               
+            $input.on("keydown", function (e) {
+                if (e.key === 'Enter') {
+                  applyValue()
+                  destroy()
+                }
+            })
+            .focus()
+            .select();
             $container.replaceWith($input)
             loadValue(); 
             return $input;  
@@ -118,7 +118,8 @@ function($, Backbone, E, Handlebars){
             var label = $container.attr('data-label')
             var value;            
             var $input;
-            var source = options.source || [{id: 3,label:'James'},{id: 82,label:'David'},{id: 13,label:'Lynae'}, {id: 33,label:'Carrie'}];
+            options.collection || (options.collection = false);
+            var source = options.collection.listSource || options.source || [];
            
             var destroy = function () {
               $input.remove();
@@ -126,9 +127,7 @@ function($, Backbone, E, Handlebars){
             };
             
             var loadValue = function () {
-              value = model.get(attr) || "";
-              var result = $.grep(source, function(e){ return e.id == value; });
-              value = result.length ? result[0].label : ""; 
+              value = model.get(attr) || ""; 
               
               $input.focus();
               $input.autocomplete('search',"");
@@ -136,6 +135,18 @@ function($, Backbone, E, Handlebars){
             };
             
             var applyValue = function (e, ui) {
+                if(options.collection){
+                    if(options.collection.get(ui.item.id)){
+                         model.set(attr, ui.item.id,options);
+                         destroy();
+                         return;  
+                    }
+                    else{
+                        destroy();
+                        return;
+                    }                    
+                }
+                    
                 model.set(attr, ui.item.id,options);                
                 destroy();                
             };
@@ -144,13 +155,12 @@ function($, Backbone, E, Handlebars){
                     return;
                 destroy();               
             };
-             $input = $("<INPUT type=text />")
-                .on('blur', function(){destroy();})
-                .on('keydown', keyHandler)
+             $input = options.$container ||$("<INPUT type=text />");               
+             $input.on('keydown', keyHandler)
                  .autocomplete({
                       autoFocus: true,
-                      delay: 0,
-                      minLength:  0,
+                      delay: options.delay || 0,
+                      minLength:  options.minLength || 0,
                       source: source,
                       select: applyValue
                   })
@@ -184,9 +194,9 @@ function($, Backbone, E, Handlebars){
               destroy();                            
             };
             
-             $input = $("<INPUT type=text />")
-                .on('change', function(){applyValue();destroy();})
-                .datepicker();
+            $input = options.$container ||$("<INPUT type=text />");               
+            $input.on('change', function(){applyValue();destroy();})
+            .datepicker();
             $container.replaceWith($input);
             loadValue(); 
             return $input;  
@@ -247,10 +257,10 @@ function($, Backbone, E, Handlebars){
                 $wrapper = $("<div style='padding:5px;'/>");
                 $container.replaceWith($wrapper);
             }
-                
-            $input = $("<textarea style='backround:white;width:90%;height:80px;border:none;outline:0'>")
-                .appendTo($wrapper);
-            
+
+            $input = options.$container || $("<textarea style='backround:white;width:90%;height:80px;border:none;outline:0'>");              
+            $input.appendTo($wrapper);
+           
             $("<div style='text-align:right'><button>Save</button><button>Cancel</button></div>")
                 .appendTo($wrapper);
             
