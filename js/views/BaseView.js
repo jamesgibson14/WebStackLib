@@ -97,7 +97,7 @@ function($, Backbone, E, Handlebars){
                 model.set(obj,options);
                 destroy();
             };
-            $input = options.$container ||$("<INPUT type=text />");               
+            $input = options.$container || $("<INPUT type=text />");               
             $input.on("keydown", function (e) {
                 if (e.key === 'Enter') {
                   applyValue()
@@ -260,10 +260,10 @@ function($, Backbone, E, Handlebars){
 
             $input = options.$container || $("<textarea style='backround:white;width:90%;height:80px;border:none;outline:0'>");              
             $input.appendTo($wrapper);
-           
+            if(options.buttons){
             $("<div style='text-align:right'><button>Save</button><button>Cancel</button></div>")
                 .appendTo($wrapper);
-            
+            }            
             $wrapper.find("button:first").bind("click", applyValue);
             $wrapper.find("button:last").bind("click", destroy);
             $input.bind("keydown", handleKeyDown);

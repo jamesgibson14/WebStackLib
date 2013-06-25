@@ -1,9 +1,9 @@
 define(['jquery', 'backbone', 'engine', 'handlebars', 'views/BaseView', 'text!templates/cellsuggestion.html', 'models/cellsuggestion','views/taskList','models/lists'], 
-function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
+function($, Backbone, E, Handlebars, BaseView, Template,Model, TaskList, Lists){
 
     var View = BaseView.extend({
         className: "CellSuggestion ofh",
-        template: template,
+        template: Template,
         serializeData:function(){
             var obj = this.model.toJSON();            
             obj.isNew = this.model.isNew();
@@ -23,9 +23,23 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
             this.on('edit:success', this.editSuccess);
         },
         onRender: function(){
+            var that = this;
             $('input').placeholder();
-            if(!this.model.isNew() && this.taskList.collection.length > 0)
-                this.$('#tasksList').html(this.taskList.render().el);                       
+            var current = ''
+            if(!that.taskList)
+                that.taskList = new TaskList({Idea_ID:that.model.id, IdeaType: 'Cell',isNew: true}); // or type: TechnologyIdea, quicktip;
+            if(!this.model.isNew() && !this.$('#tasksList').html())
+                this.$('#tasksList').html(this.taskList.render().el);
+            if(this.model.isNew() && !this.model.get('Associate_ID'))
+                this.$('input:first').focus().select();
+            if(this.model.validationError){
+                $.each(this.model.validationError,function(key, val){
+                    //TODO: wrap each element in a error "view"
+                    if(current ==='') current = key;
+                    that.$('input[data-attr=' + key + ']').css('background-color','yellow').parent().append('<span>Hello</span>')
+                })
+                this.$('input[data-attr=' + current + ']').focus();
+            }                       
         },
         edit: function(e){
             var that = this;
@@ -47,7 +61,7 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
                     options.source = this.associateCollection.renderForDataEntry()
                     $input = this.editAutoComplete(e,options);
                 break;
-                case 'Details-Urgency':
+                case 'Details_Urgency':
                     options.source = [
                         {id:'a',label:"A Items that STOP production (Downtime)"},
                         {id:'b',label:"B Items that SLOW production ( less than 100% run Speed)"},
@@ -59,7 +73,7 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
                     ];
                     $input = this.editAutoComplete(e,options);
                 break;
-                case "Details-Machines": 
+                case "Details_Machines": 
                     options.source = [
                         {id:'a',label:"5147"},
                         {id:'b',label:"B Items that SLOW production ( less than 100% run Speed)"},
@@ -71,13 +85,13 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
                     ];
                     $input = this.editAutoComplete(e,options);
                 break;
-                case 'Details-EstimateCost':
+                case 'Details_EstimateCost':
                     $input = this.editText(e,options);
                 break;
-                case 'Details-ActualCost':
+                case 'Details_ActualCost':
                     $input = this.editText(e,options);
                 break;
-                case 'Details-Gain': $input = this.longTextEditor(e,options);
+                case 'Details_Gain': $input = this.longTextEditor(e,options);
                 break;
                 case "Clear": this.model.destroy();
                 break;
@@ -86,11 +100,10 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, TaskList, Lists){
         editSuccess: function(){
             var that = this;
             var error = function(){
-                //alert('Error: Make sure both the idea and Associate is filled out');
+           
             };
             var success = function(){
-                if(!that.taskList)
-                    that.taskList = new TaskList({Idea_ID:that.model.id, IdeaType: 'Cell',isNew: true}); // or type: TechnologyIdea, quicktip;
+                
             };
             this.model.once('sync',success)
             this.model.save(null,{success: success, wait:true});

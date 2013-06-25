@@ -1,7 +1,7 @@
 define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html', 'models/task'], function($, Backbone, E, Handlebars, template, Model){
 
     var View = E.BaseView.extend({
-        tagName:  "li",
+        tagName: "li",
         template: template,    
         events: {
           "click .check"              : "edit",

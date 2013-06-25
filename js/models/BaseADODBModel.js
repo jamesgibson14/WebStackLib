@@ -156,8 +156,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             return " (" + columns.slice(0,-2) + ") VALUES (" + values.slice(0,-2) + "); ";
         },
         parseSqlDetails: function(key, value, id){
-            var sql = "DELETE FROM " + this.urlDetails + " WHERE Idea_ID = " + id + " AND [Key] = '" +  key.split('-')[1] + "';";
-            sql += "INSERT INTO " + this.urlDetails + " (Idea_ID, [Key], Value) VALUES (" + id + ", '" + key.split('-')[1] + "', " + this._parseValue(value) + ")";
+            var sql = "DELETE FROM " + this.urlDetails + " WHERE Idea_ID = " + id + " AND [Key] = '" +  key.split('_')[1] + "';";
+            sql += "INSERT INTO " + this.urlDetails + " (Idea_ID, [Key], Value) VALUES (" + id + ", '" + key.split('_')[1] + "', " + this._parseValue(value) + ")";
             this.sqlDetails += sql;
         }
         
