@@ -81,6 +81,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             if (!this.hasChanged())
                 return sql;
             var that = this;
+            var idattr= this.idAttribute || "ID"
             var queue = options && options.queue ? options.queue : false;
             var success = options && options.success ? options.success : function(){return;};
             if (!sql){
@@ -95,7 +96,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                         values += key + " = " + that._parseValue(value) + ", ";
                 })
                 sql += values.slice(0,-2);
-                sql += " WHERE ID = " + params[1] + ';'
+                sql += " WHERE "+ idattr + " = " + params[1] + ';'
                 if(values.length<1)
                     sql = ';';
             }

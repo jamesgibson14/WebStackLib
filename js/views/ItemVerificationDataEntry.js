@@ -24,6 +24,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/ItemVerifi
         serializeData: function(){
             var obj = this.model.toJSON();
             //obj.itemList = this.itemList
+            obj.DateEntered = obj.DateEntered.format("mm/dd/yyyy")
             
             return obj;
         },
@@ -42,14 +43,17 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/ItemVerifi
             }
             this.on('edit:success', success);
             switch(attr){
-                case "UserName": 
-                    options.source = this.associateCollection.renderForDataEntry();
-                    $input = this.editAutoComplete(e,options);
-                break;
+                
                 case "Item":
-                    options.minLength = 0;
-                    options.delay = 0; 
                     options.collection = this.itemCollection;
+                    $input = this.editAutoComplete(e,options);                   
+                break;
+                case "InventoryStatus":                    
+                    options.source = [
+                        {id: 'Physically Short',label: 'Physically Short'},
+                        {id: 'Physically Over',label: 'Physically Over'},
+                        {id: 'Unknown',label: 'Unknown'}
+                    ];
                     $input = this.editAutoComplete(e,options);                   
                 break;
                 case "ErrorType": 

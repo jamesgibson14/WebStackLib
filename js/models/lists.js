@@ -40,7 +40,7 @@ define(['jquery', 'backbone','engine','models/BaseCollection'], function($, Back
                             }
 	                    }) || [];
 	                    response(data.slice(0,30))
-	                }
+	                }	              
 	            })
 	            
             },
