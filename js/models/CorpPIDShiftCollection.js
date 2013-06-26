@@ -22,7 +22,7 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                     return m.get('Unit');
                 else
                     return m.get('Unit') + "_" + m.get('MachineCode');
-            }
+            };
             this.map(function(model){
                 var label = getLabel(model);
                 if (labels.indexOf(label) > -1){
