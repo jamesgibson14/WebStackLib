@@ -1,9 +1,7 @@
-define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], function($, Backbone,E, collection) {
+define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], function($, Backbone,E, Collection) {
 
     var Model = Backbone.Model.extend({
-        sql: "SELECT Machines = '[' + STUFF((select ', {\"code\": \"' + MachineCode + '\",\"label\": \"' + MachineCode + '\"}' from PeopleSoftData WHERE MachineCode <> '' GROUP BY MachineCode ORDER BY MachineCode for xml PATH('')),1,2,'') + ']'",
-        store: new WebSQLStore(E.sqlTest2,'dbo.spGetDataForPeopleSoftEntry',false),
-        collection: new collection(),
+        collection: new Collection(),
         defaults: {                
             startDate: '03/01/2012',
             endDate: new Date().format('mm/dd/yyyy'),
@@ -13,7 +11,7 @@ define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], functio
             sqlPerLevel: {
                 dayBranch: "SELECT DateCompleted, Unit, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, PID, OpSeq) AS dt1 GROUP BY DateCompleted, Unit",
                 dayMachine: "SELECT DateCompleted, Unit, MachineCode, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, MachineCode, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, MachineCode, PID, OpSeq) AS dt1 GROUP BY Unit, MachineCode, DateCompleted ORDER BY Unit",
-                monthBranch: "SELECT DateCompleted = LEFT(convert(varchar, DateCompleted, 121),7), Unit, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, PID, OpSeq) AS dt1 GROUP BY Unit, LEFT(convert(varchar, DateCompleted, 121),7) ORDER BY Unit",
+                monthBranch: "SELECT DateCompleted = LEFT(convert(varchar, DateCompleted, 121),7), Unit, RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, Item FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, Item) AS dt1 GROUP BY Unit, LEFT(convert(varchar, DateCompleted, 121),7) ORDER BY Unit",
                 monthMachine: "SELECT DateCompleted = LEFT(convert(varchar, DateCompleted, 121),7), Unit, MachineCode, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, MachineCode, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, MachineCode, PID, OpSeq) AS dt1 GROUP BY Unit, MachineCode, LEFT(convert(varchar, DateCompleted, 121),7) ORDER BY Unit"
             },
             branches: {
@@ -82,7 +80,98 @@ define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], functio
                 {name:'3 Up RTT/ST', machines: [4226,4398,4264,3506,4344]}
             ],
             plotData: [],
-            series: []
+            title: "Pieces Per Hour (Runtime + Downtime)",
+            //animate: true,
+            seriesDefaults:{                    
+                pointLabels: { 
+                    show: false 
+                },
+                trendline: {
+                    show: false,
+                    type: 'linear'
+                },
+                isDragable:false,
+                showMarker:true,
+                markerOptions: {
+                    style:'diamond'
+                }             
+            },
+            series: [],
+            axesDefaults: {
+                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                pad: 1.2
+            },
+            legend: {
+                show: true,
+                renderer: $.jqplot.EnhancedLegendRenderer,
+                placement: "outsideGrid",
+                labels: null,
+                location: "ne",
+                rowSpacing: "0px",
+                rendererOptions: {
+                    // set to true to replot when toggling series on/off
+                    // set to an options object to pass in replot options.
+                    seriesToggle: 'normal',
+                    seriesToggleReplot: {resetAxes: false}
+                }
+            },
+            axes: {
+                xaxis: {
+                    label: 'Timeline',
+                    renderer:$.jqplot.DateAxisRenderer,          
+                    tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                    numberTicks: 15,
+                    max: null,
+                    tickOptions: {
+                        showGridline: false,
+                        formatString:'%b %#d, %Y',
+                        angle: -30 
+                    },
+                    padMax: 500
+                },
+                yaxis: {
+                    label: 'Folders Per Hour',
+                    tickOptions: {
+                        suffix: ''
+                    },
+                    padMin: 1
+                }
+            },
+            grid: {
+                drawBorder: false,
+                shadow: false,
+                // background: 'rgba(0,0,0,0)'  works to make transparent.
+                background: "#dddddd"
+            },
+            highlighter: {
+                show: true,
+                showMarker:true,
+                showTooltip:true,
+                sizeAdjust: 10,
+                tooltipLocation: 'se',
+                tooltipAxes: 'xy',
+                yvalues: 1,
+                formatString:'<div class="boxpad border"><p>date: %s</p><p>PiecesPerHour: %s</p><div>',
+                useAxesFormatters: true,
+                tooltipContentEditor: function(str, seriesIndex, pointIndex, plot){
+                    var data = plot.series[seriesIndex].data[pointIndex];
+                    var format = [];
+                    if (this.get('groupBy')==='month')
+                        format[0] = new Date(data[0] + 1000*60*60*24).format('mmmm yyyy');
+                    else
+                        format[0] = new Date(data[0] ).format('mmmm dd, yyyy');
+                    format[1] = new Number(data[1]).toFixed(1);
+                    var label = plot.legend.labels[seriesIndex].indexOf('Target'); 
+                    str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>PiecesPerHour:</td><td align="right">%s</td></tr></table>';
+                    str = $.jqplot.sprintf.apply($.jqplot.sprintf, [str].concat(format));
+                    return str;
+                }
+           },
+           cursor: {
+             show: true,
+             showTooltip:false,
+             zoom: true
+           }
         },
 
         // Model Constructor

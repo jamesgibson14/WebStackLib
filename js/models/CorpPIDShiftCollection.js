@@ -26,11 +26,11 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
             this.map(function(model){
                 var label = getLabel(model);
                 if (labels.indexOf(label) > -1){
-                    obj[label].push([new Date(model.get('DateCompleted')),model.get('PcsPerHour')]);
+                    obj[label].push([new Date(model.get('DateCompleted')),model.get('RecordCount')]);
                 }
                 else{
                     labels.push(label);
-                    obj[label] = [[new Date(model.get('DateCompleted')),model.get('PcsPerHour')]]
+                    obj[label] = [[new Date(model.get('DateCompleted')),model.get('RecordCount')]]
                 }                           
             });
             var group = {};

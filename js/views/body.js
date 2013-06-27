@@ -21,6 +21,7 @@ function($, Backbone, E, Handlebars, BaseView, Model, template){
             'click #restart':'restart'
 	    },
         onRender: function() {
+            
             var that = this;
             var dialog = this.$( "#dialog-form" ).dialog({
                 autoOpen:false,

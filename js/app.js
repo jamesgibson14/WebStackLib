@@ -63,5 +63,5 @@ function   (App) {
     document.title = 'SmeadAnalytics'
     
   	// Instantiates a new Router
-    this.router = new App();
+    window.App = this.router = new App();
 });

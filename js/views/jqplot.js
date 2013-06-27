@@ -1,12 +1,11 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/CorpPiecesPerHour.html', 'models/CorpPIDShiftCollection', 'models/CorpPiecesPerHour', 'views/SlickGrid', 'jqp','jqpall'], 
-function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
+define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/jqplot.html', 'models/jqplot', 'views/SlickGrid', 'jqp','jqpall'], 
+function($, Backbone, E, Handlebars, template,Model,SlickGrid){
 
     var View = Backbone.View.extend({
 
         tagName:  "div",
         className: 'CorpPiecesPerHour ofh',
         model: Model,
-        collection: new Collection(),
         plot: null,
         template: template,
         events:{
@@ -19,13 +18,11 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
             _.bindAll(this, 'render','loadData','renderDataGrid');
 
             this.model = new this.model()
-            this.model.fetch();
             this.model.on('change:plotData', this.loadData);
             this.SlickGrid = new SlickGrid()
         },
         loadData: function(){
            var that = this;
-            //E.loading(this.$el,that.collection.fetch,this.collection);
             $.jqplot.config.enablePlugins = true;
             this.$("#sql").html(this.model.collection.sql);
             if (this.plot)
@@ -240,11 +237,6 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                 }  
             });  
             return this;
-        },
-        postRender: function(){
-            //this.collection.sqlArgs = [this.model.get('startDate'),this.model.get('endDate')];
-            //this.collection.fetch({noJSON:true})
-            E.hideLoading();
         },
         addRemoveMachine: function(e){
             $(e.target).toggleClass('ui-state-active').toggleClass('ui-state-highlight').toggleClass('fontStrike')
