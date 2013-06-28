@@ -1,4 +1,4 @@
-define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], function($, Backbone,E, Collection) {
+define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($, Backbone,E, Collection) {
 
     var Model = Backbone.Model.extend({
         collection: new Collection(),
@@ -11,7 +11,7 @@ define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], functio
             sqlPerLevel: {
                 dayBranch: "SELECT DateCompleted, Unit, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, PID, OpSeq) AS dt1 GROUP BY DateCompleted, Unit",
                 dayMachine: "SELECT DateCompleted, Unit, MachineCode, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, MachineCode, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, MachineCode, PID, OpSeq) AS dt1 GROUP BY Unit, MachineCode, DateCompleted ORDER BY Unit",
-                monthBranch: "SELECT DateCompleted = LEFT(convert(varchar, DateCompleted, 121),7), Unit, RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, Item FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, Item) AS dt1 GROUP BY Unit, LEFT(convert(varchar, DateCompleted, 121),7) ORDER BY Unit",
+                monthBranch: "SELECT DateCompleted, Unit, ItemCount = Count(*) FROM (SELECT Unit, DateCompleted = LEFT(convert(varchar, DateCompleted, 121),7), Item FROM dbo.PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted >= '%s' AND DateCompleted < '%s' GROUP BY Unit, LEFT(convert(varchar, DateCompleted, 121),7), Item) As dt1 Group BY Unit, DateCompleted",
                 monthMachine: "SELECT DateCompleted = LEFT(convert(varchar, DateCompleted, 121),7), Unit, MachineCode, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, MachineCode, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, MachineCode, PID, OpSeq) AS dt1 GROUP BY Unit, MachineCode, LEFT(convert(varchar, DateCompleted, 121),7) ORDER BY Unit"
             },
             branches: {
@@ -156,7 +156,7 @@ define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], functio
                 tooltipContentEditor: function(str, seriesIndex, pointIndex, plot){
                     var data = plot.series[seriesIndex].data[pointIndex];
                     var format = [];
-                    if (this.get('groupBy')==='month')
+                    if (plot.options.groupBy === 'month')
                         format[0] = new Date(data[0] + 1000*60*60*24).format('mmmm yyyy');
                     else
                         format[0] = new Date(data[0] ).format('mmmm dd, yyyy');
@@ -188,7 +188,48 @@ define(['jquery', 'backbone','engine', 'models/CorpPIDShiftCollection'], functio
             this.collection.sql = this.get('sqlPerLevel')[this.get('groupBy') + this.get('level')]  
             this.collection.sqlArgs = [machines, this.get('startDate'),this.get('endDate')];
             this.collection.fetch({noJSON:true});
-            this.collection.dataRenderer(this);                   
+            //this.collection.dataRenderer(this);
+            this.dataRenderer();                   
+        },
+        dataRenderer: function(){
+            var that = this;
+            var labels = [];
+            var series = [];
+            var obj = {};
+            var data = [];
+            var getLabel = function(m){
+                if(that.get('level')=='Branch')
+                    return m.get('Unit');
+                else
+                    return m.get('Unit') + "_" + m.get('MachineCode');
+            };
+            this.collection.map(function(mod){
+                var label = getLabel(mod);
+                if (labels.indexOf(label) > -1){
+                    obj[label].push([new Date(mod.get('DateCompleted')),mod.get('ItemCount')]);
+                }
+                else{
+                    labels.push(label);
+                    obj[label] = [[new Date(mod.get('DateCompleted')),mod.get('ItemCount')]]
+                }                           
+            });
+            var group = {};
+            var c = 0;
+            $.each( obj, function(i, array) {
+                data.push(array);
+                var gKey = i.slice(0,3);
+                
+                if(!group[gKey]) 
+                    group[gKey]=0;
+
+                series.push({color: that.get('branches')[gKey].colors[group[gKey]],markerOptions: that.get('branches')[gKey].markerOptions})
+                //alert(series[c].color)
+                group[gKey] += 1;
+                c++;
+            })
+            this.get('legend').labels = labels;
+            this.set('series', series);
+            this.set('plotData', data);
         }
     });
 

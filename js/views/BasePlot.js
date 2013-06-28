@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/jqplot.html', 'models/jqplot', 'views/SlickGrid', 'jqp','jqpall'], 
+define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/BasePlot.html', 'models/BasePlot', 'views/SlickGrid', 'jqp','jqpall'], 
 function($, Backbone, E, Handlebars, template,Model,SlickGrid){
 
     var View = Backbone.View.extend({
@@ -29,107 +29,12 @@ function($, Backbone, E, Handlebars, template,Model,SlickGrid){
                 this.plot.destroy();
             this.SlickGrid.$el.html('<h2><span>No Data Selected</span><h2>')
             this.renderMachines();  
-
-            var data = this.model.get('plotData'); 
-            var labels = this.model.get('labels'); 
-            var series = this.model.get('series');
+            debugger;
+            var data = this.model.get('plotData');
+             
+            var options = this.model.toJSON()
             
-            this.plot = $.jqplot("plot", data, {
-                title: "Pieces Per Hour (Runtime + Downtime)",
-                //animate: true,
-                seriesDefaults:{                    
-                    pointLabels: { 
-                        show: false 
-                    },
-                    trendline: {
-                        show: false,
-                        type: 'linear'
-                    },
-                    isDragable:false,
-                    showMarker:true,
-                    markerOptions: {
-                        style:'diamond'
-                    }             
-                },
-                series: series,
-                axesDefaults: {
-                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                    pad: 1.2
-                },
-                legend: {
-                    show: true,
-                    renderer: $.jqplot.EnhancedLegendRenderer,
-                    placement: "outsideGrid",
-                    labels: labels,
-                    location: "ne",
-                    rowSpacing: "0px",
-                    rendererOptions: {
-                        // set to true to replot when toggling series on/off
-                        // set to an options object to pass in replot options.
-                        seriesToggle: 'normal',
-                        seriesToggleReplot: {resetAxes: false}
-                    }
-                },
-                axes: {
-                    xaxis: {
-                        label: 'Timeline',
-                        renderer:$.jqplot.DateAxisRenderer,          
-                        tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-                        numberTicks: 15,
-                        max: new Date(this.model.get('endDate')).format('mm/dd/2013'),
-                        tickOptions: {
-                            showGridline: false,
-                            formatString:'%b %#d, %Y',
-                            angle: -30 
-                        },
-                        padMax: 500
-                    },
-                    yaxis: {
-                        label: 'Folders Per Hour',
-                        tickOptions: {
-                            suffix: ''
-                        },
-                        padMin: 1
-                    }
-                },
-                grid: {
-                    drawBorder: false,
-                    shadow: false,
-                    // background: 'rgba(0,0,0,0)'  works to make transparent.
-                    background: "#dddddd"
-                },
-                highlighter: {
-                    show: true,
-                    showMarker:true,
-                    showTooltip:true,
-                    sizeAdjust: 10,
-                    tooltipLocation: 'se',
-                    tooltipAxes: 'xy',
-                    yvalues: 1,
-                    formatString:'<div class="boxpad border"><p>date: %s</p><p>PiecesPerHour: %s</p><div>',
-                    useAxesFormatters: true,
-                    tooltipContentEditor: function(str, seriesIndex, pointIndex, plot){
-                        debugger;
-                        var data = plot.series[seriesIndex].data[pointIndex];
-                        var format = [];
-                        if (that.model.get('groupBy')==='month')
-                            format[0] = new Date(data[0] + 1000*60*60*24).format('mmmm yyyy');
-                        else
-                            format[0] = new Date(data[0] ).format('mmmm dd, yyyy');
-                        format[1] = new Number(data[1]).toFixed(1)
-                        var label = plot.legend.labels[seriesIndex].indexOf('Target') 
-                        str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>PiecesPerHour:</td><td align="right">%s</td></tr></table>'
-                        str = $.jqplot.sprintf.apply($.jqplot.sprintf, [str].concat(format));
-                        return str;
-                    }
-               },
-               cursor: {
-                 show: true,
-                 showTooltip:false,
-                 zoom: true
-               }
-            });
-            var that = this;
+            this.plot = $.jqplot("plot",data, options);
             this.$('#resizable').off('resize')
             this.$('#resizable').on('resize', function(event, ui) {
                 if (that.plot)
@@ -165,8 +70,8 @@ function($, Backbone, E, Handlebars, template,Model,SlickGrid){
                 that.$('#rmachine').prop('disabled', false);
                 that.model.set('machineCodes',that.model.get('machineTypes')[this.value].machines);
             });
-            this.$('#printLandscape').button({text: false})
-            this.$('#chartOptions').button({text: false});
+            //this.$('#printLandscape').button({text: false})
+            //this.$('#chartOptions').button({text: false});
 
             function split( val ) {      return val.split( /,\s*/ );    }    
             function extractLast( term ) {      return split( term ).pop();    }
@@ -254,16 +159,16 @@ function($, Backbone, E, Handlebars, template,Model,SlickGrid){
             //Instead of destroying plot just reload data, lables and then re-plot
             var that = this;
             var html;
-            var dt = new Date(data[0]).format("mm/dd/yyyy")
+            var dt = new Date(data[0]+ 1000*60*60*24).format("mm/dd/yyyy")
             var wDate ='';
             var model = this.model.toJSON();
             if (model.groupBy =='month')
-                wDate = "DateCompleted >'" + dt + "' AND DateCompleted <= DATEADD(month,1,'" + dt + "')";
+                wDate = "DateCompleted >='" + dt + "' AND DateCompleted < DATEADD(month,1,'" + dt + "')";
             else
                 wDate = "DateCompleted = '" + dt + "'";
                 
             
-            var labels = model.labels
+            var labels = model.legend.labels
             
             var wLevel = '';
             if (this.model.get('level')=='Branch'){
@@ -273,9 +178,9 @@ function($, Backbone, E, Handlebars, template,Model,SlickGrid){
             else
                 wLevel = "MachineCode = '" + labels[seriesIndex].slice(labels[seriesIndex].indexOf('_')+1) + "' ";                
   
-            
+            debugger;
             var options = {
-                sql: "SELECT PiecesPerHr = ROUND(CompletedQty / NULLIF(RunHrs + DowntimeHrs,0),0), Unit, PID, Item, OpSeq, PIDRun, MachineCode = cast(MachineCode as int), DateCompleted, Shift, AssociateCode, SetupHrs = ROUND(SetupHrs,2), RunHrs = ROUND(RunHrs,2), DowntimeHrs, CompletedQty, ScrapQty FROM PeopleSoftData WHERE " + wDate + " AND " + wLevel + " ORDER By Item"
+                sql: "SELECT Item FROM dbo.PeopleSoftData WHERE " + wDate + " AND " + wLevel + " Group BY Item ORDER By Item"
             };
             this.$("#sql").html(options.sql);
             html = this.SlickGrid.render(options).el
@@ -307,9 +212,12 @@ function($, Backbone, E, Handlebars, template,Model,SlickGrid){
         },
         adjustChartOptions: function(e){
             var val = $(e.target).html();
-            val == 'Off' ? val = "On" : val = 'Off'
+            val == 'Off' ? val = "On" : val = 'Off';
             $(e.target).html(val);
             //TODO: update plot here
+        },
+        toggleMenu: function(e){
+            $(e.target).parent().toggleClass('open');
         }
          
     });

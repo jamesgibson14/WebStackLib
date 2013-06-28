@@ -171,10 +171,6 @@ h1.ui-widget-header, h2.ui-widget-header {
 .restart{
 	float:right;
 }
-tr {
-	
-	border:1px solid black;
-}
 .left {
 	float:left;
 	position:relative;
@@ -680,9 +676,6 @@ textarea {
 #todoapp #todo-stats .todo-clear a:active {
 	position: relative;
 	top: 1px;
-}
-.table {
-	display:table;
 }
 .psEntryTable {
 	border: 1px solid black;

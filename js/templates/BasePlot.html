@@ -1,23 +1,32 @@
-<link rel="stylesheet" href="js/lib/css/bootstrap.min.css">
-<link rel="stylesheet" href="js/lib/css/font-awesome.min.css">
-<style>  
+
+<style>
 	#feedback { font-size: 1.4em; }  
 	#selectable .ui-selecting { background: #FECA40; }  
 	#selectable .ui-selected { background: #F39814; color: white; }  
 	#selectable { list-style-type: none; margin: 0; padding: 0; width: 100% }  
 	#selectable li { margin: 3px; padding: 1px; float: left; width: 30px; text-align: center; } 
-	.ui-icon- 
 </style>
+
 <div id="resizable" class="" style="height:500px; width:60%;">
-	<h2 class="ui-widget-header ofh"><span>Pieces Per Hour</span>
-		<div class="right">
-		<button id="printLandscape" class="ui-button ui-btn-small" title="Print Chart">
-			<span class="ui-button-icon-primary ui-icon ui-icon-print"/>
-		</button>
-		<button type="button" id="chartOptions" class="ui-button-primary ui-btn-small" title="Change Options">
-			<i class="ui-button-icon-primary ui-icon ui-icon-gear"/>
-		</button>
-		</div>	
+	<h2 >
+		<span>{{title}}</span>
+		<div class="dropdown pull-right" data-toggle="buttons-checkbox">
+			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-target="#menu1"><b class="caret"></b></button>  
+			<button type="button" class="btn btn-primary"><i class="icon-print"></i></button>  
+			<button type="button" class="btn btn-primary">Middle</button>  
+			<button type="button" class="btn btn-primary" id="chartOptions"><i class="icon-cogs"></i></button>
+			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-target="#menu1"><b class="caret"></b></button>
+    		<ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">  
+    			<li><a tabindex="-1" href="#">Action</a></li>  
+    			<li><a tabindex="-1" href="#">Another action</a></li>  
+    			<li><a tabindex="-1" href="#">Something else here</a></li>  
+    			<li class="divider"></li>  
+    			<li><a tabindex="-1" href="#">Separated link</a></li>
+    		</ul>
+		</div>
+		
+		
+
 		<div id='optionsView' class="z2k"></div>
 	</h2>
 	<div class="plotOptions border left defaultForm" style="width: 20%">
