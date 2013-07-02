@@ -1,23 +1,56 @@
 
 <div class="border">	
-	
+	{{#if isTabs}}
 	<ul class="nav nav-tabs">  
-		<li><a href="#pph" data-toggle="tab">Pieces Per Hour</a></li>  
+		<li class="active"><a href="#pph" data-toggle="tab">Pieces Per Hour</a></li>  
 		<li><a href="#noi" data-toggle="tab">Number Of Items</a></li>  
 		<li><a href="#nop" data-toggle="tab">Number Of PIDs</a></li>  
 		<li><a href="#pp" data-toggle="tab">Pieces Produced</a></li>  
 		<li><a href="#as" data-toggle="tab">Average Setup</a></li>  
 		<li><a href="#ad" data-toggle="tab">Average Down</a></li>
-		<li><a href="#piecesChart" data-toggle="tab">test router</a></li>
 	</ul>
-	<div class="tab-content">  
+	{{/if}}
+	{{#unless isTabs}}
+	<div class="plotOptions border left defaultForm" style="width: 20%">
+		<div class="inline">
+			<input id="startDate" class='dPicker inline' type="text" value="{{startDate}}" size="8"/>
+  			<span class="inline"><span class="ui-icon ui-icon-triangle-1-e"></span></span>
+  			<input id="endDate" class='dPicker inline' type="text" value="{{endDate}}" size="8"/>
+  		</div>
+		<div class="">			
+			Month<input type="radio" name="groupBy" value="month" checked="checked" /> 
+			Day<input type="radio" name="groupBy" value="day" />
+		</div>
+		<div class=""> 
+			Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" />
+			Machine<input type="radio" name="level" id="rmachine" value="Machine" />
+		</div>
+		<br/>
+		Select machine group:
+		<select id="machineGroups" class="machineSelect">
+			<option value="">Select group...</option>
+			{{#each machineTypes}}
+			<option value="{{@index}}">{{this.name}}</option>
+			{{/each}}
+		</select>
+		<div class="searchBox noprint">
+			Customize a group:
+		  	<input id="imachine" placeholder="Click here to search..." type="text" size='15'/>	  	
+	  	</div>
+		<br />Current Machines Included:
+		<ol id="selectable">
+			N/A 
+		</ol>
+		
+	</div>
+	{{/unless}}
+	<div class="tab-contentt">  
 		<div class="tab-pane active" id="pph">1 um sociis natoque penatibus et magnis dis parturient montes,</div>  
 		<div class="tab-pane" id="noi">2 um sociis natoque penatibus et magnis dis parturient montes,</div>  
 		<div class="tab-pane" id="nop">3 um sociis natoque penatibus et magnis dis p</div>  
 		<div class="tab-pane" id="pp">4 um sociis natoque penatibus et magnis dis p</div>
 		<div class="tab-pane" id="as">5 um sociis natoque penatibus et magnis dis p</div>
 		<div class="tab-pane" id="ad">6 um sociis natoque penatibus et magnis dis p</div>
-		<div class="tab-pane" id="piecesChart">6 um sociis natoque penatibus et magnis dis p</div>
 	</div>
 	
 	

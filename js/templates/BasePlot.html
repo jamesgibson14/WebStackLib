@@ -7,10 +7,10 @@
 	#selectable li { margin: 3px; padding: 1px; float: left; width: 30px; text-align: center; } 
 </style>
 
-<div id="resizable" class="" style="height:500px; width:60%;">
+<div id="resizable" class="" style="height:500px; width:60%;page-break-after:always;">
 	<h2 >
 		<span>{{title}}</span>
-		<div class="dropdown pull-right" data-toggle="buttons-checkbox">
+		<div class="dropdown pull-right noprint" data-toggle="buttons-checkbox">
 			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-target="#menu1"><b class="caret"></b></button>  
 			<button type="button" class="btn btn-primary"><i class="icon-print"></i></button>  
 			<button type="button" class="btn btn-primary">Middle</button>  
@@ -29,6 +29,7 @@
 
 		<div id='optionsView' class="z2k"></div>
 	</h2>
+	{{#if isTabs}}
 	<div class="plotOptions border left defaultForm" style="width: 20%">
 		<div class="inline">
 			<input id="startDate" class='dPicker inline' type="text" value="{{startDate}}" size="8"/>
@@ -45,7 +46,7 @@
 		</div>
 		<br/>
 		Select machine group:
-		<select id="machineGroups">
+		<select id="machineGroups" class="machineSelect">
 			<option value="">Select group...</option>
 			{{#each machineTypes}}
 			<option value="{{@index}}">{{this.name}}</option>
@@ -60,14 +61,17 @@
 			N/A 
 		</ol>
 		
-	</div>	
-	<div id="plot" class="border left" style="min-height: 300px; height: 90%; width:78%;">
+	</div>
+	{{/if}}	
+	<div id="plot{{plotId}}" class="border left" style="min-height: 300px; height: 90%; width:78%;">
 		
 	</div>
 </div>
 <br />
 <br />
-<div id="sql"></div>
+<div id="sql noprint"></div>
+{{#if isTabs}}
 <div id='processRecord' class="border noprint" style="min-height: 300px; width:98%;">
 	
 </div>
+{{/if}}

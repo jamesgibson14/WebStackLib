@@ -6,14 +6,9 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
             startDate: '03/01/2012',
             endDate: new Date().format('mm/dd/yyyy'),
             machineCodes: [],
+            machineGroup: '',
             groupBy: 'month',
             level: 'Branch',
-            sqlPerLevel: {
-                dayBranch: "SELECT DateCompleted, Unit, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, PID, OpSeq) AS dt1 GROUP BY DateCompleted, Unit",
-                dayMachine: "SELECT DateCompleted, Unit, MachineCode, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, MachineCode, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, MachineCode, PID, OpSeq) AS dt1 GROUP BY Unit, MachineCode, DateCompleted ORDER BY Unit",
-                monthBranch: "SELECT DateCompleted, Unit, ItemCount = Count(*) FROM (SELECT Unit, DateCompleted = LEFT(convert(varchar, DateCompleted, 121),7), Item FROM dbo.PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted >= '%s' AND DateCompleted < '%s' GROUP BY Unit, LEFT(convert(varchar, DateCompleted, 121),7), Item) As dt1 Group BY Unit, DateCompleted",
-                monthMachine: "SELECT DateCompleted = LEFT(convert(varchar, DateCompleted, 121),7), Unit, MachineCode, PcsPerHour = SUM(CompletedQty) / SUM(Hours) , PcsPerAssignedHour = SUM(CompletedQty) / SUM(AssignedHours), RecordCount = COUNT(*) FROM (SELECT Unit, DateCompleted, MachineCode, PID, OpSeq,CompletedQty = MIN(CompletedQty), Hours =  SUM(Runhrs) + SUM(DowntimeHrs), AssignedHours = SUM(Runhrs) + SUM(SetupHrs) + SUM(DowntimeHrs) FROM PeopleSoftData WHERE MachineCode IN (%s) AND DateCompleted > '%s' AND DateCompleted <= '%s' GROUP BY Unit, DateCompleted, MachineCode, PID, OpSeq) AS dt1 GROUP BY Unit, MachineCode, LEFT(convert(varchar, DateCompleted, 121),7) ORDER BY Unit"
-            },
             branches: {
                 CED:{
                    name:'Cedar City',
@@ -80,7 +75,6 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
                 {name:'3 Up RTT/ST', machines: [4226,4398,4264,3506,4344]}
             ],
             plotData: [],
-            title: "Pieces Per Hour (Runtime + Downtime)",
             //animate: true,
             seriesDefaults:{                    
                 pointLabels: { 
@@ -176,7 +170,7 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
 
         // Model Constructor
         initialize: function() {
-              this.on('change:machineCodes change:startDate change:endDate change:level change:groupBy', this.renderPlot)
+            this.on('change:machineCodes change:startDate change:endDate change:level change:groupBy', this.renderPlot)
         },
         renderPlot: function(e){
             
@@ -185,7 +179,7 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
             var machines = this.get('machineCodes');
             if (machines.length ==0)
                 return alert("Please select a machine");
-            this.collection.sql = this.get('sqlPerLevel')[this.get('groupBy') + this.get('level')]  
+            this.collection.sql = this.get('sqlPerLevel')[this.get('groupBy') + this.get('level')];
             this.collection.sqlArgs = [machines, this.get('startDate'),this.get('endDate')];
             this.collection.fetch({noJSON:true});
             //this.collection.dataRenderer(this);
@@ -206,11 +200,11 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
             this.collection.map(function(mod){
                 var label = getLabel(mod);
                 if (labels.indexOf(label) > -1){
-                    obj[label].push([new Date(mod.get('DateCompleted')),mod.get('ItemCount')]);
+                    obj[label].push([new Date(mod.get('DateCompleted')),mod.get(that.get('y1'))]);
                 }
                 else{
                     labels.push(label);
-                    obj[label] = [[new Date(mod.get('DateCompleted')),mod.get('ItemCount')]]
+                    obj[label] = [[new Date(mod.get('DateCompleted')),mod.get(that.get('y1'))]]
                 }                           
             });
             var group = {};
