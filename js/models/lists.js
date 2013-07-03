@@ -18,6 +18,11 @@ define(['jquery', 'backbone','engine','models/BaseCollection'], function($, Back
 	            }),
 	            users: new BaseCollection(),
 	            items: new BaseCollection(),
+                corpMachines: BaseCollection.extend({
+                    sql: "SELECT Machines = '[' + STUFF((select ', {\"ID\": \"' + MachineCode + '\",\"label\": \"' + MachineCode + '\"}' from PeopleSoftData WHERE MachineCode <> '' GROUP BY MachineCode ORDER BY MachineCode for xml PATH('')),1,2,'') + ']'",
+                    db: E.sqlTest2,
+                    url: '/PeopleSoftData'
+                })
 	            
             },
             getList: function(listAttr){

@@ -78,7 +78,7 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
             //animate: true,
             seriesDefaults:{                    
                 pointLabels: { 
-                    show: false 
+                    show: true 
                 },
                 trendline: {
                     show: false,
@@ -167,12 +167,13 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
              zoom: true
            }
         },
-
+        autoPlot: true,
         // Model Constructor
         initialize: function() {
             this.on('change:machineCodes change:startDate change:endDate change:level change:groupBy', this.renderPlot)
         },
         renderPlot: function(e){
+            if (!this.autoPlot) return;
             
             //Instead of destroying plot just reload data, lables and then re-plot 
             //no data check

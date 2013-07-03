@@ -1,5 +1,17 @@
-
-<div class="border">	
+<style>
+	.sidebar-nav-fixed {
+	    padding: 9px 0;
+	    position:fixed;
+	    left:40px;
+	    top:60px;	    
+	}
+	
+	.row-fluid > .span-fixed-sidebar {
+	    margin-left: 290px;
+	}
+</style>
+<div class="container">
+<div class="row">  
 	{{#if isTabs}}
 	<ul class="nav nav-tabs">  
 		<li class="active"><a href="#pph" data-toggle="tab">Pieces Per Hour</a></li>  
@@ -10,50 +22,69 @@
 		<li><a href="#ad" data-toggle="tab">Average Down</a></li>
 	</ul>
 	{{/if}}
+</div>
+<div class="row">  
+	<div class="span3">
 	{{#unless isTabs}}
-	<div class="plotOptions border left defaultForm" style="width: 20%">
-		<div class="inline">
-			<input id="startDate" class='dPicker inline' type="text" value="{{startDate}}" size="8"/>
-  			<span class="inline"><span class="ui-icon ui-icon-triangle-1-e"></span></span>
-  			<input id="endDate" class='dPicker inline' type="text" value="{{endDate}}" size="8"/>
-  		</div>
-		<div class="">			
-			Month<input type="radio" name="groupBy" value="month" checked="checked" /> 
-			Day<input type="radio" name="groupBy" value="day" />
-		</div>
-		<div class=""> 
-			Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" />
-			Machine<input type="radio" name="level" id="rmachine" value="Machine" />
-		</div>
-		<br/>
-		Select machine group:
-		<select id="machineGroups" class="machineSelect">
+	<div class="plotOptions well sidebar-nav-fixed noprint" style="width: 170px">
+		<form>
+		<legend>Filters</legend>
+		<div><label>Select machine group</label>
+		<select id="machineGroups" class="machineSelect input-medium">
 			<option value="">Select group...</option>
 			{{#each machineTypes}}
 			<option value="{{@index}}">{{this.name}}</option>
 			{{/each}}
-		</select>
+		</select></div>
+		<div class="inline">
+			<label>Date Range</label>
+			<input id="startDate" class='dPicker input-small inline' type="text" value="{{startDate}}" />
+  			<div class="inline"><i class="icon-arrow-right"></i></div>
+  			<input id="endDate" class='dPicker input-small inline' type="text" value="{{endDate}}" />
+  	</div>	
+  		<span>Groups</span><br />
+		<label class="radio inline">			
+			<input type="radio" name="groupBy" value="month" checked="checked" /> Month
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="groupBy" value="day" />Day
+		</label>
+		<br /><br />
+		<span>Scope</span><br />
+		<label class="radio inline">
+			Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" />
+		</label>		
+		<label class="radio inline">
+			Machine<input type="radio" name="level" id="rmachine" value="Machine" />
+		</label>	
 		<div class="searchBox noprint">
 			Customize a group:
-		  	<input id="imachine" placeholder="Click here to search..." type="text" size='15'/>	  	
+		  	<textarea id="imachine" class="input-medium" placeholder="Click here to search..." rows='3'></textarea>	  	
 	  	</div>
-		<br />Current Machines Included:
+		<label>Current Machines:</label>
 		<ol id="selectable">
 			N/A 
 		</ol>
-		
+		<legend>Options</legend>
+		<button type="button" class="btn btn-primary printAll">Print Page&nbsp;&nbsp;<i class="icon-print"></i></button>
+		<br /><br />
+		<button type="button" class="btn btn-primary labelToggle">Labels ON/OFF&nbsp;&nbsp;<i class="icon-gear"></i></button>
+		</form> 
 	</div>
 	{{/unless}}
-	<div class="tab-contentt">  
-		<div class="tab-pane active" id="pph">1 um sociis natoque penatibus et magnis dis parturient montes,</div>  
-		<div class="tab-pane" id="noi">2 um sociis natoque penatibus et magnis dis parturient montes,</div>  
-		<div class="tab-pane" id="nop">3 um sociis natoque penatibus et magnis dis p</div>  
-		<div class="tab-pane" id="pp">4 um sociis natoque penatibus et magnis dis p</div>
-		<div class="tab-pane" id="as">5 um sociis natoque penatibus et magnis dis p</div>
-		<div class="tab-pane" id="ad">6 um sociis natoque penatibus et magnis dis p</div>
+	</div>  
+	<div class="span12"> 
+		{{#unless isTabs}}<div class="tab-contentt">{{/unless}}  
+			<div class="" id="pph" style="page-break-after:always;">1 um sociis natoque penatibus et magnis dis parturient montes,</div>  
+			<div class="" id="noi" style="page-break-after:always;">2 um sociis natoque penatibus et magnis dis parturient montes,</div>  
+			<div class="" id="nop" style="page-break-after:always;">3 um sociis natoque penatibus et magnis dis p</div>  
+			<div class="" id="pp" style="page-break-after:always;">4 um sociis natoque penatibus et magnis dis p</div>
+			<div class="" id="as" style="page-break-after:always;">5 um sociis natoque penatibus et magnis dis p</div>
+			<div class="" id="ad" style="page-break-after:always;">6 um sociis natoque penatibus et magnis dis p</div>
+		{{#unless isTabs}}</div>{{/unless}}
 	</div>
-	
-	
+</div>
+
 </div>
 	
 		

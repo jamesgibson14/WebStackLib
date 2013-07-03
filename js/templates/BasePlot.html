@@ -7,8 +7,8 @@
 	#selectable li { margin: 3px; padding: 1px; float: left; width: 30px; text-align: center; } 
 </style>
 
-<div id="resizable" class="" style="height:500px; width:60%;page-break-after:always;">
-	<h2 >
+<div id="resizable" class="" >
+	<h2 class="noprint" >
 		<span>{{title}}</span>
 		<div class="dropdown pull-right noprint" data-toggle="buttons-checkbox">
 			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-target="#menu1"><b class="caret"></b></button>  
@@ -30,7 +30,7 @@
 		<div id='optionsView' class="z2k"></div>
 	</h2>
 	{{#if isTabs}}
-	<div class="plotOptions border left defaultForm" style="width: 20%">
+	<div class="plotOptions border left defaultForm" style="width: 20%;pag">
 		<div class="inline">
 			<input id="startDate" class='dPicker inline' type="text" value="{{startDate}}" size="8"/>
   			<span class="inline"><span class="ui-icon ui-icon-triangle-1-e"></span></span>
@@ -63,7 +63,7 @@
 		
 	</div>
 	{{/if}}	
-	<div id="plot{{plotId}}" class="border left" style="min-height: 300px; height: 90%; width:78%;">
+	<div id="plot{{plotId}}" class="plot" style="min-height: 300px; {{#if isTabs}}height: 90%; width:78%;{{else}}height: 650px; width:900px;{{/if}}">
 		
 	</div>
 </div>

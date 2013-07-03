@@ -64,8 +64,9 @@ function($, Backbone, E, Handlebars){
             PageSetup_Null();
             
             setTimeout(function(){
+                alert("Remember to manually adjust printer settings like orientation and color.")
                 window.print();
-            },500);
+            },100);
         },
         editor: function(){
             
@@ -145,7 +146,7 @@ function($, Backbone, E, Handlebars){
                     return;
                 destroy();               
             };
-             $input = $("<INPUT type=text />")
+            $input = $("<INPUT type=text />")
                 .on('blur', function(){destroy();})
                 .on('keydown', keyHandler)
                  .autocomplete({

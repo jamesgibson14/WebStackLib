@@ -87,19 +87,23 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, PiecesPlot, BaseP
             'click #chartOptions': 'renderChartOptions',
             'click #selectable': 'addRemoveMachine',
             'click .chartOptions': 'adjustChartOptions',
-            'change .machineSelect': 'machineGroupChange'            
+            'change .machineSelect': 'machineGroupChange',
+            'click .printAll': 'print',
+            'click .labelToggle': 'optionsToggle'            
         },
         initialize: function(){
             var that = this;
+            var isTabs = this.isTabs
             var filterModel = new (BasePlotModel.extend({
                 initialize: function(){
-                    
+                    this.set('isTabs',that.isTabs);
                 }
-            }))({startDate: '4/01/2013'});
+            }))({startDate: '4/01/2013', isTabs: that.isTabs});
             this.groupModel = BasePlotModel.extend({
                 initialize: function() {
                     var that = this;
-                    this.set('isTabs',that.isTabs)
+                    this.set('startDate',filterModel.get('startDate'));
+                    this.set('isTabs',isTabs);
                     filterModel.on('change:machineCodes change:startDate change:endDate change:level change:groupBy', function(e){
                         $.each(e.changed, function(key, value){
                             that.set(key, value);
@@ -115,22 +119,22 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, PiecesPlot, BaseP
         },
         onRender: function(){
             var that = this;
-            this.tabs.pph = new BasePlot({model: new this.groupModel(this.views.pph)});
+            this.tabs.pph = new BasePlot({model: new this.groupModel(this.views.pph) });
             this.currentTab = this.tabs.pph;
             this.$('#pph').html( this.currentTab.render().el);
-            this.tabs.noi = new BasePlot({model: new this.groupModel(this.views.noi)});
+            this.tabs.noi = new BasePlot({model: new this.groupModel(this.views.noi) });
             this.currentTab = this.tabs.noi;
             this.$('#noi').html( this.currentTab.render().el);
-            this.tabs.nop = new BasePlot({model: new this.groupModel(this.views.nop)});
+            this.tabs.nop = new BasePlot({model: new this.groupModel(this.views.nop) });
             this.currentTab = this.tabs.nop;
             this.$('#nop').html( this.currentTab.render().el);
-            this.tabs.pp = new BasePlot({model: new this.groupModel(this.views.pp)});
+            this.tabs.pp = new BasePlot({model: new this.groupModel(this.views.pp) });
             this.currentTab = this.tabs.pp;
             this.$('#pp').html( this.currentTab.render().el);
-            this.tabs.as = new BasePlot({model: new this.groupModel(this.views.as)});
+            this.tabs.as = new BasePlot({model: new this.groupModel(this.views.as) });
             this.currentTab = this.tabs.as;
             this.$('#as').html( this.currentTab.render().el);
-            this.tabs.ad = new BasePlot({model: new this.groupModel(this.views.ad)});
+            this.tabs.ad = new BasePlot({model: new this.groupModel(this.views.ad) });
             this.currentTab = this.tabs.ad;
             this.$('#ad').html( this.currentTab.render().el);
             this.$('.dPicker').datepicker({numberOfMonths: 3});
@@ -157,7 +161,7 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, PiecesPlot, BaseP
             .autocomplete({
                 source: function( request, response ) {          
                     // delegate back to autocomplete, but extract the last term          
-                    response( $.ui.autocomplete.filter(machines, extractLast( request.term ) ) );        
+                    response( $.ui.autocomplete.filter([{id: '3191',label: '3191'},{id: '3077',label: '3077'},{id: '590',label: '590'}], extractLast( request.term ) ) );        
                 },
                 autoFocus: true,
                 minLength: 0,
@@ -197,8 +201,6 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, PiecesPlot, BaseP
             this.$('input[type=radio]').click(function(e){   
                 that.filterModel.set($(this).attr("name"), $(this).val())
             })
-            this.$('#resizable').resizable({delay:20,minHeight: 326,minWidth: 400});
-            //this.$('input, textarea').placeholder();
             this.$('#optionsView').dialog({      
                 autoOpen: false,      
                 show: {        
@@ -242,6 +244,20 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, PiecesPlot, BaseP
             this.$('#rmachine').prop('disabled', false);
             this.filterModel.set("machineGroup",e.target.value);
             this.filterModel.set('machineCodes',this.filterModel.get('machineTypes')[e.target.value].machines);
+        },
+        pointLabel: true,
+        optionsToggle: function(){
+            var options = {
+                
+            }
+            var plotm = this.tabs.pph.model;
+            var plot = this.tabs.pph.plot;
+            this.pointLabel = !this.pointLabel;
+            plot.replot({seriesDefaults:{
+                pointLabels:{
+                    show: this.pointLabel
+                } 
+            }})
         }
     });
     // Returns the View class

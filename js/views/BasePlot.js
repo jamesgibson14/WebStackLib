@@ -7,7 +7,7 @@ function($, Backbone, E, Handlebars, BaseView, template,Model,SlickGrid){
         className: 'CorpPiecesPerHour ofh',
         plot: null,
         template: template,
-        events:{
+        events: {
             'click #chartOptions': 'renderChartOptions',
             'click #selectable': 'addRemoveMachine',
             'click .chartOptions': 'adjustChartOptions',
@@ -24,7 +24,6 @@ function($, Backbone, E, Handlebars, BaseView, template,Model,SlickGrid){
         },
         loadData: function(){
            var that = this;
-           debugger;
            var plotId = this.model.get('plotId')
             $.jqplot.config.enablePlugins = true;
             this.$("#sql").html(this.model.collection.sql);
