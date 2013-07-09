@@ -14,9 +14,10 @@ function($, Backbone, E, Handlebars, BaseView, template,Model,SlickGrid){
             'change .machineSelect': 'machineGroupChange'
         },
         initialize: function() {
-            _.bindAll(this, 'loadData','renderDataGrid');
+            _.bindAll(this, 'loadData','renderDataGrid','replot');
             
             this.model.on('change:plotData', this.loadData);
+            this.model.on('change:seriesDefaults', this.replot);
             this.SlickGrid = new SlickGrid()
         },
         serializeData: function(){
@@ -48,6 +49,10 @@ function($, Backbone, E, Handlebars, BaseView, template,Model,SlickGrid){
                 this.$('#plot' + plotId).off('jqplotDataClick');
                 this.$('#plot' + plotId).on('jqplotDataClick',this.renderDataGrid);   
             }
+        },
+        replot: function(options){
+            var opts = options || this.model.toJSON();
+            this.plot.replot(opts); 
         },
         onRender: function() {
             if(this.model.get('isTabs')){
@@ -191,28 +196,33 @@ function($, Backbone, E, Handlebars, BaseView, template,Model,SlickGrid){
             
         },
         renderChartOptions: function(e){
-            if($( "#optionsView" ).dialog( "isOpen" )){
-                $( "#optionsView" ).dialog( "close" )
-                return false;
-            }
-                
-            var $el = $('#optionsView')
-            $el.html('<span>Trendlines: </span><span class="chartOptions" data-attr="trendlines">Off</span><br /><span>Markers: </span><span class="chartOptions" data-attr="markers">Off</span>');
-            $el.dialog({
-                appendTo: this.$el,
-                position: {
-                    my: 'right top',
-                    at: 'right bottom',
-                    of: e.target
-                }  
-            })
-            $el.dialog('open')
-            
+            this.$( "#menu1" ).toggleClass( "show" )
         },
         adjustChartOptions: function(e){
-            var val = $(e.target).html();
-            val == 'Off' ? val = "On" : val = 'Off';
-            $(e.target).html(val);
+            var $val = $(e.target).find('span');
+            var val = $val.html();
+            var attr = $(e.target).attr('data-attr');
+            var optval = false
+            var obj = this.model.get('seriesDefaults')
+            if(val == 'Off'){
+                val = "On";
+                optval = true;
+            }
+            else{
+                val = 'Off';
+                optval = false;
+            }
+            switch(attr){
+                case "trendlines": obj.trendline.show = optval;
+                break;
+                case "markers": obj.showMarker = optval;
+                break;
+                case "pointLabels": obj.pointLabels.show = optval;
+                break;
+            }
+            $val.html(val);
+            this.model.set('seriesDefaults',obj)
+            this.model.trigger('change:seriesDefaults')
             //TODO: update plot here
         },
         toggleMenu: function(e){

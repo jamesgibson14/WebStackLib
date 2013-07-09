@@ -5,6 +5,9 @@
 	#selectable .ui-selected { background: #F39814; color: white; }  
 	#selectable { list-style-type: none; margin: 0; padding: 0; width: 100% }  
 	#selectable li { margin: 3px; padding: 1px; float: left; width: 30px; text-align: center; } 
+	.dropdown-menu li span {
+		float:right;
+	}
 </style>
 
 <div id="resizable" class="" >
@@ -16,18 +19,18 @@
 			<button type="button" class="btn btn-primary">Middle</button>  
 			<button type="button" class="btn btn-primary" id="chartOptions"><i class="icon-cogs"></i></button>
 			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-target="#menu1"><b class="caret"></b></button>
+
     		<ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">  
-    			<li><a tabindex="-1" href="#">Action</a></li>  
-    			<li><a tabindex="-1" href="#">Another action</a></li>  
-    			<li><a tabindex="-1" href="#">Something else here</a></li>  
+    			<li><a href="#" class="chartOptions" data-attr="trendlines">Trendlines: <span >Off</span></a></li>
+    			<li><a href="#" class="chartOptions" data-attr="markers">Markers: <span >On</span></a></li> 
+    			<li><a href="#" class="chartOptions" data-attr="pointLabels">Point Labels: <span>On</span></a></li>   
     			<li class="divider"></li>  
     			<li><a tabindex="-1" href="#">Separated link</a></li>
     		</ul>
 		</div>
 		
-		
 
-		<div id='optionsView' class="z2k"></div>
+		
 	</h2>
 	{{#if isTabs}}
 	<div class="plotOptions border left defaultForm" style="width: 20%;pag">
