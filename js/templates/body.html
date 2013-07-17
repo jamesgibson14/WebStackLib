@@ -1,15 +1,32 @@
 {{#if header}}
+<div class="navbar">
+		
+		<div class="navbar-inner">			
+			<div class="container">
+				
+				<div class="">
+					
+					<ul class="nav">
+						<li><a href="#"><img src="assets/images/SmeadAnalytics.tif" style="height: 30px" /></a></li>
+						<li><a href="#main/home">Home</a></li>
+						<li><a href="#main/PSApp" >PeopleSoft Entry</a></li>
+						<li><a href="#main/OperatorTracking">OperatorTracking</a></li>
+						<li><a href="#main/CorpCharts">Corporate Charts</a></li>
+						<li><a href="#main/InventoryApp" >Inventory</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 <div id="header" class="relative"> 
 	<button type="button" id="restart" class="restart">Restart App</button>
 	<div id='tabsmenu'>
 		<input type="radio" id="radio5" name="radio" checked="checked" href="#main/home" /><label for="radio5">Home</label>
 		<input type="radio" id="radio1" name="radio" /><label for="radio1"><a href="#main/TodoApp" >Todolist</a></label>
-		<input type="radio" id="radio2" name="radio" /><label for="radio2"><a href="#main/PSApp" >PeopleSoft Entry</a></label>
 		<input type="radio" id="radio4" name="radio" /><label for="radio4"><a href="#main/MachPerfApp" >Machine Performance</a></label>
 		<input type="radio" id="radio6" name="radio" /><label for="radio6"><a href="#main/IdeaApp" >Idea Tracking</a></label>
 		<input type="radio" id="radio7" name="radio" /><label for="radio7"><a href="#main/plot" >Plot testing</a></label>
 		<input type="radio" id="radio8" name="radio" /><label for="radio8"><a href="#main/ProductionApp" >Production</a></label>
-		<input type="radio" id="radio9" name="radio" /><label for="radio9"><a href="#main/InventoryApp" >Inventory</a></label>
 		<input type="radio" id="radio11" name="radio" /><label for="radio11"><a href="#main/ProdScheduleApp">Prododuction Scheduling</a></label>
 		<input type="radio" id="radio14" name="radio" /><label for="radio14"><a href="#main/ImageTesting">ImageTesting</a></label>
 		<input type="radio" id="radio15" name="radio" /><label for="radio15"><a href="#main/SlickGrid">SlickGrid</a></label>
@@ -17,8 +34,6 @@
 		<input type="radio" id="radio17" name="radio" /><label for="radio17"><a href="#main/demand">Demand routing</a></label>
 		<input type="radio" id="radio18" name="radio" /><label for="radio18"><a href="#main/OperatorProductionEntry">Opertor Entry</a></label>
 		<input type="radio" id="radio19" name="radio" /><label for="radio19"><a href="#main/ADCReplacement">ADC Entry</a></label>
-		<input type="radio" id="radio20" name="radio" /><label for="radio20"><a href="#main/OperatorTracking">OperatorTracking</a></label>
-		<input type="radio" id="radio21" name="radio" /><label for="radio21"><a href="#main/CorpCharts">Corporate Charts</a></label>
 	</div>
 </div>
 {{/if}}

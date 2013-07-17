@@ -78,14 +78,14 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
             //animate: true,
             seriesDefaults:{                    
                 pointLabels: { 
-                    show: true 
+                    show: false 
                 },
                 trendline: {
                     show: false,
                     type: 'linear'
                 },
                 isDragable:false,
-                showMarker:true,
+                showMarker:false,
                 markerOptions: {
                     style:'diamond'
                 }             
@@ -168,20 +168,22 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
            }
         },
         autoPlot: true,
-        // Model Constructor
         initialize: function() {
             this.on('change:machineCodes change:startDate change:endDate change:level change:groupBy', this.renderPlot)
         },
         renderPlot: function(e){
+            //add a check for rendering on render btn click instead of a model change event.
             if (!this.autoPlot) return;
-            
-            //Instead of destroying plot just reload data, lables and then re-plot 
+            var that = this;
+            var i;
             //no data check
-            var machines = this.get('machineCodes');
-            if (machines.length ==0)
-                return alert("Please select a machine");
+            this.filterMap || (this.filterMap = ['machineCodes','startDate','endDate']);
+            
             this.collection.sql = this.get('sqlPerLevel')[this.get('groupBy') + this.get('level')];
-            this.collection.sqlArgs = [machines, this.get('startDate'),this.get('endDate')];
+            this.collection.sqlArgs = [];
+            $.each(this.filterMap, function(index, value){
+                that.collection.sqlArgs.push(that.get(value))
+            })
             this.collection.fetch({noJSON:true});
             //this.collection.dataRenderer(this);
             this.dataRenderer();                   
@@ -198,16 +200,25 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
                 else
                     return m.get('Unit') + "_" + m.get('MachineCode');
             };
-            this.collection.map(function(mod){
-                var label = getLabel(mod);
-                if (labels.indexOf(label) > -1){
-                    obj[label].push([new Date(mod.get('DateCompleted')),mod.get(that.get('y1'))]);
+            var map;
+            if(this.collectionMap){
+                map = function(model){
+                    that.collectionMap.call(that, model,labels, obj);
                 }
-                else{
-                    labels.push(label);
-                    obj[label] = [[new Date(mod.get('DateCompleted')),mod.get(that.get('y1'))]]
-                }                           
-            });
+            }
+            else {
+                map = function(mod){
+                    var label = getLabel(mod);
+                    if (labels.indexOf(label) > -1){
+                        obj[label].push([new Date(mod.get('DateCompleted')),mod.get(that.get('y1'))]);
+                    }
+                    else{
+                        labels.push(label);
+                        obj[label] = [[new Date(mod.get('DateCompleted')),mod.get(that.get('y1'))]]
+                    }                           
+                }
+            }
+            this.collection.map(map);
             var group = {};
             var c = 0;
             $.each( obj, function(i, array) {
@@ -216,8 +227,8 @@ define(['jquery', 'backbone','engine', 'models/BasePlotCollection'], function($,
                 
                 if(!group[gKey]) 
                     group[gKey]=0;
-
-                series.push({color: that.get('branches')[gKey].colors[group[gKey]],markerOptions: that.get('branches')[gKey].markerOptions})
+                if(that.get('branches')[gKey])    
+                    series.push({color: that.get('branches')[gKey].colors[group[gKey]],markerOptions: that.get('branches')[gKey].markerOptions})
                 //alert(series[c].color)
                 group[gKey] += 1;
                 c++;

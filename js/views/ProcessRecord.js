@@ -1,37 +1,30 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/ProcessRecord.html', 'models/ProcessRecord'], 
-function($, Backbone, E, Handlebars, template, Collection){
+define(['jquery', 'backbone', 'engine', 'views/BaseView', 'text!templates/ProcessRecord.html', 'models/ProcessRecord'], 
+function($, Backbone, E, BaseView, template, Collection){
 
-    var View = Backbone.View.extend({
+    var View = BaseView.extend({
 
         tagName:  "div",
         className: 'ProcessRecord ofh',
         collection: new Collection(),
         template: template,
-        initialize: function() {
-            _.bindAll(this, 'render');   
+        initialize: function() {            
+            this.listenTo(this.collection,'reset',this.render);  
         },
-        render: function(Record_ID) {
-            var that = this;
-            this.collection.sqlArgs = [Record_ID || 48285]
-            this.collection.fetch();
-            var html;
-            if(this.collection.length >0){
-                var ctemp = Handlebars.compile(this.template);
-                var context = {};
+        serializeData: function(){
+            var context = {};
+            if(this.collection.length < 1){
+                context.error = 'No Data'; 
+            }
+            else { 
                 var model = this.collection.at(0)
                 context = $.extend(context,model.toJSON());
                 context.Date =  new Date(context.Date).format('mm/dd/yyyy')
                 context.details = this.collection.dataRender();
-                html = ctemp(context);
             }
-            else{
-                html = "<div>No data found</div>"   
-            }       
-                
-            this.$el.html( html );
-         
+            return context
+        },
+        onRender: function() {
             
-            return this;
         }
     });
 	

@@ -11,7 +11,8 @@ function($, Backbone, E, Handlebars, BaseView, template,Model,SlickGrid){
             'click #chartOptions': 'renderChartOptions',
             'click #selectable': 'addRemoveMachine',
             'click .chartOptions': 'adjustChartOptions',
-            'change .machineSelect': 'machineGroupChange'
+            'change .machineSelect': 'machineGroupChange',
+            'click #print': 'print'
         },
         initialize: function() {
             _.bindAll(this, 'loadData','renderDataGrid','replot');
@@ -25,7 +26,7 @@ function($, Backbone, E, Handlebars, BaseView, template,Model,SlickGrid){
         },
         loadData: function(){
            var that = this;
-           var plotId = this.model.get('plotId')
+           var plotId = this.model.get('plotId') || '';
             $.jqplot.config.enablePlugins = true;
             this.$("#sql").html(this.model.collection.sql);
             if (this.plot){
@@ -52,6 +53,7 @@ function($, Backbone, E, Handlebars, BaseView, template,Model,SlickGrid){
         },
         replot: function(options){
             var opts = options || this.model.toJSON();
+            opts.resetAxis = false;
             this.plot.replot(opts); 
         },
         onRender: function() {
@@ -118,14 +120,12 @@ function($, Backbone, E, Handlebars, BaseView, template,Model,SlickGrid){
                     },                            
                     tooltipClass: "ui-state-highlight absolute z2k"                        
                 });
-                this.$("#imachine").on('click',function(e){
-                    //that.$( "#imachine" ).autocomplete( "search", "" );
-                })
+
                 this.$('input[type=radio]').click(function(e){   
                     that.model.set($(this).attr("name"), $(this).val())
                 })
                 this.$('#resizable').resizable({delay:20,minHeight: 326,minWidth: 400});
-                //this.$('input, textarea').placeholder();
+
                 this.$('#optionsView').dialog({      
                     autoOpen: false,      
                     show: {        
@@ -222,8 +222,9 @@ function($, Backbone, E, Handlebars, BaseView, template,Model,SlickGrid){
             }
             $val.html(val);
             this.model.set('seriesDefaults',obj)
-            this.model.trigger('change:seriesDefaults')
-            //TODO: update plot here
+            if(this.model.get('plotData').length > 0)            
+                this.model.trigger('change:seriesDefaults')
+            
         },
         toggleMenu: function(e){
             $(e.target).parent().toggleClass('open');

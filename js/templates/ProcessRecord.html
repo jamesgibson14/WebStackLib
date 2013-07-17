@@ -1,15 +1,20 @@
+{{#if error}}
+	<div>No data found</div>
+{{else}}
 <div class="ProcessRecord">
-	<div class="parent defaultForm">
-		<label>Machine:</label> <span class="spanInput">{{Machine}}</span>
-		<label>Date:</label> <span  class="spanInput">{{Date}}</span>
-		<label>Associate:</label> <span  class="spanInput">{{AssociateCode}}</span>
-		<label>Shift:</label> <span  class="spanInput">{{Shift}}</span>
-		<label>Current Stage:</label> <span  class="spanInput">{{OperatorStage}}</span>
-		<label>Target Percentage:</label> <span  class="spanInput">{{Stage5Target}}</span>
-		<div><label>Flagged:</label><span class="ui-icon ui-icon-close"></span></div>
-		<div><label>Completed:</label><span class="ui-icon ui-icon-check"></span></div>
+	<div class="parent form-inline">
+		<label>Machine:</label> <span class="">{{Machine}}</span>
+		<label>Date:</label> <span  class="">{{Date}}</span>
+		<label>Associate:</label> <span  class="">{{AssociateCode}}</span>
+		<label>Shift:</label> <span  class="">{{Shift}}</span>
+		<label>Current Stage:</label> <span  class="">{{OperatorStage}}</span>
+		<label>Target Percentage:</label> <span  class="">{{Stage5Target}}</span>
+		<label>Flagged:</label><span><i class="{{#if Flagged}}icon-check{{else}}icon-check-empty{{/if}}"></i></span>
+		<label>Completed:</label><span><i class="{{#if Completed}}icon-check{{else}}icon-check-empty{{/if}}"></i></span>
 	</div>
-	<table class="tablesorter left borderCells">
+	<div class="row">
+	<div class="span12">
+	<table class="tablesorter borderCells">
 	<thead class='row header'><tr>
 		<th class="hcell"><br /></th>
 		<th class="hcell">PID</th>
@@ -28,17 +33,17 @@
 	{{#each details}}
 	{{#with this}}
 		<tr>
-		<td class='cell border'>{{LineNum}}</td>
+		<td class='cell'>{{LineNum}}</td>
 		{{#if LineNum}}	
-		<td class='cell border'>{{PID}}<br />						
+		<td class='cell'>{{PID}}<br />						
 			op:&nbsp;{{OpSeq}}<br />item:&nbsp;{{txtProduct}}<br />Task:&nbsp;{{Task}}</td>		
-		<td class='cell border'>
+		<td class='cell'>
 			<table class="borderCells">
 				<tr><td title="ClockSetup">{{ClockSetup}}</td><td>{{ClockRun}}</td><td>{{ClockEnd}}</td></tr>
 				<tr><td colspan="3">
-					B<input type="checkbox" {{#if chkBreak1}}checked="checked"{{/if}} /> 
-					L<input type="checkbox" {{#if chkLunch}}checked="checked"{{/if}} /> 
-					B<input type="checkbox" {{#if chkBreak2}}checked="checked"{{/if}} />
+					B<i class="{{#if chkBreak1}}icon-check{{else}}icon-check-empty{{/if}}"></i>
+					L<i class="{{#if chkLunch}}icon-check{{else}}icon-check-empty{{/if}}"></i>
+					B<i class="{{#if chkBreak2}}icon-check{{else}}icon-check-empty{{/if}}"></i>
 				</td>
 				</tr>			
 			</table>
@@ -59,14 +64,14 @@
 		</td>
 		<td>
 			<table class="borderCells">			
-				<tr><td title="Goal Performance %" colspan="2">Goal Perf.</td></tr>
+				<tr><th title="Goal Performance %" colspan="2">Goal Perf.</th></tr>
 				<tr><td><b>{{NetQtyProducedPercentage}}%</b></td>
 					<td><b>{{NetQtyProducedPercentageTarget}}%</b></td></tr>
 				<tr><td>{{StagePercent}}%</td>
 					<td>100%</td></tr>				
 			</table>
 		</td>
-		<td class='cell border'>
+		<td class='cell'>
 			{{#if LineNum}}
 			<table class="borderCells">
 				<tr>
@@ -77,14 +82,14 @@
 					<th title="DownTime">DT</th>
 				</tr>
 				<tr><td class="noBorder">Actual</td>
-					<td>{{AssignedMinutes}}</td>
+					<td title="">{{AssignedMinutes}}</td>
 					<td rowspan="2" style="vertical-align: middle">{{AssignedMinutesPercentage}}%</td>
-					<td>{{runMeter}}</td>
-					<td rowspan="2" style="vertical-align: middle">{{RunTimePercentage}}%</td>
+					<td>{{Runtime}}</td>
+					<td rowspan="2" style="vertical-align: middle">{{RuntimePercentage}}%</td>
 					<td>{{OperatorSetupMinutes}}</td>
 					<td>{{downTime}}</td></tr>
 				<tr><td class="noBorder">Target</td>
-					<td>{{AssignedMinutesTarget}}</td>
+					<td title="">{{AssignedMinutesTarget}}</td>
 					<td>{{RuntimeTarget}}</td>
 					<td>{{OperatorSetupMinutesTarget}}</td>
 					<td>{{downTimeTarget}}</td>
@@ -94,12 +99,12 @@
 				<span>Re-Assigned:{{ReAssgnMinTotal}}</span>
 			{{/if}}
 		</td>
-		<td class='cell border'>
+		<td class='cell'>
 			{{TotalPacked}}<br />
 			eaches: {{NetQtyProduced}} <br />
 			target: {{NetQtyProducedTarget}}			
 		</td>
-		<td class='cell border'>
+		<td class='cell'>
 			{{Scrap}}<br />
 			tar: {{ScrapTarget}}<br />
 			{{ScrapPercentage}}%<br />
@@ -130,12 +135,18 @@
 	<!-- Here is where I need to add a list of PID Module views instead of the following-->
 	
 	</table>
-	<table class="left" style="margin-left: 20px">
+	</div>
+	<div class="span4">
+	<table class="table table-condensed table-striped table-bordered" style="margin-left: 20px">
 		<tr><th colspan="2">Legend</th></tr>
-		<tr><td>A</td><td>Assigned Minutes</td></tr>
-		<tr><td>S</td><td>Setup Minutes</td></tr>
-		<tr><td>R</td><td>Runtime Minutes</td></tr>
-		<tr><td>D</td><td>Downtime</td></tr>
+		<tr><td>AM</td><td>Assigned Minutes</td></tr>
+		<tr><td>AM Targ:</td><td>((Netqty + ScrapTarget) / speedtarget) + setupMinutesTaget</td></tr>
+		<tr><td>RT</td><td>Runtime Minutes</td></tr>
+		<tr><td>ST</td><td>Setup Minutes</td></tr>
+		<tr><td>DT</td><td>Downtime</td></tr>
 		<tr><td>mC</td><td>Machine Count</td></tr>
 	</table>
+	</div>
+	</div>
 </div>
+{{/if}}

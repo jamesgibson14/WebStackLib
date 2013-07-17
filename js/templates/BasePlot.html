@@ -10,44 +10,49 @@
 	}
 </style>
 
-<div id="resizable" class="" >
+<div id="resizable" class="ofh" style="height: 550px" >
 	<h2 class="noprint" >
 		<span>{{title}}</span>
-		<div class="dropdown pull-right noprint" data-toggle="buttons-checkbox">
-			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-target="#menu1"><b class="caret"></b></button>  
-			<button type="button" class="btn btn-primary"><i class="icon-print"></i></button>  
-			<button type="button" class="btn btn-primary">Middle</button>  
+		<div class="dropdown pull-right noprint" data-toggle="buttons-checkbox">  
+			<button type="button" class="btn btn-primary" id="print"><i class="icon-print"></i></button> 
 			<button type="button" class="btn btn-primary" id="chartOptions"><i class="icon-cogs"></i></button>
-			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-target="#menu1"><b class="caret"></b></button>
 
     		<ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">  
-    			<li><a href="#" class="chartOptions" data-attr="trendlines">Trendlines: <span >Off</span></a></li>
-    			<li><a href="#" class="chartOptions" data-attr="markers">Markers: <span >On</span></a></li> 
-    			<li><a href="#" class="chartOptions" data-attr="pointLabels">Point Labels: <span>On</span></a></li>   
-    			<li class="divider"></li>  
-    			<li><a tabindex="-1" href="#">Separated link</a></li>
+    			<li><a href="" class="chartOptions" data-attr="trendlines">Trendlines: <span >Off</span></a></li>
+    			<li><a href="" class="chartOptions" data-attr="markers">Markers: <span >On</span></a></li> 
+    			<li><a href="" class="chartOptions" data-attr="pointLabels">Point Labels: <span>On</span></a></li>  
     		</ul>
 		</div>
 		
 
 		
 	</h2>
+	
 	{{#if isTabs}}
-	<div class="plotOptions border left defaultForm" style="width: 20%;pag">
-		<div class="inline">
-			<input id="startDate" class='dPicker inline' type="text" value="{{startDate}}" size="8"/>
-  			<span class="inline"><span class="ui-icon ui-icon-triangle-1-e"></span></span>
-  			<input id="endDate" class='dPicker inline' type="text" value="{{endDate}}" size="8"/>
-  		</div>
-		<div class="">			
-			Month<input type="radio" name="groupBy" value="month" checked="checked" /> 
-			Day<input type="radio" name="groupBy" value="day" />
-		</div>
-		<div class=""> 
-			Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" />
-			Machine<input type="radio" name="level" id="rmachine" value="Machine" />
-		</div>
-		<br/>
+	<div class="plotOptions form-inline" >
+		{{#if plotFilters.daterange}}
+		<label>
+			Date Range</label>
+			<input id="startDate" class='dPicker input-small' type="text" value="{{startDate}}" />
+  			<label class="inline"><i class="icon-arrow-right"></i></label>
+  			<input id="endDate" class='dPicker input-small' type="text" value="{{endDate}}" />
+  		
+  		{{/if}}
+  		{{#if plotFilters.dategroups}}
+  		<label>Group By</label>
+		<fieldset class="">			
+			<label class="radio inline">Month<input type="radio" name="groupBy" value="month" checked="checked" /> </label>
+			<label class="radio inline">Day<input type="radio" name="groupBy" value="day" /></label>
+		</fieldset>
+		{{/if}}
+		{{#if plotFilters.othergroups}}
+		<label>Groups
+		<fieldset class=""> 
+			<label class="radio inline">Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" /></label>
+			<label class="radio inline">Machine<input type="radio" name="level" id="rmachine" value="Machine" /></label>
+		</fieldset></label>
+		{{/if}}
+		{{#if plotFilters.machinegroups}}
 		Select machine group:
 		<select id="machineGroups" class="machineSelect">
 			<option value="">Select group...</option>
@@ -63,10 +68,10 @@
 		<ol id="selectable">
 			N/A 
 		</ol>
-		
+		{{/if}}
 	</div>
 	{{/if}}	
-	<div id="plot{{plotId}}" class="plot" style="min-height: 300px; {{#if isTabs}}height: 90%; width:78%;{{else}}height: 650px; width:900px;{{/if}}">
+	<div id="plot{{plotId}}" class="plot" style="min-height: 450px;  width:900px;{{#unless isTabs}}height: 650px;{{/unless}}; margin-left: 50px">
 		
 	</div>
 </div>

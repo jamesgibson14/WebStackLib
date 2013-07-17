@@ -3,7 +3,7 @@
 (function( window, undefined ) {
     
     var engine = function() {
-
+        var i;
         this.callbackque = []
         //Engine Setup
         
@@ -14,7 +14,7 @@
                 } else if (fromIndex < 0) {         
                     fromIndex = Math.max(0, this.length + fromIndex);     
                 }     
-                for (var i = fromIndex, j = this.length; i < j; i++) {         
+                for (i = fromIndex, j = this.length; i < j; i++) {         
                     if (this[i] === obj)             
                     return i;     
                 }     
@@ -28,9 +28,9 @@
             link.href = url;
             document.getElementsByTagName("head")[0].appendChild(link);
         }
-    }
+    };
     
-    window.engine = window.E = new engine;
+    window.engine = window.E = new engine();
 })(window);
 
     //Get window username variable
@@ -53,7 +53,7 @@
     var l = E.loading = function(selector, callback,scope){       
         $('#loading').addClass('loading-visible');
         setTimeout(function () {callback.call(scope);},100);
-    }
+    };
     E.hideLoading = function(){
         $('#loading').removeClass('loading-visible');
     }

@@ -1,43 +1,38 @@
-<div class="title">
-	<h1>Operator Tracking</h1>
-</div>
-
-<span class="noSelect">Browse graph styles <a href="js/lib/jqplot/examples/index.html" target="_blank" >here</a> 
-	then submit an idea of the new graph style and data you would like to see.
-</span>
-<br />
-<br />
+<style>
+	.form-inline span {
+		font-size: 24px;
+		font-family: inherit;
+		line-height: 1.4em;
+		border: 0;
+		outline: none;
+		padding: 2px;
+		margin: 2px;
+		margin-left:5px;
+	}
+	
+</style>
 <div class="clearfloat defaultForm">
 	<div class="searchBox noprint">
 		<label for="Machine">Search Qualifications:</label>
 	  	<input id="iqualification" placeholder="Click here to search..." type="text" size="34" /><br />
   	</div>
-	<div class="left">
-		<label for="Associate">Associate</label><span id="sAssociate" class="spanInput">n/a</span>
-	  	<label for="Cell">Associate Cell</label><span id="scell" class="spanInput">n/a</span>
-	  	<label for="qualName">Qualification Name</label><span id="qualName" class="spanInput">n/a</span>
+	<div class="form-inline">
+		<label for="Associate">Associate</label><span id="sAssociate">n/a</span>
+	  	<label for="Cell">Associate Cell</label><span id="scell">n/a</span>
+	  	<label for="qualName">Qualification Name</label><span id="qualName">n/a</span>
 	  	{{#if debug}}
-	  	<label for="Cell">AssociateToQualification_ID (for testing)</label><span id="atq_id" class="spanInput">n/a</span>
+	  	<label for="Cell">AssociateToQualification_ID (for testing)</label><span id="atq_id">n/a</span>
 	  	{{/if}}
-	  	<label for="Cell">Current Stage</label><span id="cS" class="spanInput">n/a</span>
-	  	<label for="Cell">Last Review</label><span id="cD" class="spanInput">n/a</span><br />
-	  	<label for="Cell">Current Shifts</label><span id="cM" class="spanInput">n/a</span>
-	  	<label for="Cell">Next Review in (shifts) </label><span id="nS" class="spanInput">n/a</span>
-	  	<label for="Cell">Next % Increase </label><span id="nS" class="spanInput">(not working yet)</span>
-  	</div>
-  <div class="clearfloat"></div>  
+	  	<label for="Cell">Current Stage</label><span id="cS">n/a</span>
+	  	<label for="Cell">Last Review</label><span id="cD">n/a</span><br />
+	  	<label for="Cell">Current Shifts</label><span id="cM">n/a</span>
+	  	<label for="Cell">Next Review in (shifts) </label><span id="nS">n/a</span>
+	  	<label for="Cell">Next % Increase </label><span id="nS">(not working yet)</span>
+  	</div> 
 </div>
 
-<div id="resizable" class="border relative">
-	<div id="plot" style="min-height: 300px; height: 98%; width:98%;">
-		
-	</div>
-</div>
+<div class="" id="plotarea">...</div>
 
-<div><span>Moused Over: </span><span id="info1b">Nothing</span><span>Moused Over: </span><span id="info1c">Nothing</span></div>
-<div id='processRecord'>
-	
-</div>
 
 <div class="quicktipsview noprint clearfloat">
 	<ul class="left"><h3><span>QuickTips</span></h3>
@@ -59,4 +54,7 @@
 		<li><input type="checkbox" checked="checked" />Click on performance data point to display raw data</li>
 		<li><input type="checkbox" checked="checked" />Display more Operator Stage information (next stage increase,current minutes, etc.)</li>			
 	</ul>
+	<span class="noSelect clearfloat">Browse graph styles <a href="js/lib/jqplot/examples/index.html" target="_blank" >here</a> 
+	then submit an idea of the new graph style and data you would like to see.
+</span>
 </div>
