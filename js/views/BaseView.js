@@ -82,7 +82,7 @@ function($, Backbone, E, Handlebars){
             
             var destroy = function () {
                 $input.remove();
-                model.trigger('change')
+                that.trigger('edit:success')
             };
             
             var loadValue = function () {
@@ -96,17 +96,17 @@ function($, Backbone, E, Handlebars){
                 var obj = {}
                 obj[attr] = $input.val();
                 model.set(obj,options);
-                that.trigger('edit:success')
+                destroy();
             };
-            $input = $("<INPUT type=text />")                
-                .on("keydown", function (e) {
-                    if (e.key === 'Enter') {
-                      applyValue()
-                      destroy()
-                    }
-                })
-                .focus()
-                .select();
+            $input = options.$container || $("<INPUT type=text />");               
+            $input.on("keydown", function (e) {
+                if (e.key === 'Enter') {
+                  applyValue()
+                  destroy()
+                }
+            })
+            .focus()
+            .select();
             $container.replaceWith($input)
             loadValue(); 
             return $input;  
@@ -119,17 +119,16 @@ function($, Backbone, E, Handlebars){
             var label = $container.attr('data-label')
             var value;            
             var $input;
-            var source = options.source || [{id: 3,label:'James'},{id: 82,label:'David'},{id: 13,label:'Lynae'}, {id: 33,label:'Carrie'}];
+            options.collection || (options.collection = false);
+            var source = options.collection.listSource || options.source || [];
            
             var destroy = function () {
               $input.remove();
-              model.trigger('change')
+              that.trigger('edit:success')
             };
             
             var loadValue = function () {
-              value = model.get(attr) || "";
-              var result = $.grep(source, function(e){ return e.id == value; });
-              value = result.length ? result[0].label : ""; 
+              value = model.get(attr) || ""; 
               
               $input.focus();
               $input.autocomplete('search',"");
@@ -137,22 +136,33 @@ function($, Backbone, E, Handlebars){
             };
             
             var applyValue = function (e, ui) {
+                if(options.collection){
+                    if(options.collection.get(ui.item.id)){
+                         model.set(attr, ui.item.id,options);
+                         destroy();
+                         return;  
+                    }
+                    else{
+                        destroy();
+                        return;
+                    }                    
+                }
+                    
                 model.set(attr, ui.item.id,options);                
-                destroy();
-                that.trigger('edit:success')
+                destroy();                
             };
             var keyHandler = function(e){
                 if(e.key !== 'Esc')
                     return;
                 destroy();               
             };
-            $input = $("<INPUT type=text />")
-                .on('blur', function(){destroy();})
-                .on('keydown', keyHandler)
+
+             $input = options.$container ||$("<INPUT type=text />");               
+             $input.on('keydown', keyHandler)
                  .autocomplete({
                       autoFocus: true,
-                      delay: 0,
-                      minLength:  0,
+                      delay: options.delay || 0,
+                      minLength:  options.minLength || 0,
                       source: source,
                       select: applyValue
                   })
@@ -171,7 +181,7 @@ function($, Backbone, E, Handlebars){
            
             var destroy = function () {
                 $input.remove();
-                model.trigger('change')
+                that.trigger('edit:success');
             };
             
             var loadValue = function () {
@@ -183,13 +193,12 @@ function($, Backbone, E, Handlebars){
             
             var applyValue = function () {
               model.set(attr, new Date($input.val()),options);
-              destroy();
-              that.trigger('edit:success');              
+              destroy();                            
             };
             
-             $input = $("<INPUT type=text />")
-                .on('change', function(){applyValue();destroy();})
-                .datepicker();
+            $input = options.$container ||$("<INPUT type=text />");               
+            $input.on('change', function(){applyValue();destroy();})
+            .datepicker();
             $container.replaceWith($input);
             loadValue(); 
             return $input;  
@@ -225,7 +234,7 @@ function($, Backbone, E, Handlebars){
         
             var destroy = function () {
                 $wrapper.remove();
-                model.trigger('change');
+                that.trigger('edit:success')
             };
 
             var loadValue = function (item) {
@@ -240,7 +249,6 @@ function($, Backbone, E, Handlebars){
                 obj[attr] = $input.val();
                 model.set(obj,options);                
                 destroy();
-                that.trigger('edit:success')
             };
 
             if(options.popup){
@@ -251,13 +259,13 @@ function($, Backbone, E, Handlebars){
                 $wrapper = $("<div style='padding:5px;'/>");
                 $container.replaceWith($wrapper);
             }
-                
-            $input = $("<textarea style='backround:white;width:90%;height:80px;border:none;outline:0'>")
-                .appendTo($wrapper);
-            
+
+            $input = options.$container || $("<textarea style='backround:white;width:90%;height:80px;border:none;outline:0'>");              
+            $input.appendTo($wrapper);
+            if(options.buttons){
             $("<div style='text-align:right'><button>Save</button><button>Cancel</button></div>")
                 .appendTo($wrapper);
-            
+            }            
             $wrapper.find("button:first").bind("click", applyValue);
             $wrapper.find("button:last").bind("click", destroy);
             $input.bind("keydown", handleKeyDown);

@@ -1,11 +1,11 @@
 define(['jquery', 'backbone','engine', 'models/BaseADODBModel'], function($, Backbone,E, BaseADOModel) {
 
 var Todo = BaseADOModel.extend({
-    idAttribute: "ID",
+    idAttribute: "RecordNumber",
     
     urlRoot : '/ItemVerification',
     initialize: function() {
-
+    this.set({DateEntered: new Date(), UserName: E.user.get('Name')},{silent:true})
     },
     
     parse: function(res){
@@ -16,14 +16,8 @@ var Todo = BaseADOModel.extend({
         return res
     },
     onBeforeCreate: function(options){
-        if (!this.get('Options')){
-            var op = this.get('Options') || {}
-            op.LP = this.collection.nextOrder()
-            this.set({Options: op},{silent:true})
-        }
-        if(!this.get('AssignedTo'))
-            this.set('AssignedTo',E.user.get('Associate_ID'),{silent:true})
-        this.set({Created: new Date(), CreatedBy: E.user.get('Associate_ID')},{silent:true})
+        
+           
     }
 
   });

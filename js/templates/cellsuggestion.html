@@ -1,36 +1,50 @@
+<style>
+	.defaultForm div.editable {
+		padding: 2px 4px 2px 4px;
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+		border: 1px solid #fbeed5;
+		color: #3a87ad;
+		background-color: #d9edf7;
+		border-color: #bce8f1;
+		display:inline-block;
+	}
+</style>
 <div class="defaultForm border ofh left">
   		
   	<div class="left">
   		{{#if isNew}}
-	  		<label>Associate:</label>
-		 	<input data-attr="Associate_ID" class="editable associateList newIdea" placeholder="search by name or number" type="text" value="{{Name}}" /><br />
-			<label>Idea:</label><input class="editable newIdea" data-attr="Idea" type="text" value="{{Idea}}" /><br />
+	  		<div><label>Associate:</label>
+		 	<input data-attr="Associate_ID" class="editable associateList" placeholder="search by name or number" type="text" value="{{Name}}" tabindex="0" /></div>
+			<div><label>Idea:</label><input class="editable" data-attr="Idea" type="text" value="{{Idea}}" placeholder="click here to add idea" /></div>
+			<div><label for="Suggestion">Gains</label> 
+			<input data-attr="Details_Gain" class="editable" placeholder="How will this improve the process (Gains)?" value="{{Details_Gain}}" /></div>
+			<div><label>Machines</label>
+			<input  data-attr="Details_Machines" class="editable " placeholder="Machines:" type="text" size="6" value="{{Details_Gain}}" /></div>
+  			<div><label>Urgency </label>
+  			<input type="text" data-attr="Details_Urgency" class="editable" placeholder="Numeric:" value="{{Details_Urgency}}" /></div>
+	  		<div><label>Estimate $</label>
+		  	<input data-attr="Details_EstimateCost" class="editable" placeholder="$0.00" type="text" size="6" value="{{Details_EstimateCost}}" /></div>
+			<div><label for="iactual">Actual $</label>
+		  	<input data-attr="Details_ActualCost" class="editable" placeholder="$0.00" type="text" size="6" value="{{Details_ActualCost}}" /></div>
   		{{else}}
-  			<label>Associate:</label>
-		  	<span data-attr="Associate_ID" class="editable associateList newIdea" placeholder="search by name or number" >{{Name}}</span><br />
-  			<label>Idea: </label><span class="editable newIdea" data-attr="Idea">{{ Idea }}</span><br />
+  			<div><label>Associate:</label>
+		  	<div data-attr="Associate_ID" class="editable associateList" placeholder="search by name or number" >{{Name}}</div></div>
+  			
+  			<div><label>Idea: </label><div class="editable" data-attr="Idea">{{ Idea }}</div></div>
+  			<div><label>Gain: </label><div class="editable" data-attr="Details_Gain">{{ Details_Gain }}</div></div>
+  			<div><label>Machines: </label><div class="editable" data-attr="Details_Machines">{{ Details_Machines }}</div></div>
+  			<div><label>Urgency: </label><div class="editable" data-attr="Details_Urgency">{{ Details_Urgency }}</div></div>
+  			<div><label>EstimateCost: </label><div class="editable" data-attr="Details_EstimateCost">{{ Details_EstimateCost }}</div></div>
+  			<div><label>ActualCost: </label><div class="editable" data-attr="Details_ActualCost">{{ Details_ActualCost }}</div></div>
   		{{/if}}
 		{{#unless isNew}}
-		<label for="Suggestion">Gains</label><br />  
-		<input data-attr="Gain" class="editable" placeholder="How will this improve the process (Gains)?" /><br />
-		<label for="Machine">Machines</label>
-		<input  data-attr="" class="editable " placeholder="Machines:" type="text" size="6" /><br />
-  		<label for="alpha">Alpha </label>
-  		<input type="text" data-attr="alpha" class="editable" placeholder="Numeric:"/>
-  		<br />
-	  	<label for="numeric">Numeric </label>
-	  	<input data-attr="numeric" class="editable" /><br />
-	  	<label for="iestimate">Estimate </label>
-		  <input data-attr="estimate" class="editable" placeholder="$0.00" type="text" size="6" /><br />
-		<label for="iactual">Actual </label>
-		  <input data-attr="actual" class="editable" placeholder="$0.00" type="text" size="6" />
+		
+		
 		{{/unless}}
   	</div>
   	{{#unless isNew}}
   	Tasks:
-  	<div id="tasksList" class="left">
-	  	
-	</div>
+  	<div id="tasksList" class="left"></div>
 	{{/unless}}
 </div>
 			

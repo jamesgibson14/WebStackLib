@@ -1,30 +1,18 @@
-<style>
-	.task .task-destroy {
-		float:right;
-		display: none;
-		cursor: pointer;
-	}
-	.task:hover .task-destroy {
-		display: block;
-	}
-	.task .task-info {
-		float:right;
-		display: none;
-		cursor: pointer;
-	}
-	.task:hover .task-info {
-		display: block;
-	}
-</style>
-<div class="task{{#if done}} done ui-state-disabled{{/if}} border" data-id="{{ ID }}" style="width: 250px">
-      {{#unless isNew}}<input class="check" data-attr="Completed" type="checkbox" title="{{Completed}}" {{#if done}}checked="checked"{{/if}} />{{/unless}}
-      <label class="content" data-attr="Task">{{ Task }}</label>
+<div class="task{{#if done}} done ui-state-disabled{{/if}} border" data-id="{{ ID }}" style="width: 250px;display:block">
       {{#unless isNew}}
       <span class="task-destroy ui-icon ui-icon-circle-close" data-attr="Clear" title="Delete this task"></span>
-      <div style="display: block">
-      	<span  title="Created by {{CreatedByName}} on {{Created}}" class="task-info ui-icon ui-icon-info"></span>
-      	<label class="todo-assigned">to: </label><span data-attr="AssignedTo" class="AssignedTo">{{ Name }}</span>
+      <input class="check" data-attr="Completed" type="checkbox" title="{{Completed}}" {{#if done}}checked="checked"{{/if}} />
+      {{/unless}}
+      <label class="content" data-attr="Task">{{ Task }}</label>
+      {{#if Name}}<label class="todo-assigned">to: </label><span data-attr="AssignedTo" class="AssignedTo">{{ Name }}</span>{{/if}}
+      {{#unless isNew}}
+      
+      <div >
+      	
+      	
       	<span class="dueAt" data-attr="DueAt"><label>- by: {{ DueAt }}</label></span>
-	  </div>	      
+	  	<span  title="Created by {{CreatedByName}} on {{Created}}" class="task-info ui-icon ui-icon-info"></span>	
+	  </div>
+	        
       {{/unless}} 
 </div>

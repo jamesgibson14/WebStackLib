@@ -15,7 +15,9 @@ function($, Backbone, E, Handlebars, BaseView, Model, template){
             this.model = new Model($.extend(this.options,E.user.toJSON()));            		
         },
         serializeData: function(){
-            return this.model.toJSON();
+            var obj = this.model.toJSON();
+            obj.isDevelop = obj.appState == 'Developer'
+            return obj;
         },
         events: {
             'click #restart':'restart'
