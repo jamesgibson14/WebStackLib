@@ -40,7 +40,8 @@ define(['jquery', 'backbone','engine'], function($, Backbone,E) {
                 line.NetQtyProducedPercentageTarget = (Math.round(line.NetQtyProducedPercentageTarget*10000)/100).toFixed(1) 
                 line.StagePercent = (Math.round(line.NetQtyProducedPercentageTarget/line.NetQtyProducedPercentage*10000)/100)
                 line.runClock = (date3 - date2)/1000/60;
-                line.runMeter = ((line.MeterStop - line.MeterStart)*60).toFixed(0);                 
+                line.Runtime = ((line.MeterStop - line.MeterStart)*60).toFixed(0);                
+                line.RuntimePercentage = Math.round((line.Runtime*100) / line.RuntimeTarget);                
                 line.SetupMinutes = (date2 - date1)/1000/60;
                 line.AssignedClock = ((date3 - date1)/1000/60)-line.breakMinutes;
                 line.downTime = (line.AssignedMinutes-line.runMeter-line.SetupMinutes);

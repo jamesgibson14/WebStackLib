@@ -1,7 +1,7 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!templates/PSApp.html', 'models/PSDetails','views/PSDetail','jquery.tablesorter.min'], 
-function($, Backbone, E, Handlebars, Model, template, Collection, subView){
+define(['jquery', 'backbone', 'engine', 'views/BaseView', 'models/PSDetail', 'text!templates/PSApp.html', 'models/PSDetails','views/PSDetail','jquery.tablesorter.min'], 
+function($, Backbone, E, BaseView, Model, template, Collection, subView){
 
-    var View = Backbone.View.extend({
+    var View = BaseView.extend({
 
         tagName:  "div",
         className: 'PSApp',
@@ -25,18 +25,35 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             'click legend.ui-widget-header': 'toggleFilter'      
         },
         initialize: function() {
-          this.template = Handlebars.compile(this.template);
             _.bindAll(this, 'render','change','tester','filter','fnTest');
             this.collection.bind('reset',     this.filter);
             
         },
+        serializeData: function(){
+            return {};
+        },
+        onRender: function() {
+            this.$("#pidList").tablesorter({
+                headers:{
+                    1:{sorter:false},3:{sorter:false},4:{sorter:false},5:{sorter:false},
+                    6:{sorter:false},7:{sorter:false},8:{sorter:false},9:{sorter:false},10:{sorter:false},
+                    12:{sorter:false},13:{sorter:false},14:{sorter:false}
+                }
+            });   
+            if((document.location + '').indexOf('.hta','.hta')>-1) 
+                this.$('#autoentry').attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
+            
+            this.$('#pidfilters .content').hide();    
+            
+            return this;
+        },
         fnTest: function(){
             var fr = document.getElementById("autoentry").contentWindow.document;
-                    
+            var i;        
             var myObjs = fr.querySelectorAll('tr td:first-child'); // get element by tag name
             alert(myObjs.length); // show number of items
             
-            for (var i=0;i<myObjs.length; i++){
+            for (i=0;i<myObjs.length; i+1){
                 var html = myObjs[i].innerHTML+ '';
                 
                 if(html.indexOf('#ICRow')>=0 && html.indexOf(10)>=0 ){
@@ -58,7 +75,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
             var that = this;
             var fetch = function(){
                 that.collection.fetch({reset:true})
-            }
+            };
             this.$('#scanError').html(' ')
             E.loading(this.$el,fetch,this.collection);
         },
@@ -101,81 +118,21 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                 var sounds = this.$('.soundError')
                 sounds.get(0).play();
                 if (flagged)
-                    errMessage = '<br /><span class="scanError">PID: ' + fPID + " Opseq: " + fOp + ' has been flagged 999</span>' 
+                    errMessage = '<br /><span class="scanError">PID: ' + fPID + " Opseq: " + fOp + ' has been flagged 999</span>';
                 else
-                    errMessage = '<br /><span class="scanError">Could not find PID: ' + fPID + " Opseq: " + fOp + '</span>'
+                    errMessage = '<br /><span class="scanError">Could not find PID: ' + fPID + " Opseq: " + fOp + '</span>';
                 
                 this.$('#scanError').append(errMessage)
                 //TODO: error checking why isnt PID&OP found
             }
         },
-        printPIDs: function(){
-            var HKEY_Root, HKEY_Path, HKEY_Key;
-            HKEY_Root = "HKEY_CURRENT_USER";
-            HKEY_Path = "\\Software\\Microsoft\\Internet Explorer\\PageSetup\\";
-            // Set the page footer to print the header is empty
-            function PageSetup_Null (){
-              try{
-                var Wsh = new ActiveXObject("WScript.Shell");
-                HKEY_Key = "header";
-                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key ,"");
-                HKEY_Key = "footer";
-                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key ,"");
-              }catch (e) {}
-            }
-            // Set the page footer to print the header for the default value
-            function PageSetup_Default (){
-              /*
-               * &b = break/space
-               * &w = page title
-               * &p / &P = current page / Total pages
-               * &u = url
-               * &d = short date
-               */
-
-              try{
-                var Wsh = new ActiveXObject ( "WScript.Shell");
-                HKEY_Key = "header";
-                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key, "&w &b on page 00 yards, &p / &P");
-                HKEY_Key = "footer";
-                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key, "&u &b &d");
-                HKEY_Key = "Shrink_To_Fit";
-                Wsh.RegWrite (HKEY_Root + HKEY_Path + HKEY_Key, "yes");
-              }
-              catch (e) {}
-            }
-            PageSetup_Default();
-            
+        printPIDs: function(){            
             this.filter(true,'checkbox','isReady');
-            
-            setTimeout(function(){
-                window.print();
-            },100);
-        },
-        // Re-render the contents of the todo item.
-        render: function() {
-            //var temp = this.model.toJSON();
-            
-            var temp = this.template({});
-            
-            this.$el.html( temp );
-            this.$("#pidList").tablesorter({
-                headers:{
-                    1:{sorter:false},3:{sorter:false},4:{sorter:false},5:{sorter:false},
-                    6:{sorter:false},7:{sorter:false},8:{sorter:false},9:{sorter:false},10:{sorter:false},
-                    12:{sorter:false},13:{sorter:false},14:{sorter:false}
-                }
-            });   
-            if((document.location + '').indexOf('.hta','.hta')>-1) 
-                this.$('#autoentry').attr('src','http://scmprd2005.smead.us:7001/servlets/iclientservlet/PRD/?cmd=login');
-            
-            this.$('#pidfilters .content').hide();    
-            
-            return this;
+            this.print();
         },
         change: function(){            
             var newvalue = this.$el.find('.pid').val();
-            this.model.set({pid: newvalue})
+            this.model.set({pid: newvalue});
         },
         filter: function(filter, type, attr){
             
@@ -189,26 +146,25 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     switch(type){
                         case "checkbox":
                             if(filter === model.get(attr)) 
-                                tempmods.push(model)
+                                tempmods.push(model);
                         break;
                         case "number":
                             if(parseFloat(filter) === model.get(attr)) 
-                                tempmods.push(model)
+                                tempmods.push(model);
                         break;
                         case "text":
                             if (model.get(attr) + ''.indexOf(filter)>=0)
                                 tempmods.push(model);
                         break;
                     }
-                })
-                
-                //alert(tempmods.length);
+                });
+
                 if(tempmods.length>0){
                     this.filteredModels = tempmods;
                     this.addAll();
                 }
                 else{
-                    alert('No matches found. Try clearing the filters')
+                    alert('No matches found. Try clearing the filters');
                 }
             }
             else{
@@ -378,7 +334,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                             //document.getElementById("autoentry").contentWindow.oldAlert("OldAlert");
                             //document.getElementById("autoentry").contentWindow.alert("Alert");
                         }
-                    }
+                    };
                     
                     _step = 'step4';
                     context.one('load', function(){
@@ -394,7 +350,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var pid = fr.getElementById('SM_SF_PID_WRK_PRODUCTION_ID').getAttribute("class");
                     
                     if (pid =="PSERROR"){
-                        alert("Error with PID go to next record");
+                        //alert("Error with PID go to next record");
                         var temp = {}
                         temp.flag = _errors = true;
                         temp.flagreason = 'AutoEntry: PID closed or other error';
@@ -557,8 +513,9 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     var myObjs = fr.querySelectorAll('tr td:first-child'); // get element by tag name 
                     var index;
                     var row;
+                    var i;
                     // Search DOM for table row of current opseq
-                    for (var i=0;i<myObjs.length; i++){
+                    for (i=0;i<myObjs.length; i++){
                         var html = myObjs[i].innerHTML+ '';                        
                         if(html.indexOf('#ICRow')>=0 && html.indexOf(_model.opseq)>=0 ){
                             index = html.indexOf('#ICRow');
@@ -569,7 +526,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     }
                     // Find the scrap value by it's column
                     var myObjs = fr.querySelectorAll('tr td:nth-of-type(7) a'); // get element by tag name 
-                    for (var i=0;i<myObjs.length; i++){
+                    for (i=0;i<myObjs.length; i++){
                         var html = myObjs[i]+ '';
                         if(html.indexOf(row)>=0){
                             scrap = parseInt(myObjs[i].innerHTML);                            
@@ -602,9 +559,10 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     //alert('step9: Find Paper component and add on endscrap length, Save and go to next PID')
                     var contents = context.contents();
                     var fr = document.getElementById("autoentry").contentWindow.document;
-                    var temp = {}
+                    var temp = {};
+                    var i;
                     if(_model.enterendscrap){
-                        for(var i=0,len=_model.componentcode.length;i<len;i++){
+                        for(i=0,len=_model.componentcode.length;i<len;i++){
                             var num = contents.find('input[value="' + _model.componentcode[i].cc + '"]');
                             if (num.length ==0){
                                 alert("step9-PeopleSoftEntry" + " Could not find paper component");
@@ -693,7 +651,7 @@ function($, Backbone, E, Handlebars, Model, template, Collection, subView){
                     thisStep();
                     //setTimeout(function(){thisStep(context,fr,data);},100);
                 }
-            } 
+            }; 
             
             return {
                 run: function(){

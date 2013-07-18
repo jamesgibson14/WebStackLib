@@ -1,0 +1,85 @@
+
+<style>
+	#feedback { font-size: 1.4em; }  
+	#selectable .ui-selecting { background: #FECA40; }  
+	#selectable .ui-selected { background: #F39814; color: white; }  
+	#selectable { list-style-type: none; margin: 0; padding: 0; width: 100% }  
+	#selectable li { margin: 3px; padding: 1px; float: left; width: 30px; text-align: center; } 
+	.dropdown-menu li span {
+		float:right;
+	}
+</style>
+
+<div id="resizable" class="ofh" style="height: {{#if isTabs}}550px;{{else}}710px{{/if}}" >
+	<h2 class="noprint" >
+		<span>{{title}}</span>
+		<div class="dropdown pull-right noprint" data-toggle="buttons-checkbox">  
+			<button type="button" class="btn btn-primary" id="print"><i class="icon-print"></i></button> 
+			<button type="button" class="btn btn-primary" id="chartOptions"><i class="icon-cogs"></i></button>
+
+    		<ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">  
+    			<li><a href="" class="chartOptions" data-attr="trendlines">Trendlines: <span >Off</span></a></li>
+    			<li><a href="" class="chartOptions" data-attr="markers">Markers: <span >On</span></a></li> 
+    			<li><a href="" class="chartOptions" data-attr="pointLabels">Point Labels: <span>On</span></a></li>  
+    		</ul>
+		</div>
+		
+
+		
+	</h2>
+	
+	{{#if isTabs}}
+	<div class="plotOptions form-inline" >
+		{{#if plotFilters.daterange}}
+		<label>
+			Date Range</label>
+			<input id="startDate" class='dPicker input-small' type="text" value="{{startDate}}" />
+  			<label class="inline"><i class="icon-arrow-right"></i></label>
+  			<input id="endDate" class='dPicker input-small' type="text" value="{{endDate}}" />
+  		
+  		{{/if}}
+  		{{#if plotFilters.dategroups}}
+  		<label>Group By</label>
+		<fieldset class="">			
+			<label class="radio inline">Month<input type="radio" name="groupBy" value="month" checked="checked" /> </label>
+			<label class="radio inline">Day<input type="radio" name="groupBy" value="day" /></label>
+		</fieldset>
+		{{/if}}
+		{{#if plotFilters.othergroups}}
+		<label>Groups
+		<fieldset class=""> 
+			<label class="radio inline">Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" /></label>
+			<label class="radio inline">Machine<input type="radio" name="level" id="rmachine" value="Machine" /></label>
+		</fieldset></label>
+		{{/if}}
+		{{#if plotFilters.machinegroups}}
+		Select machine group:
+		<select id="machineGroups" class="machineSelect">
+			<option value="">Select group...</option>
+			{{#each machineTypes}}
+			<option value="{{@index}}">{{this.name}}</option>
+			{{/each}}
+		</select>
+		<div class="searchBox noprint">
+			Customize a group:
+		  	<input id="imachine" placeholder="Click here to search..." type="text" size='15'/>	  	
+	  	</div>
+		<br />Current Machines Included:
+		<ol id="selectable">
+			N/A 
+		</ol>
+		{{/if}}
+	</div>
+	{{/if}}	
+	<div id="plot{{plotId}}" class="plot" style="min-height: 450px;  width:900px;{{#unless isTabs}}height: 650px;{{/unless}}; margin-left: 50px">
+		
+	</div>
+</div>
+<br />
+<br />
+<div id="sql noprint"></div>
+{{#if isTabs}}
+<div id='processRecord' class="border noprint" style="min-height: 300px; width:98%;">
+	
+</div>
+{{/if}}

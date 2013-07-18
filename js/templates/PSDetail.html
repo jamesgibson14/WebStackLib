@@ -20,7 +20,7 @@
 <td class='cell border'>RT:&nbsp;{{runtime}}</td>
 <td class='cell border'>DT:&nbsp;{{downtime}}</td>
 <td class='cell border'>{{date}}</td>
-<td class='cell border'>
+<td class='cell border noprint'>
 {{#each componentcode}}
   {{this.pc}}<br />
 {{/each}}
@@ -31,6 +31,6 @@
 </span>
 {{#if PaperConverting}}<span class="extra">F:&nbsp;{{feedup}}</span>{{/if}}
 </td>
-<td class='cell border'><input type="checkbox" class="check" {{#if flag}}checked="checked"{{/if}}  /><br />{{{flagreason}}}</td>
-<td class='cell border'><input type="checkbox" class="chkentered" {{#if entered}}checked="checked"{{/if}}  /><br />{{dateentered}}</td>
+<td class='cell border noprint'><input type="checkbox" class="check" {{#if flag}}checked="checked"{{/if}}  /><br />{{{flagreason}}}</td>
+<td class='cell border noprint'><input type="checkbox" class="chkentered" {{#if entered}}checked="checked"{{/if}}  /><br />{{dateentered}}</td>
 

@@ -15,6 +15,7 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
           "click .print": "print"
         },
         initialize: function() {
+            var that = this;
             this.collection = this.model.tasks;
             _.bindAll(this, 'addOne', 'addAll', 'render','renderStats','reOrder');
             this.listenTo(this.collection,'reset',     this.addAll);
@@ -22,11 +23,15 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
             subView = subView.extend({
                 associateCollection: E.lists.getList('associates'),
                 associateList: E.lists.getList('associates').renderForDataEntry()
-            })              
+            });            
         },
         onRender: function(){
             var that = this;
-            this.collection.fetch({reset:true});  
+            
+            if(this.options.isNew)
+                this.collection.reset(this['defaultTasks' + this.options.IdeaType])
+            else
+                this.collection.fetch({reset:true});   
             this.input = this.$("#new-todo");
             this.renderNew();
         },
@@ -82,20 +87,31 @@ function($, Backbone, E, Handlebars, Model, template, statsTemp, subView, task){
             this.filteredModels = this.collection.models;
             
             // create element in memory 
-            var $el = this.$('#todo-list').clone(true,true); 
+            var $el = $('<ul id="todo-list" />');
             $el.empty();
             // append everything to the in-memory element 
             _.each(this.filteredModels, function(model){ 
                 var rowView = new subView({model: model}); 
                 $el.append(rowView.render().el); 
-            }); 
-            $el.sortable({
-                update: this.reOrder
             });
             // replace the old view element with the new one, in the DOM 
-            this.$("#todo-list").replaceWith($el);//.replaceWith($el); 
+            this.$(".container").html($el);
             this.renderStats();
-        }
+        },
+        defaultTasksCell: [
+            {Task: 'Approval', Options:{LP:1}},
+            {Task: 'Design', Options:{LP:2}},
+            {Task: 'Planning', Options:{LP:3}},
+            {Task: 'Fabrication', Options:{LP:4}},
+            {Task: 'Installation', Options:{LP:5}}
+        ],
+        defaultTasksApp: [
+            {Task: 'Prioritize'},
+            {Task: 'Backend'},
+            {Task: 'Frontend'},
+            {Task: 'Fabrication'},
+            {Task: 'Installation'}
+        ]
 
     });
 	

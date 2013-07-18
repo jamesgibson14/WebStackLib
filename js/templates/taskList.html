@@ -1,9 +1,30 @@
-
+<style>
+	.task .task-destroy {
+		float:right;
+		display: none;
+		cursor: pointer;
+	}
+	.task:hover .task-destroy {
+		display: block;
+	}
+	.task .task-info {
+		float:right;
+		display: none;
+		cursor: pointer;
+	}
+	.task:hover .task-info {
+		display: block;
+	}
+	.task .content {
+		margin-right: 10px;
+	}
+</style>
 <div class="content">
 	<div id="newTask" class="defaultForm">
 	
-	</div> 
+	</div>
+	<div class="container">
 	<ul id="todo-list"> </ul>
-
+	</div> 
 	<div id="todo-stats"> </div>
 </div>

@@ -1,0 +1,90 @@
+<style>
+	.sidebar-nav-fixed {
+	    padding: 9px 0;
+	    position:fixed;
+	    left:40px;
+	    top:60px;	    
+	}
+	
+	.row-fluid > .span-fixed-sidebar {
+	    margin-left: 290px;
+	}
+</style>
+<div class="container">
+<div class="row">  
+	{{#if isTabs}}
+	<ul class="nav nav-tabs">  
+		<li class="active"><a href="#pph" data-toggle="tab">Pieces Per Hour</a></li>  
+		<li><a href="#noi" data-toggle="tab">Number Of Items</a></li>  
+		<li><a href="#nop" data-toggle="tab">Number Of PIDs</a></li>  
+		<li><a href="#pp" data-toggle="tab">Pieces Produced</a></li>  
+		<li><a href="#as" data-toggle="tab">Average Setup</a></li>  
+		<li><a href="#ad" data-toggle="tab">Average Down</a></li>
+	</ul>
+	{{/if}}
+</div>
+<div class="row">  
+	<div class="span3">
+	{{#unless isTabs}}
+	<div class="plotOptions well sidebar-nav-fixed noprint" style="width: 170px">
+		<form>
+		<legend>Filters</legend>
+		<div><label>Select machine group</label>
+		<select id="machineGroups" class="machineSelect input-medium">
+			<option value="">Select group...</option>
+			{{#each machineTypes}}
+			<option value="{{@index}}">{{this.name}}</option>
+			{{/each}}
+		</select></div>
+		<div class="inline">
+			<label>Date Range</label>
+			<input id="startDate" class='dPicker input-small inline' type="text" value="{{startDate}}" />
+  			<div class="inline"><i class="icon-arrow-right"></i></div>
+  			<input id="endDate" class='dPicker input-small inline' type="text" value="{{endDate}}" />
+  	</div>	
+  		<span>Groups</span><br />
+		<label class="radio inline">			
+			<input type="radio" name="groupBy" value="month" checked="checked" /> Month
+		</label>
+		<label class="radio inline">
+			<input type="radio" name="groupBy" value="day" />Day
+		</label>
+		<br /><br />
+		<span>Scope</span><br />
+		<label class="radio inline">
+			Branch<input type="radio" name="level" id="rbranch" value="Branch" checked="checked" />
+		</label>		
+		<label class="radio inline">
+			Machine<input type="radio" name="level" id="rmachine" value="Machine" />
+		</label>	
+		<div class="searchBox noprint">
+			Customize a group:
+		  	<textarea id="imachine" class="input-medium" placeholder="Click here to search..." rows='3'></textarea>	  	
+	  	</div>
+		<label>Current Machines:</label>
+		<ol id="selectable">
+			N/A 
+		</ol>
+		<legend>Options</legend>
+		<button type="button" class="btn btn-primary printAll">Print Page&nbsp;&nbsp;<i class="icon-print"></i></button>
+		<br /><br />
+		<button type="button" class="btn btn-primary labelToggle">Labels ON/OFF&nbsp;&nbsp;<i class="icon-gear"></i></button>
+		</form> 
+	</div>
+	{{/unless}}
+	</div>  
+	<div class="span12"> 
+		{{#unless isTabs}}<div class="tab-contentt">{{/unless}}  
+			<div class="" id="pph" style="page-break-after:always;">1 um sociis natoque penatibus et magnis dis parturient montes,</div>  
+			<div class="" id="noi" style="page-break-after:always;">2 um sociis natoque penatibus et magnis dis parturient montes,</div>  
+			<div class="" id="nop" style="page-break-after:always;">3 um sociis natoque penatibus et magnis dis p</div>  
+			<div class="" id="pp" style="page-break-after:always;">4 um sociis natoque penatibus et magnis dis p</div>
+			<div class="" id="as" style="page-break-after:always;">5 um sociis natoque penatibus et magnis dis p</div>
+			<div class="" id="ad" style="page-break-after:always;">6 um sociis natoque penatibus et magnis dis p</div>
+		{{#unless isTabs}}</div>{{/unless}}
+	</div>
+</div>
+
+</div>
+	
+		

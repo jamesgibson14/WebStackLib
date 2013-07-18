@@ -1,11 +1,8 @@
-define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/OperatorTracking.html', 'models/operatorTracking', 'views/ProcessRecord', 'jqp','jqpall'], 
-function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
+define(['jquery', 'backbone', 'engine', 'views/BaseView', 'text!templates/OperatorTracking.html', 'models/operatorTracking', 'views/ProcessRecord', 'views/BasePlot','models/BasePlot', 'jqp','jqpall'], 
+function($, Backbone, E, BaseView, template, Collection,ProcessRecord, BasePlot,BasePlotModel){
 
-    var View = Backbone.View.extend({
-
-        tagName:  "div",
+    var View = BaseView.extend({
         className: 'ReportApp ofh',
-        attributes: {style:'border:none;'},
         qualificationList: Backbone.Collection.extend({
             sql: "SELECT id = AssociatesToQualifications.ID, label= [Name]+ '- Q' + [QualificationName], cell= ExprCell, qualification= [QualificationName] FROM dbo.Associates INNER JOIN dbo.AssociatesToQualifications ON dbo.Associates.RecordID = dbo.AssociatesToQualifications.Associate_ID INNER JOIN dbo.Qualifications q ON dbo.AssociatesToQualifications.Qualifications_ID = q.ID WHERE (ExprStatus <> N'Terminated') AND ExprStatus <> '' ORDER BY Name, QualificationName",
             store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false), }),
@@ -14,106 +11,44 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
             sqlArgs: [430],
             store: new WebSQLStore(E.sqlProd2,'dbo.spGetDataForPeopleSoftEntry',false), }),
         collection: new Collection(),
+        plotModel: {      
+            atq_id: null,
+            
+            isTabs: true,
+            title: 'Operator Tracking',
+            y1: 'PcsPerHour',
+            sqlPerLevel: {
+                dayBranch: "SELECT crd.Machine_ID, crd.ParentRecord_ID, Date = crd.Date, crd.CurrentStage, Target = crd.NetQtyProducedPercentageTarget, StageTarget = dbo.fnGetNetProducedPercentageTarget(crd.CurrentStage,m.Stage5Target), LineCount = COUNT(*), PerformancePercent = (SUM(crd.NetQtyProduced) * 1.0) / NULLIF(SUM(crd.NetQtyProducedTarget * 1.0),0), AssignedMinutes = SUM(crd.AssignedMinutes), m.Code, crd.Multiprocess FROM CompiledReportingData crd INNER JOIN dbo.Associates INNER JOIN dbo.AssociatesToQualifications ON dbo.Associates.RecordID = dbo.AssociatesToQualifications.Associate_ID INNER JOIN dbo.Qualifications q ON dbo.AssociatesToQualifications.Qualifications_ID = q.ID INNER JOIN dbo.QualificationsToMachines ON q.ID = dbo.QualificationsToMachines.Qualifications_ID INNER JOIN Machines m ON QualificationsToMachines.Machines_ID = m.ID ON crd.Machine_ID = QualificationsToMachines.Machines_ID AND crd.Associate_ID = Associates.RecordID WHERE AssociatesToQualifications.ID = %s AND crd.Date >= '%s' AND crd.Date <= '%s' GROUP BY crd.Associate_ID, crd.Machine_ID, crd.Date, crd.CurrentStage, crd.NetQtyProducedPercentageTarget, m.Stage5Target, m.Code, crd.Multiprocess, crd.ParentRecord_ID ORDER BY crd.Date",
+                monthBranch: "SELECT crd.Machine_ID, crd.ParentRecord_ID, Date= crd.Date, crd.CurrentStage, Target = crd.NetQtyProducedPercentageTarget, StageTarget = dbo.fnGetNetProducedPercentageTarget(crd.CurrentStage,m.Stage5Target), LineCount = COUNT(*), PerformancePercent = (SUM(crd.NetQtyProduced) * 1.0) / NULLIF(SUM(crd.NetQtyProducedTarget * 1.0),0), AssignedMinutes = SUM(crd.AssignedMinutes), m.Code, crd.Multiprocess FROM CompiledReportingData crd INNER JOIN dbo.Associates INNER JOIN dbo.AssociatesToQualifications ON dbo.Associates.RecordID = dbo.AssociatesToQualifications.Associate_ID INNER JOIN dbo.Qualifications q ON dbo.AssociatesToQualifications.Qualifications_ID = q.ID INNER JOIN dbo.QualificationsToMachines ON q.ID = dbo.QualificationsToMachines.Qualifications_ID INNER JOIN Machines m ON QualificationsToMachines.Machines_ID = m.ID ON crd.Machine_ID = QualificationsToMachines.Machines_ID AND crd.Associate_ID = Associates.RecordID WHERE AssociatesToQualifications.ID = %s AND crd.Date >= '%s' AND crd.Date <= '%s' GROUP BY crd.Associate_ID, crd.Machine_ID, crd.Date, crd.CurrentStage, crd.NetQtyProducedPercentageTarget, m.Stage5Target, m.Code, crd.Multiprocess, crd.ParentRecord_ID ORDER BY crd.Date",
+            },
+            plotFilters: {
+                daterange:true
+            }
+        },
         associateToQualification_ID: 0,
         filteredModels: [],
         filters: false,
         plot: null,
         template: template,
         initialize: function() {
-          this.template = Handlebars.compile(this.template);
-            _.bindAll(this, 'render','loadData','renderProcessRecord');
+            _.bindAll(this,'loadData','renderProcessRecord');
             this.qualificationList = new this.qualificationList()
             this.modelStageTotals = new this.modelStageTotals();
             this.qualificationList.fetch();
             this.ProcessRecordView = new ProcessRecord()
-            //this.collection.fetch();
-        },
-        loadData: function(){
-           
-            //E.loading(this.$el,that.collection.fetch,this.collection);
-            $.jqplot.config.enablePlugins = true;           
-            if (this.plot)
-                this.plot.destroy();
-            
-              
-            var coll = this.collection.dataRenderer();
-            var data = coll.data; //infos[0];
-            var labels = coll.labels; //infos[1]; ['3700_Target','2_two','3_three','4_four'] //
-            //var ticks = infos[2];
-            
-            this.plot = $.jqplot("plot", data, {
-                title: "Machine Performance and Target",
-                //animate: true,
-                seriesDefaults:{                    
-                    pointLabels: { 
-                        show: false 
-                    },
-                    trendline: {
-                        show: false,
-                        type: 'linear'
-                    },
-                    isDragable:false,
-                    showMarker:false             
-                },
-                axesDefaults: {
-                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer
-                },
-                legend: {
-                    show: true,
-                    renderer: $.jqplot.EnhancedLegendRenderer,
-                    placement: "outsideGrid",
-                    labels: labels,
-                    location: "ne",
-                    rowSpacing: "0px",
-                    rendererOptions: {
-                        // set to true to replot when toggling series on/off
-                        // set to an options object to pass in replot options.
-                        seriesToggle: 'normal',
-                        seriesToggleReplot: {resetAxes: true}
-                    }
-                },
-                axes: {
-                    xaxis: {
-                        label: 'Performance Timeline',
-                        renderer:$.jqplot.DateAxisRenderer,          
-                        tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-                        tickOptions: {
-                            showGridline: false,
-                            formatString:'%b %#d, %Y',
-                            angle: -30 
-                        }
-                    },
-                    yaxis: {
-                        label: 'Actual & Target Percentage',
-                        tickOptions: {
-                            suffix: '%'
-                        },
-                        padMin: 0
-                    }
-                },
-                grid: {
-                    drawBorder: false,
-                    shadow: false,
-                    // background: 'rgba(0,0,0,0)'  works to make transparent.
-                    background: "white"
-                },
-                highlighter: {
-                    show: true,
-                    showMarker:true,
-                    showTooltip:true,
-                    sizeAdjust: 10,
-                    tooltipLocation: 'se',
-                    tooltipAxes: 'xy',
-                    yvalues: 4,
-                    formatString:'<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr><tr><td>Record #</td><td>%s</td></tr></table>',
-                    useAxesFormatters: true,
-                    tooltipContentEditor: function(str, seriesIndex, pointIndex, plot){
-                        debugger;
+            this.plotModel = new (BasePlotModel.extend({
+                collection: this.collection,
+                initialize: function(){
+                    var dt = new Date();
+                    this.on('change:atq_id change:startDate change:endDate change:level change:groupBy', this.renderPlot)
+                    this.get('highlighter').tooltipContentEditor = function(str, seriesIndex, pointIndex, plot){
                         var data = plot.series[seriesIndex].data[pointIndex]
                         var format = [];
-                        format[0] = new Date(data[0]).format('mm/dd/yyyy');
-
-                        format[1] = new Number(data[1]).toFixed(1)
+                        format[0] = new Date(data[0]).format('mm/dd/yyyy');                        
+                        format[1] = new Number(data[1]).toFixed(1);
+                        format[2] = data[2];
+                        format[3] = data[3];
+                        format[4] = data[4];
                         if(plot.legend.labels[seriesIndex].indexOf('Target') > 1){
                             str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>Stage:</td><td>%s</td></tr></table>'
                         }
@@ -121,35 +56,34 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                             str = '<table class="jqplot-highlighter"><tr><td>date:</td><td>%s</td></tr><tr><td>Percentage:</td><td>%s %</td></tr><tr><td>AssignedMinutes:</td><td>%s</td></tr><tr><td>Changeovers:</td><td>%s</td></tr><tr><td>Record #</td><td>%s</td></tr></table>'
                         str = $.jqplot.sprintf.apply($.jqplot.sprintf, [str].concat(format));
                         return str;
+                    };
+                    
+                    dt = new Date(dt.setMonth(dt.getMonth()-6,1))                    
+                    this.set('startDate',dt.format('mm/dd/yyyy'),{silent:true})
+                },
+                filterMap: ['atq_id','startDate','endDate'],
+                collectionMap: function(model,labels,obj){
+                    var label = model.get('Code');
+                    if (labels.indexOf(label + '_Target') > -1){
+                        obj[label + '_Target'].push([new Date(model.get('Date')),model.get('Target')*100,model.get('CurrentStage')]);
+                        obj[label + '_Actual'].push([new Date(model.get('Date')),model.get('PerformancePercent')*100,model.get('AssignedMinutes'),model.get('LineCount'),model.get('ParentRecord_ID')]);
                     }
-               },
-               cursor: {
-                 show: true,
-                 showTooltip:false,
-                 zoom: true
-               }
-            });
-            var that = this;
-            this.$('#resizable').off('resize')
-            this.$('#resizable').on('resize', function(event, ui) {
-                if (that.plot)
-                    that.plot.replot( { resetAxes: true } );
-            });
-            this.$('#plot').off('jqplotDataUnhighlight');
-            this.$('#plot').on('jqplotDataUnhighlight',         
-                function (ev) {   
-                    //alert('unhighlighted')          
-                    that.$('#info1b').html('Nothing');        
-            }); 
-            this.$('#plot').off('jqplotDataHighlight');
-            this.$('#plot').on('jqplotDataHighlight',         
-                function (ev, seriesIndex, pointIndex, data) {             
-                    alert('highlighted')
-                    that.$('#info1b').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);        
-            }); 
-            this.$('#plot').off('jqplotDataClick');
-            this.$('#plot').on('jqplotDataClick',this.renderProcessRecord);             
-                
+                    else{
+                        labels.push(label + '_Target');
+                        labels.push(label + '_Actual');
+                        obj[label + '_Target'] = [[new Date(model.get('Date')),model.get('Target')*100,model.get('CurrentStage')]]
+                        obj[label + '_Actual'] = [[new Date(model.get('Date')),model.get('PerformancePercent')*100,model.get('AssignedMinutes'),model.get('LineCount'),model.get('ParentRecord_ID')]]
+                    }                           
+                }                
+            }))(this.plotModel);
+            this.plotV = new BasePlot({model: this.plotModel});
+            this.plotV.renderDataGrid = this.renderProcessRecord
+            
+        },
+        test: function(){
+           alert('caught');  
+        },
+        loadData: function(){   
             var cd;
             var cs = this.collection.getCurrentStage()
             if(cs != 8){
@@ -172,12 +106,8 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
             
 
         },
-        render: function() {
+        onRender: function() {
             var that = this;
-            
-            var temp = this.template({debug:true});
-            
-            this.$el.html( temp );
             
             function removeIfInvalid(value, list) {               
                 var valid = false;                    
@@ -201,19 +131,7 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 }  
                 return valid              
             }  
-            //var qualificationList = this.model.get('operatorQualifications');
-            var success = function(atq_id){
-                that.collection.sqlArgs = [atq_id], //= "EXECUTE dbo.spOperatorTracking @AssociateToQualification_ID = " + atq_id;
-                that.collection.fetch();
-                //no data check
-                if (that.collection.length==0){
-                    alert('No data found for this Qualification\nPlease contact James Gibson if this seems like an error')
-                    E.hideLoading();
-                    return false;
-                }  
-                that.loadData()
-                E.hideLoading();
-            }
+
             var source = this.qualificationList.toJSON()
             
             this.$( "#iqualification" ).autocomplete({
@@ -229,7 +147,8 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                     that.$('#scell').html( ui.item.cell );
                     that.$('#sAssociate').html( ui.item.label.split('-')[0] );
                     if(removeIfInvalid( ui.item.label,source)) {
-                        E.loading(that.$el, function() {success(ui.item.id );},that)
+                        that.plotModel.set('atq_id', ui.item.id );
+                        that.loadData();
                     }
                     $(this).val('').blur();
                     return false;
@@ -249,12 +168,8 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 that.$( "#iqualification" ).autocomplete( "search", "" );
             })
             
-            this.$('#resizable').resizable({delay:20,minHeight: 326,minWidth: 400});
-            //this.$('input, textarea').placeholder();
+            this.$('#plotarea').html( this.plotV.render().el);
             return this;
-        },
-        renderPlot: function(){
-            //Instead of destroying plot just reload data, lables and then re-plot  
         },
         renderTable: function(){
             //Instead of destroying plot just reload data, lables and then re-plot  
@@ -265,10 +180,13 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
         renderProcessRecord: function(ev, seriesIndex, pointIndex, data){            
             var that = this;
             var html; 
-            if(this.collection.labels[seriesIndex].indexOf('Actual')>-1) {
+            debugger;
+            if(that.plotModel.get('legend').labels[seriesIndex].indexOf('Actual')>-1) {
                 var view = this.ProcessRecordView;
-                this.$('#info1c').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+new Date(data[0]) + ', ' + data[1]+ ', pageX: '+ev.pageX+', pageY: '+ev.pageY);
-                html = view.render(data[4]).el
+                view.collection.sqlArgs = [data[4]]
+                view.collection.fetch({reset:true});
+                //alert('series: '+seriesIndex+', point: '+pointIndex+', data: '+new Date(data[0]) + ', ' + data[1]+ ', pageX: '+ev.pageX+', pageY: '+ev.pageY);
+                html = view.el
             }
             else{
                 html = '<div>This is the target line.</div>'
@@ -288,7 +206,6 @@ function($, Backbone, E, Handlebars, template, Collection,ProcessRecord){
                 cs = 5;
             return cs   
         }
-         
     });
 	
     // Returns the View class

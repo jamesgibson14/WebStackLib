@@ -119,6 +119,7 @@ function($, Backbone, E, Handlebars, require,user){
             //if not loaded... load
             //add to tabs
             //switch to new tab
+            alert(view);
         },
         'popup': function(view){
             //add view as pop-up window.

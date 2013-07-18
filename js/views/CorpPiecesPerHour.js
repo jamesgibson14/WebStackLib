@@ -168,8 +168,8 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
                 that.$('#rmachine').prop('disabled', false);
                 that.model.set('machineCodes',that.model.get('machineTypes')[this.value].machines);
             });
-            this.$('#printLandscape').button({text: false, icons:{primary: 'ui-icon-print'}}).css('width','15px')
-            this.$('#chartOptions').button({text: false, icons:{primary: 'ui-icon-triangle-1-s', secondary: 'ui-icon-gear'}}).css('width','30px')
+            this.$('#printLandscape').button({text: false})
+            this.$('#chartOptions').button({text: false});
 
             function split( val ) {      return val.split( /,\s*/ );    }    
             function extractLast( term ) {      return split( term ).pop();    }
@@ -253,7 +253,7 @@ function($, Backbone, E, Handlebars, template, Collection,Model,SlickGrid){
         renderMachines: function(){
             var html = '';
             $.each(this.model.get('machineCodes'), function(i, item){
-                html += '<li class="ui-state-active" style="padding-left:3px;padding-right:3px">' + item + '</li>'
+                html += '<li class="ui-state-default" style="padding-left:3px;padding-right:3px">' + item + '</li>'
             })
             this.$('#selectable').html();
             this.$('#selectable').html(html);

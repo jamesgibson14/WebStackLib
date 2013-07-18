@@ -172,7 +172,7 @@ FROM
 			AND	ProductionDataDetails.PID <>'DCP' 
 			And ProductionDataDetails.PID <> 'extra'  
 			AND ProductionData.Machine <> '52102'
-			--AND	ProductionDataDetails.PID IN ('PID1628304', 'PID162388')
+			--AND	ProductionDataDetails.PID IN ('PID1637776', 'PID1636904', 'PID1636852')
 			AND ProductionData.chkCompleted = 1 
 			AND ProductionData.Date > '8/1/2012'
 		) AS dt1

@@ -1,7 +1,7 @@
 define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html', 'models/task'], function($, Backbone, E, Handlebars, template, Model){
 
     var View = E.BaseView.extend({
-        tagName:  "li",
+        tagName: "li",
         template: template,    
         events: {
           "click .check"              : "edit",
@@ -9,8 +9,7 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
           "click span.task-destroy"   : "edit",
           "dblclick .dueAt": "edit",
           "dblclick .AssignedTo": "edit"
-        },
-    
+        },    
         initialize: function() {
             var obj ={}
             if(this.options.Idea_ID)
@@ -19,10 +18,6 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'text!templates/task.html'
                 this.model = new Model(obj);
             this.listenTo(this.model,'change', this.render);
             this.listenTo(this.model,'destroy', this.remove,this);                        
-        },
-        temp: function(){
-            this.model.set({ID:30})
-            this.model.trigger('sync')  
         },     
         serializeData: function(){
             var obj = this.model.toJSON();

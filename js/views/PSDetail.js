@@ -4,7 +4,6 @@ define(['jquery', 'backbone', 'engine', 'handlebars', 'models/PSDetail', 'text!t
 
         //... is a list tag.
         tagName:  "tr",
-        className: "row",
         // Cache the template function for a single item.
         template: template,
     

@@ -8,7 +8,7 @@ engine.ADODB = function(options){
 	var s = {
 		database: 'CCDB',
 		source: '//smead.us/data/Share.CC/DB/HistPerm/BE/shareddb.accdb',
-		source: 'C:/DATABASES/Sync/DataControl.accdb',
+		source: 'C:/DATABASES/Sync/DataControl2.accdb',
 		sqlsource: 'SQLTEST2',
 		type: 'sqlserver',
 		timeout: 5,
