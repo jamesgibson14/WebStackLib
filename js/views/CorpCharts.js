@@ -245,17 +245,17 @@ function($, Backbone, E, Handlebars, BaseView, template,Model, PiecesPlot, BaseP
             this.filterModel.set("machineGroup",e.target.value);
             this.filterModel.set('machineCodes',this.filterModel.get('machineTypes')[e.target.value].machines);
         },
-        pointLabel: true,
         optionsToggle: function(){
             var options = {
                 
             }
             var plotm = this.tabs.pph.model;
             var plot = this.tabs.pph.plot;
-            this.pointLabel = !this.pointLabel;
+            var pointLabel = !plotm.get('seriesDefaults').pointLabels.show;
+            plotm.get('seriesDefaults').pointLabels.show = pointLabel;
             plot.replot({seriesDefaults:{
                 pointLabels:{
-                    show: this.pointLabel
+                    show: pointLabel
                 } 
             }})
         }
